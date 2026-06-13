@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Онлайн расчет - SHAKOLN Auto Parts</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Unified Link Style */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* страницаPage Content */
+        .page-content {
+            padding: 60px 0;
+        }
+        
+        .page-title {
+            text-align: center;
+            color: #0F4F9A;
+            margin-bottom: 40px;
+            font-size: 28px;
+        }
+        
+        .quote-section {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        
+        .quote-form {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .submit-btn {
+            background-color: #0F4F9A;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0C448A;
+        }
+        
+        .quote-info {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+        
+        .quote-info h3 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+        }
+        
+        .quote-info ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        
+        .quote-info li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .quote-info li:before {
+            content: "•";
+            color: #0F4F9A;
+            font-weight: bold;
+            position: absolute;
+            left: -20px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #0F4F9A;
+            color: white;
+            padding: 40px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+        }
+        
+        .footer-section p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- страницаPage Content -->
+    <div class="page-content">
+        <div class="container">
+            <h1 class="page-title">Онлайн расчет</h1>
+            
+            <div class="quote-section">
+                <form class="quote-form">
+                    <div class="form-group">
+                        <label class="form-label">Contact Person <span style="color:red">*</span></label>
+                        <input type="text" class="form-input" placeholder="Please enterВаше имя">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Телефон <span style="color:red">*</span></label>
+                        <input type="tel" class="form-input" placeholder="Please enter yourТелефон">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="Please enter yourEmail">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">partsштType <span style="color:red">*</span></label>
+                        <select class="form-select">
+                            <option value="">Please select partштType</option>
+                            <option value="engine">Engine partsшт</option>
+                            <option value="chassis">Chassis partsшт</option>
+                            <option value="electrical">Electrical partsшт</option>
+                            <option value="brake">Тормозная система</option>
+                            <option value="other">Other partsшт</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">OENumber</label>
+                        <input type="text" class="form-input" placeholder="Введите OE номерCode（if available）">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Бренд <span style="color:red">*</span></label>
+                        <select class="form-select">
+                            <option value="">Please selectБренд</option>
+                            <option value="benz">Mercedes-Benz</option>
+                            <option value="bmw">BMW</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Vehicle Model</label>
+                        <input type="text" class="form-input" placeholder="Please enter vehicle model">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Quantity <span style="color:red">*</span></label>
+                        <input type="number" class="form-input" placeholder="Please enter quantity" min="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Remarks</label>
+                        <textarea class="form-textarea" placeholder="Please enter remarks"></textarea>
+                    </div>
+                    
+                    <button type="button" class="submit-btn">Submit Quote Request</button>
+                </form>
+                
+                <div class="quote-info">
+                    <h3>Quote Instructions</h3>
+                    <ul>
+                        <li>Our customer service team will contact you within 24 hours to provide a detailed quote</li>
+                        <li>Bulk purchases can enjoy more discounts</li>
+                        <li>provideОригинал，10x compensation for counterfeits</li>
+                        <li>Support multiple payment methods, safe and convenient</li>
+                        <li>Доставка по всей стране，same-day delivery available in some regions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Загрузить скрипт шаблонов -->
+    <script src="../../templates/load-templates.js"></script>
+</body>
+</html>

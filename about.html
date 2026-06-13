@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - 萨肯汽配</title>
+    <!-- Tailwind CSS -->
+    <script src="assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* 统一链接样式 */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            background-color: white;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            color: #0F4F9A;
+        }
+        
+        /* 公司简介 */
+        .company-intro {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .company-intro h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .intro-content {
+            line-height: 1.6;
+        }
+        
+        .intro-content p {
+            margin-bottom: 20px;
+        }
+        
+        /* 发展历程 */
+        .development-history {
+            padding: 60px 0;
+            background-color: #f5f7fa;
+            margin-bottom: 40px;
+        }
+        
+        .development-history h2 {
+            color: #0F4F9A;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background-color: #0F4F9A;
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background-color: #FF6C00;
+            border-radius: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .timeline-content {
+            position: relative;
+            width: 45%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            left: 55%;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: #0F4F9A;
+            margin-bottom: 10px;
+        }
+        
+        /* 企业使命愿景价值观 */
+        .mission-vision {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .mission-vision h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .mv-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .mv-item {
+            text-align: center;
+            padding: 30px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+        }
+        
+        .mv-item h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+
+        
+        /* 荣誉资质 */
+        .honors-certifications {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .honors-certifications h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .honors-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .honor-item {
+            text-align: center;
+        }
+        
+        .honor-image {
+            width: 100%;
+            height: 180px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            object-fit: contain;
+            background-color: #f5f7fa;
+        }
+        
+
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">首页</a>
+            <span>></span>
+            <span>关于我们</span>
+        </div>
+    </div>
+    
+    <!-- 公司简介 -->
+    <div class="container company-intro">
+        <h2>公司简介</h2>
+        <div class="intro-content">
+            <p>　　致力于安全、放心、高品质的零部件，在发展的过程中，我司不断创新，与国内外众多知名企业建立了长期稳定的合作关系，业务规模和市场影响力不断扩大。我们深知客户是企业发展的基石，始终以客户需求为导向，持续提升产品质量和服务水平。</p>
+            <p>　　未来，北京云孚汽车贸易有限公司将继续秉承"诚信经营，品质至上"的理念，努力提升品牌价值，拓展市场版图，为客户提供更加优质的汽车零部件和专业的服务，力争成为国内汽车零部件行业的领先品牌。</p>
+            <p>　　北京云孚汽车贸易有限公司成立于2013年9月6日，位于中国的首都——北京市。自成立以来，公司始终致力于提供高品质的汽车零部件，业务范围涵盖国内各大汽配市场。公司目前拥有50名专业且经验丰富的员工团队，致力于为客户提供优质的产品和卓越的服务。</p>
+            <p>　　我们拥有自己的品牌——萨肯SHAKOLN，专注于研发和销售高性能的汽车零部件。我们的产品种类丰富，涵盖了发动机零件、制动系统、悬挂系统等多个类别，满足不同客户的多样化需求。我们始终坚持质量第一的原则，严格控制产品的生产流程，确保每一件产品都达到国际标准。</p>
+        </div>
+    </div>
+    
+    <!-- 发展历程 -->
+    <div class="development-history">
+        <div class="container">
+            <h2>发展历程</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2015年</div>
+                        <h3>公司成立</h3>
+                        <p>2015年8月6日北京云孚成立</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2017年</div>
+                        <h3>第一家自营门店</h3>
+                        <p>第一家萨肯（SHAKOLN）自营品牌门店（北京萨肯店）<br>2017年9月6日</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2018年</div>
+                        <h3>第二家自营门店</h3>
+                        <p>第二家萨肯（SHAKOLN）自营品牌门店（杭州萨肯店）<br>2018年2月21日</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2019年</div>
+                        <h3>第三家自营门店</h3>
+                        <p>第三家萨肯（SHAKOLN）自营品牌门店（成都萨肯店）<br>2019年5月6日</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2020年</div>
+                        <h3>第四家自营门店</h3>
+                        <p>第四家萨肯（SHAKOLN）自营品牌门店（香河萨肯店）<br>2020年6月6日</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2021年</div>
+                        <h3>第五家自营门店</h3>
+                        <p>第五家萨肯（SHAKOLN）自营品牌门店（济南萨肯店）<br>2021年8月7日</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2022年</div>
+                        <h3>第六家自营门店</h3>
+                        <p>第六家萨肯（SHAKOLN）自营品牌门店（广州萨肯店）<br>2022年5月24日</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2023年</div>
+                        <h3>第七家自营门店</h3>
+                        <p>第七家萨肯（SHAKOLN）自营品牌门店（常山萨肯店）<br>2023年3月21日</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024年</div>
+                        <h3>第八家自营门店</h3>
+                        <p>第八家萨肯（SHAKOLN）自营品牌门店（重庆萨肯店）<br>2024年4月16日</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 企业使命愿景价值观 -->
+    <div class="container mission-vision">
+        <h2>企业使命 / 愿景 / 价值观</h2>
+        <div class="mv-grid">
+            <div class="mv-item">
+                <h3>企业使命</h3>
+                <p>为客户提供高品质的汽车配件和专业的服务，推动汽车后市场的健康发展</p>
+            </div>
+            <div class="mv-item">
+                <h3>企业愿景</h3>
+                <p>成为国内领先的奔驰/宝马汽车配件供应商，打造行业知名品牌</p>
+            </div>
+            <div class="mv-item">
+                <h3>核心价值观</h3>
+                <p>品质第一、客户至上、诚信经营、创新发展</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 荣誉资质 -->
+    <div class="container honors-certifications">
+        <h2>荣誉资质</h2>
+        <div class="honors-grid">
+            <div class="honor-item">
+                <img src="img/qiyezizhi/tu1.png" alt="重点信用认证品牌" class="honor-image">
+                <p>重点信用认证品牌</p>
+            </div>
+            <div class="honor-item">
+                <img src="img/qiyezizhi/tu2.png" alt="中国汽车维修行业协会会员" class="honor-image">
+                <p>中国汽车维修行业协会会员</p>
+            </div>
+            <div class="honor-item">
+                <img src="img/qiyezizhi/tu3.png" alt="重点信用认证品牌" class="honor-image">
+                <p>重点信用认证品牌</p>
+            </div>
+            <div class="honor-item">
+                <img src="img/qiyezizhi/tu4.png" alt="中国汽车维修行业协会会员" class="honor-image">
+                <p>中国汽车维修行业协会会员</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- 加载模板脚本 -->
+    <script src="templates/load-templates.js"></script>
+</body>
+</html>

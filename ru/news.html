@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новости - SHAKOLN Auto Parts</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* Unified Link Style */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* страницаpage title */
+        .page-title {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* News Content */
+        .news-content {
+            padding: 40px 0;
+            display: flex;
+            gap: 40px;
+        }
+        
+        .news-sidebar {
+            width: 300px;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-section {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-section h3 {
+            font-size: 18px;
+            color: #0F4F9A;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #0F4F9A;
+            padding-bottom: 10px;
+        }
+        
+        .news-categories {
+            list-style: none;
+        }
+        
+        .news-categories li {
+            margin-bottom: 10px;
+        }
+        
+        .news-categories a {
+            color: #666;
+            text-decoration: none;
+            display: block;
+            padding: 8px 0;
+            transition: color 0.3s ease;
+        }
+        
+        .news-categories a:hover {
+            color: #0F4F9A;
+            padding-left: 10px;
+        }
+        
+        .news-categories a.active {
+            color: #0F4F9A;
+            font-weight: bold;
+        }
+        
+        .search-box {
+            position: relative;
+            margin-top: 20px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .search-box button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+        }
+        
+        .latest-news {
+            list-style: none;
+        }
+        
+        .latest-news li {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .latest-news li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .latest-news a {
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            line-height: 1.4;
+            display: block;
+        }
+        
+        .latest-news a:hover {
+            color: #0F4F9A;
+        }
+        
+        .latest-news .news-date {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .news-main {
+            flex: 1;
+        }
+        
+        .news-list {
+            list-style: none;
+        }
+        
+        .news-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        
+        .news-image {
+            width: 200px;
+            height: 140px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .news-item:hover .news-image img {
+            transform: scale(1.05);
+        }
+        
+        .news-info {
+            flex: 1;
+        }
+        
+        .news-info h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .news-info h3 a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .news-info h3 a:hover {
+            color: #0F4F9A;
+        }
+        
+        .news-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .news-excerpt {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .news-read-more {
+            display: inline-block;
+            color: #0F4F9A;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .news-read-more:hover {
+            color: #0C448A;
+        }
+        
+        /* pointsстраница */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            padding: 16px 24px;
+            background: transparent;
+        }
+        
+        .pagination-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background: #ffffff;
+        }
+        
+        .pagination-btn:hover:not(.disabled) {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .pagination-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .pagination-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .pagination-ellipsis {
+            color: #9ca3af;
+            font-size: 14px;
+            padding: 0 4px;
+        }
+        
+        .pagination-jump {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #6b7280;
+            padding: 6px 12px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            height: 36px;
+        }
+        
+        .pagination-input {
+            width: 40px;
+            height: 24px;
+            padding: 0 6px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            box-sizing: border-box;
+            background: #ffffff;
+        }
+        
+        .pagination-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+        }
+        
+        .pagination-jump-btn {
+            padding: 4px 14px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #3b82f6;
+        }
+        
+        .pagination-jump-btn:hover {
+            background: #2563eb;
+        }
+        
+
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .news-content {
+                flex-direction: column;
+            }
+            
+            .news-sidebar {
+                width: 100%;
+            }
+            
+            .news-categories {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .news-categories li {
+                margin-bottom: 0;
+            }
+            
+            .news-categories a {
+                padding: 5px 15px;
+                background-color: #f0f0f0;
+                border-radius: 15px;
+            }
+            
+            .news-categories a:hover {
+                padding-left: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .news-item {
+                flex-direction: column;
+            }
+            
+            .news-image {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">Главная</a>
+            <span>></span>
+            <span>Новости</span>
+        </div>
+    </div>
+    
+    <!-- страницаpage title -->
+    <div class="page-title">
+        <div class="container">
+            <h1>Новости</h1>
+            <p>Узнайте о последних разработках и отраслевых новостях SHAKOLN Auto Parts</p>
+        </div>
+    </div>
+    
+    <!-- News Content -->
+    <div class="container news-content">
+        <!-- Sidebar -->
+        <div class="news-sidebar">
+            <div class="sidebar-section">
+                <h3>Категории новостей</h3>
+                <ul class="news-categories">
+                    <li><a href="#" class="active">Все новости</a></li>
+                    <li><a href="#">Новости компании</a></li>
+                    <li><a href="#">Industry News</a></li>
+                    <li><a href="#">Информация о продуктах</a></li>
+                    <li><a href="#">Технические статьи</a></li>
+                    <li><a href="#">Информация о выставках</a></li>
+                </ul>
+                
+                <div class="search-box">
+                    <input type="text" placeholder="Поиск новостей...">
+                    <button>🔍</button>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Последние новости</h3>
+                <ul class="latest-news">
+                    <li>
+                        <a href="#">SHAKOLN Auto Parts участвует в Международной выставке автозапчастей в Гуанчжоу 2024</a>
+                        <div class="news-date">2024-04-01</div>
+                    </li>
+                    <li>
+                        <a href="#">SHAKOLN Auto Parts представляет новую серию запчастей для Mercedes-Benz</a>
+                        <div class="news-date">2024-03-15</div>
+                    </li>
+                    <li>
+                        <a href="#">SHAKOLN Auto Parts получила сертификацию системы управления качеством ISO9001</a>
+                        <div class="news-date">2024-02-28</div>
+                    </li>
+                    <li>
+                        <a href="#">SHAKOLN Auto Parts заключила сотрудничество с несколькими автосалонами 4S</a>
+                        <div class="news-date">2024-02-10</div>
+                    </li>
+                    <li>
+                        <a href="#">Запущен проект расширения завода SHAKOLN Auto Parts</a>
+                        <div class="news-date">2024-01-20</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- News List -->
+        <div class="news-main">
+            <ul class="news-list">
+                <li class="news-item">
+                    <div class="news-image">
+                        <img src="../img/news-exhibition.jpg" alt="Изображение выставки">
+                    </div>
+                    <div class="news-info">
+                        <h3><a href="news-detail.html">SHAKOLN Auto Parts участвует в Международной выставке автозапчастей в Гуанчжоу 2024</a></h3>
+                        <div class="news-meta">
+                            <span>2024-04-01</span>
+                            <span>Информация о выставках</span>
+                            <span>Просмотры: 1234</span>
+                        </div>
+                        <p class="news-excerpt">SHAKOLN Auto Parts будет участвовать в Международной выставке автозапчастей в Гуанчжоу с 10 по 12 апреля 2024 года, демонстрируя новейшие запчасти для Mercedes-Benz и BMW. Мы настроим профессиональный стенд на выставке для демонстрации ключевых продуктов и технических преимуществ компании. Добро пожаловать посетить и обсудить.</p>
+                        <a href="#" class="news-read-more">Читать далее →</a>
+                    </div>
+                </li>
+                <li class="news-item">
+                    <div class="news-image">
+                        <img src="../img/news-production.jpg" alt="Изображение продукта">
+                    </div>
+                    <div class="news-info">
+                        <h3><a href="news-detail.html">SHAKOLN Auto Parts представляет новую серию запчастей для Mercedes-Benz</a></h3>
+                        <div class="news-meta">
+                            <span>2024-03-15</span>
+                            <span>Информация о продуктах</span>
+                            <span>Просмотры: 987</span>
+                        </div>
+                        <p class="news-excerpt">SHAKOLN Auto Parts недавно представила новую серию запчастей для Mercedes-Benz, включая двигатель, шасси, электротехнику и кузовные изделия. Эти продукты изготовлены из высококачественных материалов и передовых технологий, строго в соответствии с заводскими стандартами для идеальной совместимости с оригинальным автомобилем. Новая серия уже принимает заказы, добро пожаловать на консультацию и покупку.</p>
+                        <a href="#" class="news-read-more">Читать далее →</a>
+                    </div>
+                </li>
+                <li class="news-item">
+                    <div class="news-image">
+                        <img src="../img/news-certification.jpg" alt="Изображение сертификата">
+                    </div>
+                    <div class="news-info">
+                        <h3><a href="news-detail.html">SHAKOLN Auto Parts получила сертификацию системы управления качеством ISO9001</a></h3>
+                        <div class="news-meta">
+                            <span>2024-02-28</span>
+                            <span>Новости компании</span>
+                            <span>Просмотры: 856</span>
+                        </div>
+                        <p class="news-excerpt">SHAKOLN Auto Parts недавно успешно получила сертификацию системы управления качеством ISO9001, что свидетельствует о том, что уровень управления качеством компании достиг международных стандартов. Благодаря сертификации компания будет дальше укреплять управление качеством, повышать качество продукции и уровень обслуживания, предоставляя клиентам более надежные продукты и услуги.</p>
+                        <a href="#" class="news-read-more">Читать далее →</a>
+                    </div>
+                </li>
+                <li class="news-item">
+                    <div class="news-image">
+                        <img src="../img/news-cooperation.jpg" alt="Изображение сотрудничества">
+                    </div>
+                    <div class="news-info">
+                        <h3><a href="news-detail.html">SHAKOLN Auto Parts заключила сотрудничество с несколькими автосалонами 4S</a></h3>
+                        <div class="news-meta">
+                            <span>2024-02-10</span>
+                            <span>Новости компании</span>
+                            <span>Просмотры: 745</span>
+                        </div>
+                        <p class="news-excerpt">SHAKOLN Auto Parts недавно заключила соглашения о сотрудничестве с несколькими автосалонами Mercedes-Benz и BMW 4S, став их официальным поставщиком запчастей. Это сотрудничество еще больше расширит долю рынка компании и повысит узнаваемость бренда. В то же время компания будет предоставлять более профессиональную техническую поддержку и послепродажное обслуживание автосалонам 4S, вместе создавая высококачественный опыт обслуживания клиентов.</p>
+                        <a href="#" class="news-read-more">Читать далее →</a>
+                    </div>
+                </li>
+                <li class="news-item">
+                    <div class="news-image">
+                        <img src="../img/news-expansion.jpg" alt="Factory pictures">
+                    </div>
+                    <div class="news-info">
+                        <h3><a href="news-detail.html">Запущен проект расширения завода SHAKOLN Auto Parts</a></h3>
+                        <div class="news-meta">
+                            <span>2024-01-20</span>
+                            <span>Новости компании</span>
+                            <span>Просмотры: 634</span>
+                        </div>
+                        <p class="news-excerpt">SHAKOLN Auto PartsFactory expansion project officially launched，Total project investment1000million yuan，expected to beJune 2024completed。After expansion，Factory production capacity will increase50%，able to better meet market demand。At the same time，The company will introduce advancedОборудованиеand technology，further improveТоварqualityandproduction efficiency。</p>
+                        <a href="#" class="news-read-more">Читать далее →</a>
+                    </div>
+                </li>
+            </ul>
+            
+            <!-- pointsстраница -->
+            <div class="pagination" id="pagination">
+                <!-- pointsстраницаwill be throughJavaScriptdynamically generated -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Загрузить скрипт шаблонов -->
+    <script src="../../templates/load-templates.js"></script>
+    <script src="../templates/pagination.js"></script>
+    <script>
+        initPagination('.news-item', 'pagination');
+    </script>
+</body>
+</html>

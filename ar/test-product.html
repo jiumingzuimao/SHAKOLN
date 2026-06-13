@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试المنتجات</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- إعدادات مخصصة -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .product-card { background: white; padding: 10px; margin: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .product-card img { width: 100px; height: 100px; object-fit: cover; }
+        .loading { text-align: center; padding: 50px; }
+        .error { color: red; }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <h1>المنتجات测试</h1>
+    <div id="content" class="loading">
+        <div>جارٍ التحميل...</div>
+    </div>
+
+    <script>
+        async function loadData() {
+            try {
+                // تحميلالمنتج图片映射
+                const imagesResponse = await fetch("product-images.json");
+                const imagesMap = await imagesResponse.json();
+                console.log('图片映射تحميل成功:', Object.keys(imagesMap).length, 'قطعةOE号');
+                
+                // تحميلالمنتج数据
+                const productsResponse = await fetch("product-data.json");
+                const data = await productsResponse.json();
+                // المنتج数据可能是对象（包含products数组）或直接是数组
+                const products = data.products || data;
+                console.log('المنتج数据تحميل成功:', products.length, 'قطعةالمنتج');
+                
+                // 筛选有图片的المنتج
+                const productsWithImages = products.filter(p => imagesMap[p.code]);
+                console.log('有图片的المنتج:', productsWithImages.length, 'قطعة');
+                
+                // 显示前6قطعةالمنتج
+                const content = document.getElementById('content');
+                content.innerHTML = productsWithImages.slice(0, 6).map(p => `
+                    <div class="product-card">
+                        <img src="${imagesMap[p.code][0]}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/100'">
+                        <h3>${p.name}</h3>
+                        <p>OE: ${p.code}</p>
+                        <p>العلامة: ${p.series}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('فشل التحميل:', error);
+                document.getElementById('content').innerHTML = `
+                    <div class="error">فشل التحميل: ${error.message}</div>
+                    <div>يرجى التحقق من وحدة التحكم للحصول على معلومات خطأ مفصلة</div>
+                `;
+            }
+        }
+        
+        loadData();
+    </script>
+</body>
+</html>

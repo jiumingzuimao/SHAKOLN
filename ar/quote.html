@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض سعر عبر الإنترنت - SHAKOLN قطع غيار السيارات</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* نمط الارتباط الموحد */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* محتوى الصفحة */
+        .page-content {
+            padding: 60px 0;
+        }
+        
+        .page-title {
+            text-align: center;
+            color: #0F4F9A;
+            margin-bottom: 40px;
+            font-size: 28px;
+        }
+        
+        .quote-section {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        
+        .quote-form {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .submit-btn {
+            background-color: #0F4F9A;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0C448A;
+        }
+        
+        .quote-info {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+        
+        .quote-info h3 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+        }
+        
+        .quote-info ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        
+        .quote-info li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .quote-info li:before {
+            content: "•";
+            color: #0F4F9A;
+            font-weight: bold;
+            position: absolute;
+            left: -20px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #0F4F9A;
+            color: white;
+            padding: 40px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+        }
+        
+        .footer-section p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- محتوى الصفحة -->
+    <div class="page-content">
+        <div class="container">
+            <h1 class="page-title">عرض سعر عبر الإنترنت</h1>
+            
+            <div class="quote-section">
+                <form class="quote-form">
+                    <div class="form-group">
+                        <label class="form-label">الشخص المسؤول عن الاتصال <span style="color:red">*</span></label>
+                        <input type="text" class="form-input" placeholder="يرجى إدخال اسمك">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">الهاتف <span style="color:red">*</span></label>
+                        <input type="tel" class="form-input" placeholder="يرجى إدخال رقم هاتفك">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">البريد الإلكتروني</label>
+                        <input type="email" class="form-input" placeholder="يرجى إدخال بريدك الإلكتروني">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">نوع القطعة <span style="color:red">*</span></label>
+                        <select class="form-select">
+                            <option value="">يرجى اختيار نوع القطعة</option>
+                            <option value="engine">قطع المحرك</option>
+                            <option value="chassis">قطع الشاسيه</option>
+                            <option value="electrical">قطع كهربائية</option>
+                            <option value="brake">نظام الفرامل</option>
+                            <option value="other">قطع أخرى</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">رقم OE</label>
+                        <input type="text" class="form-input" placeholder="أدخل رقم OE (إذا كان متاحاً)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">العلامة <span style="color:red">*</span></label>
+                        <select class="form-select">
+                            <option value="">يرجى اختيار العلامة</option>
+                            <option value="benz">Mercedes-Benz</option>
+                            <option value="bmw">BMW</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">نموذج السيارة</label>
+                        <input type="text" class="form-input" placeholder="يرجى إدخال نموذج السيارة">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">الكمية <span style="color:red">*</span></label>
+                        <input type="number" class="form-input" placeholder="يرجى إدخال الكمية" min="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">ملاحظات</label>
+                        <textarea class="form-textarea" placeholder="يرجى إدخال الملاحظات"></textarea>
+                    </div>
+                    
+                    <button type="button" class="submit-btn">إرسال طلب عرض السعر</button>
+                </form>
+                
+                <div class="quote-info">
+                    <h3>تعليمات العرض السعر</h3>
+                    <ul>
+                        <li>سيقوم فريق خدمة العملاء بالاتصال بك خلال 24 ساعة لتقديم عرض سعر مفصل</li>
+                        <li>يمكن الاستمتاع بخصومات أكبر عند الشراء بالجملة</li>
+                        <li>توفير ضمان الأصلي، تعويض بمبلغ 10 مرات عن المنتجات المزيفة</li>
+                        <li>دعم طرق دفع متعددة، آمنة ومريحة</li>
+                        <li>التوصيل في جميع أنحاء البلاد، التوصيل في نفس اليوم متاح في بعض المناطق</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- تحميل نص البرنامج النماذج -->
+    <script src="../../templates/load-templates.js"></script>
+</body>
+</html>

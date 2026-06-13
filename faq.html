@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常见问题 - 萨肯汽配</title>
+    <!-- Tailwind CSS -->
+    <script src="assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* 统一链接样式 */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* 常见问题内容 */
+        .faq-content {
+            padding: 40px 0;
+        }
+        
+        .faq-section {
+            margin-bottom: 40px;
+        }
+        
+        .faq-section h2 {
+            font-size: 24px;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .faq-list {
+            list-style: none;
+        }
+        
+        .faq-item {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: #333;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .faq-answer {
+            padding: 0 20px 20px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+        }
+        
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        
+        .faq-item.active .faq-question {
+            border-bottom: 1px solid #e0e0e0;
+            background-color: #f0f0f0;
+        }
+        
+        .faq-item.active .faq-question::after {
+            content: '▼';
+            transform: rotate(180deg);
+        }
+        
+        .faq-question::after {
+            content: '▼';
+            font-size: 12px;
+            color: #999;
+            transition: transform 0.3s ease;
+        }
+        
+        /* 联系我们 */
+        .contact-section {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        
+        .contact-section h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .contact-section p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .contact-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #0F4F9A;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .contact-button:hover {
+            background-color: #0C448A;
+        }
+        
+
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .container {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 992px) {
+        }
+        
+        @media (max-width: 768px) {
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">首页</a>
+            <span>></span>
+            <span>常见问题</span>
+        </div>
+    </div>
+    
+    <!-- 页面标题 -->
+    <div class="page-title">
+        <div class="container">
+            <h1>常见问题</h1>
+            <p>解答您可能遇到的问题，帮助您更好地了解萨肯汽配</p>
+        </div>
+    </div>
+    
+    <!-- 常见问题内容 -->
+    <div class="container faq-content">
+        <!-- 产品相关问题 -->
+        <div class="faq-section">
+            <h2>产品相关问题</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">如何选择适合我的车型的配件？</div>
+                    <div class="faq-answer">
+                        <p>您可以通过我们的车型查询系统，输入您的车型信息，系统会自动为您匹配适合的配件。您也可以联系我们的客服人员，提供您的车型信息，我们将为您提供专业的选型建议。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">萨肯汽配的产品质量如何？</div>
+                    <div class="faq-answer">
+                        <p>萨肯汽配的产品采用优质材料和先进工艺制造，严格按照原厂标准生产，确保与原车完美匹配。我们拥有完善的质量管理体系，通过了ISO9001质量管理体系认证，确保产品质量稳定可靠。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">产品保修期是多久？</div>
+                    <div class="faq-answer">
+                        <p>我们的产品保修期为12个月，从产品交付之日起计算。在保修期内，如产品出现质量问题，我们将免费为您更换或维修。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">如何辨别萨肯汽配的真伪？</div>
+                    <div class="faq-answer">
+                        <p>萨肯汽配的产品都有唯一的防伪标识，您可以通过我们的官方网站或客服热线查询产品的真伪。同时，我们建议您通过正规渠道购买萨肯汽配的产品，以确保产品的真实性。</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- 订单相关问题 -->
+        <div class="faq-section">
+            <h2>订单相关问题</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">如何下单购买产品？</div>
+                    <div class="faq-answer">
+                        <p>您可以通过我们的官方网站、电话或邮件下单购买产品。我们的客服人员会为您提供专业的产品咨询和下单服务。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">订单确认后可以修改吗？</div>
+                    <div class="faq-answer">
+                        <p>订单确认后，如需要修改订单信息，请在订单发货前联系我们的客服人员，我们将根据实际情况为您处理。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">如何查询订单状态？</div>
+                    <div class="faq-answer">
+                        <p>您可以通过我们的官方网站或客服热线查询订单状态。我们会及时更新订单的处理情况，确保您能够随时了解订单的进展。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">支持哪些支付方式？</div>
+                    <div class="faq-answer">
+                        <p>我们支持银行转账、支付宝、微信支付等多种支付方式。具体支付方式可以与我们的客服人员协商确定。</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- 物流相关问题 -->
+        <div class="faq-section">
+            <h2>物流相关问题</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">物流配送需要多长时间？</div>
+                    <div class="faq-answer">
+                        <p>根据您的地理位置，物流配送时间一般为1-7个工作日。我们会根据您的需求，选择最适合的物流方式，确保产品及时送达。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">如何查询物流信息？</div>
+                    <div class="faq-answer">
+                        <p>订单发货后，我们会通过邮件或短信向您发送物流单号，您可以通过物流单号在相应的物流公司网站上查询物流信息。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">物流费用如何计算？</div>
+                    <div class="faq-answer">
+                        <p>物流费用根据产品的重量、体积和配送地址计算。我们会为您提供合理的物流费用报价，确保物流成本透明。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">产品包装如何？</div>
+                    <div class="faq-answer">
+                        <p>我们的产品采用专业的包装材料，确保产品在运输过程中不受损坏。对于易碎品，我们会采取额外的保护措施。</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- 售后服务问题 -->
+        <div class="faq-section">
+            <h2>售后服务问题</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">如何申请售后服务？</div>
+                    <div class="faq-answer">
+                        <p>您可以通过电话、邮件或在线客服申请售后服务。在申请时，请提供您的订单号、产品信息和问题描述，我们的客服人员将及时为您处理。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">售后服务流程是怎样的？</div>
+                    <div class="faq-answer">
+                        <p>售后服务流程包括：问题提交、问题评估、解决方案制定、服务实施和售后跟进。我们会全程跟踪服务过程，确保问题得到及时解决。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">产品出现质量问题如何处理？</div>
+                    <div class="faq-answer">
+                        <p>如产品出现质量问题，请及时联系我们的客服人员。我们会根据实际情况为您提供维修、更换或退款服务，确保您的权益得到保障。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">售后服务时间是多久？</div>
+                    <div class="faq-answer">
+                        <p>我们的售后服务时间为工作日9:00-18:00。对于紧急问题，我们会在24小时内响应并处理。</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- 其他问题 -->
+        <div class="faq-section">
+            <h2>其他问题</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">如何成为萨肯汽配的经销商？</div>
+                    <div class="faq-answer">
+                        <p>如果您有兴趣成为萨肯汽配的经销商，请联系我们的销售团队，提供您的公司信息和业务需求，我们将为您提供详细的合作方案。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">萨肯汽配的企业文化是什么？</div>
+                    <div class="faq-answer">
+                        <p>萨肯汽配的企业文化是：诚信、创新、专业、服务。我们致力于为客户提供高品质的产品和优质的服务，打造成为行业领先的汽车配件供应商。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">如何联系萨肯汽配？</div>
+                    <div class="faq-answer">
+                        <p>您可以通过以下方式联系我们：电话：400 626 0128，邮箱：shakoln@163.com，地址：北京市朝阳区小红门 69 号。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">萨肯汽配的发展历程是怎样的？</div>
+                    <div class="faq-answer">
+                        <p>萨肯汽配成立于2010年，经过多年的发展，已成为专业的奔驰宝马配件供应商。公司拥有现代化的工厂和专业的团队，产品远销国内外市场。</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- 联系我们 -->
+    <div class="contact-section">
+        <div class="container">
+            <h2>还有其他问题？</h2>
+            <p>如果您有任何其他问题，欢迎随时联系我们的客服人员</p>
+            <a href="contact.html" class="contact-button">联系我们</a>
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+    
+    <script>
+        // FAQ 折叠功能
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+    </script>
+    
+    <!-- 加载模板脚本 -->
+    <script src="templates/load-templates.js"></script>
+</body>
+</html>

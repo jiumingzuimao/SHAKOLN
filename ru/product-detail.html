@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали продукта - SHAKOLN Автозапчасти</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb a {
+            color: #0F4F9A;
+            text-decoration: none;
+        }
+        
+        .breadcrumb span {
+            color: #666;
+            margin: 0 10px;
+        }
+        
+        /* 产品详情 */
+        .product-detail {
+            padding: 40px 0;
+        }
+        
+        .product-content {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        
+        /* 产品图片 */
+        .product-images {
+            background-color: white;
+            padding: 37.5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-image {
+            width: 100%;
+            max-width: 625px;
+            height: 500px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* 缩略图容器 - 左对齐 */
+        .thumbnail-container {
+            display: flex;
+            gap: 12.5px;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+        
+        /* 缩略图样式 */
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .thumbnail:hover {
+            border-color: #0F4F9A;
+        }
+        
+        .thumbnail.active {
+            border-color: #0F4F9A;
+            box-shadow: 0 0 0 2px rgba(15, 79, 154, 0.3);
+        }
+        
+        /* 图片放大模态框 */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .lightbox.show {
+            display: flex;
+        }
+        
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 10000;
+        }
+        
+        .lightbox-close:hover {
+            color: #FF6C00;
+        }
+        
+        /* 可点击的主图样式 */
+        .main-image {
+            cursor: zoom-in;
+            transition: transform 0.3s;
+        }
+        
+        .main-image:hover {
+            transform: scale(1.02);
+        }
+        
+        /* 产品信息 */
+        .product-info {
+            background-color: white;
+            padding: 37.5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .product-info h1 {
+            color: #0F4F9A;
+            margin-bottom: 25px;
+            font-size: 30px;
+        }
+        
+        .product-details {
+            margin-bottom: 37.5px;
+            flex-grow: 1;
+        }
+        
+        .detail-item {
+            display: flex;
+            margin-bottom: 18.75px;
+        }
+        
+        .detail-item label {
+            width: 150px;
+            font-weight: bold;
+            color: #666;
+            font-size: 17.5px;
+        }
+        
+        .detail-item span {
+            font-size: 17.5px;
+        }
+        
+        .product-actions {
+            margin-top: 50px;
+        }
+        
+        .btn {
+            padding: 15px 37.5px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 17.5px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: block;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background-color: #0F4F9A;
+            color: white;
+        }
+        
+        /* 产品描述 */
+        .product-description {
+            margin-top: 50px;
+            background-color: white;
+            padding: 37.5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            grid-column: 1 / -1;
+        }
+        
+        .product-description h3 {
+            color: #0F4F9A;
+            margin-bottom: 25px;
+            font-size: 25px;
+        }
+        
+        .product-description p {
+            font-size: 17.5px;
+        }
+        
+        .product-description p {
+            line-height: 1.8;
+            color: #666;
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- 图片放大模态框 -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightboxImage" src="" alt="Увеличить изображение">
+    </div>
+    
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="index.html">Главная</a>
+            <span>&gt;</span>
+            <span>Детали продукта</span>
+        </div>
+    </div>
+    
+    <!-- 产品详情 -->
+    <div class="product-detail">
+        <div class="container">
+            <div class="product-content" id="productContent">
+                <!-- 产品将在这里渲染 -->
+                <div style="grid-column: 1 / -1; text-align: center; padding: 100px;">
+                    <div style="font-size: 24px; margin-bottom: 20px;">Загрузка...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+
+    <script>
+        // 对URL进行编码
+        function encodePath(path) {
+            if (!path) return path;
+            var parts = path.split('/');
+            var encodedParts = [];
+            for (var i = 0; i < parts.length; i++) {
+                encodedParts.push(encodeURIComponent(parts[i]));
+            }
+            return encodedParts.join('/');
+        }
+        
+        // 读取URL参数
+        function getURLParam(name) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+        
+        // 产品图片基础URL（从Gitee仓库读取图片，不传到GitHub）
+        const PRODUCT_IMAGE_BASE_URL = 'https://gitee.com/shakoln_0/sakon-website/raw/master/';
+
+        // 获取路径前缀 - 遍历查找语言部分位置（兼容 GitHub Pages 子路径部署）
+        function getImagePathPrefix() {
+            var pathParts = window.location.pathname.split('/');
+            for (var i = 0; i < pathParts.length; i++) {
+                if (pathParts[i] === 'en' || pathParts[i] === 'ru' || pathParts[i] === 'ar') {
+                    return '../';
+                }
+            }
+            return '';
+        }
+
+        // 默认图片
+        var defaultImages = [
+            'img/chexing/benchiCji.jpg',
+            'img/chexing/BMW3xi.jpg',
+            'img/chexing/benchiEji.jpg',
+            'img/chexing/benchiSji.jpg',
+            'img/chexing/BMW5xi.jpg'
+        ];
+
+        // 当前显示的图片索引
+        window.currentImageIndex = 0;
+
+        // 渲染产品
+        function renderProduct(product) {
+            var container = document.getElementById('productContent');
+            if (!container) return;
+
+            // 获取路径前缀
+            var pathPrefix = getImagePathPrefix();
+
+            // 获取分类信息
+            var categoryText = product.category || '';
+            var productKey = product.code || product.oe;
+            if (window.categoryStructureMap && window.categoryStructureMap[productKey]) {
+                var catInfo = window.categoryStructureMap[productKey];
+                categoryText = (catInfo.system || product.category);
+            }
+
+            // 获取所有产品图片（从Gitee仓库读取）
+            var productImages = [];
+            if (product.image) {
+                // 如果是相对路径（fenlei-chanp-jpg/...），用Gitee URL；否则保持原样
+                var imgUrl = product.image;
+                if (imgUrl.startsWith('fenlei-chanp-jpg/') || !imgUrl.startsWith('http')) {
+                    imgUrl = PRODUCT_IMAGE_BASE_URL + imgUrl;
+                }
+                productImages.push(imgUrl);
+            }
+            if (window.productImageMap && window.productImageMap[productKey]) {
+                var imagesFromMap = window.productImageMap[productKey].slice(0, 5).map(function(img) {
+                    return PRODUCT_IMAGE_BASE_URL + img;
+                });
+                productImages = productImages.concat(imagesFromMap).slice(0, 5);
+            }
+            // 如果不够5张，用默认图片补充
+            while (productImages.length < 5) {
+                productImages.push(pathPrefix + defaultImages[productImages.length % defaultImages.length]);
+            }
+            
+            container.innerHTML = '<div class="product-images">' +
+                '<img class="main-image" id="mainProductImage" src="' + productImages[0] + '" alt="' + product.name + '" onclick="openLightbox()" onerror="this.src=\'' + pathPrefix + defaultImages[0] + '\'">' +
+                '<div class="thumbnail-container">' +
+                productImages.map(function(img, idx) {
+                    return '<img class="thumbnail' + (idx === 0 ? ' active' : '') + '" src="' + img + '" onclick="changeMainImage(' + idx + ')" onerror="this.src=\'' + pathPrefix + defaultImages[0] + '\'">';
+                }).join('') +
+                '</div>' +
+                '</div>' +
+                '<div class="product-info">' +
+                '<h1>' + product.name + '</h1>' +
+                '<div class="product-details">' +
+                '<div class="detail-item"><label>Номер ОЕ:</label><span>' + (product.code || product.oe || '') + '</span></div>' +
+                '<div class="detail-item"><label>Название запчасти:</label><span>' + product.name + '</span></div>' +
+                '<div class="detail-item"><label>Бренд:</label><span>' + (product.brand || 'SHAKOLN') + '</span></div>' +
+                '<div class="detail-item"><label>Модель автомобиля:</label><span>' + (product.model || product.series || '') + '</span></div>' +
+                '<div class="detail-item"><label>Категория:</label><span>' + categoryText + '</span></div>' +
+                '<div class="detail-item"><label>Наличие:</label><span>' + (product.stock || 'В наличии') + '</span></div>' +
+                '</div>' +
+                '<div class="product-actions">' +
+                '<a href="quote.html" class="btn btn-primary">Запросить цену</a>' +
+                '</div>' +
+                '</div>' +
+                '<div class="product-description">' +
+                '<h3>Описание товара</h3>' +
+                '<p>' + (product.description || 'Этот товар - высококачественная автозапчасть от SHAKOLN, изготовленная из качественных материалов, с отличными характеристиками и длительным сроком службы, гарантирующая нормальную работу вашего автомобиля.') + '</p>' +
+                '</div>';
+            
+            // 保存图片列表供切换使用
+            window.currentProductImages = productImages;
+        }
+        
+        // 切换主图
+        function changeMainImage(index) {
+            var mainImage = document.getElementById('mainProductImage');
+            var thumbnails = document.querySelectorAll('.thumbnail');
+            
+            if (mainImage && window.currentProductImages && window.currentProductImages[index]) {
+                mainImage.src = window.currentProductImages[index];
+                
+                // 更新缩略图选中状态
+                thumbnails.forEach(function(thumb, idx) {
+                    if (idx === index) {
+                        thumb.classList.add('active');
+                    } else {
+                        thumb.classList.remove('active');
+                    }
+                });
+            }
+        }
+        
+        // 打开lightbox
+        function openLightbox() {
+            var lightbox = document.getElementById('lightbox');
+            var lightboxImage = document.getElementById('lightboxImage');
+            var mainImage = document.getElementById('mainProductImage');
+            
+            if (lightbox && lightboxImage && mainImage) {
+                lightboxImage.src = mainImage.src;
+                lightbox.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        // 关闭lightbox
+        function closeLightbox() {
+            var lightbox = document.getElementById('lightbox');
+            
+            if (lightbox) {
+                lightbox.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // 键盘ESC键关闭lightbox
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+        
+        // 加载产品数据
+        function loadProduct() {
+            var oe = getURLParam('oe') || getURLParam('code');
+            if (!oe) {
+                showError('Неверный параметр, пожалуйста, предоставьте действительный номер ОЕ');
+                return;
+            }
+
+            console.log('Ищем товар, номер ОЕ:', oe);
+
+            // 先加载分类结构
+            fetch('./category-structure.json')
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(categoryData) {
+                    window.categoryStructureMap = categoryData.product_map || categoryData.productMap || {};
+
+                    // 再加载产品图片映射
+                    return fetch('./product-images.json');
+                })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(imageMap) {
+                    window.productImageMap = imageMap;
+
+                    // 再从 product-data.json 查找产品
+                    return fetch('./product-data.json');
+                })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    var product = null;
+                    // 从 products 数组中查找
+                    if (data.products && data.products.length > 0) {
+                        for (var i = 0; i < data.products.length; i++) {
+                            if (data.products[i].code === oe || data.products[i].oe === oe) {
+                                product = data.products[i];
+                                break;
+                            }
+                        }
+                    }
+
+                    if (product) {
+                        console.log('Товар найден:', product);
+                        renderProduct(product);
+                    } else {
+                        // 如果没找到，尝试从 hot_products 或 home_products 查找
+                        tryFindFromOtherSources(oe);
+                    }
+                })
+                .catch(function(err) {
+                    console.error('Не удалось загрузить данные товара:', err);
+                    tryFindFromOtherSources(oe);
+                });
+        }
+        
+        // 从其他数据源查找
+        function tryFindFromOtherSources(oe) {
+            console.log('Попробуем искать из других источников...');
+
+            // 先加载分类结构（如果还没有）
+            var loadCategoryMapPromise = Promise.resolve(window.categoryStructureMap);
+            if (!window.categoryStructureMap) {
+                loadCategoryMapPromise = fetch('./category-structure.json')
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(categoryData) {
+                        window.categoryStructureMap = categoryData.product_map || categoryData.productMap || {};
+                        return window.categoryStructureMap;
+                    });
+            }
+
+            // 再加载产品图片映射（如果还没有）
+            var loadImageMapPromise = loadCategoryMapPromise.then(function() {
+                if (!window.productImageMap) {
+                    return fetch('./product-images.json')
+                        .then(function(response) {
+                            return response.json();
+                        })
+                        .then(function(imageMap) {
+                            window.productImageMap = imageMap;
+                            return imageMap;
+                        });
+                }
+                return Promise.resolve(window.productImageMap);
+            });
+
+            loadImageMapPromise.then(function() {
+                // 尝试从 hot_products 查找
+                return fetch('./data/hot_products.json');
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(products) {
+                var product = null;
+                for (var i = 0; i < products.length; i++) {
+                    if (products[i].oe === oe || products[i].code === oe) {
+                        product = products[i];
+                        break;
+                    }
+                }
+
+                if (product) {
+                    console.log('Товар найден из горячих предложений:', product);
+                    // 如果产品没有图片，尝试从 product-images.json 查找
+                    var productKey = product.code || product.oe;
+                    if (!product.image && window.productImageMap && window.productImageMap[productKey]) {
+                        product.image = window.productImageMap[productKey][0];
+                    }
+                    renderProduct(product);
+                } else {
+                    // 从 home_products 查找
+                    return fetch('./data/home_products.json');
+                }
+            })
+            .then(function(response) {
+                if (response) return response.json();
+            })
+            .then(function(products) {
+                if (products) {
+                    var product = null;
+                    for (var i = 0; i < products.length; i++) {
+                        if (products[i].oe === oe || products[i].code === oe) {
+                            product = products[i];
+                            break;
+                        }
+                    }
+
+                    if (product) {
+                        console.log('Товар найден из центра товаров:', product);
+                        // 如果产品没有图片，尝试从 product-images.json 查找
+                        var productKey = product.code || product.oe;
+                        if (!product.image && window.productImageMap && window.productImageMap[productKey]) {
+                            product.image = window.productImageMap[productKey][0];
+                        }
+                        renderProduct(product);
+                    } else {
+                        showError('Товар не существует');
+                    }
+                }
+            })
+            .catch(function(err) {
+                console.error('Ошибка при поиске:', err);
+                showError('Ошибка загрузки');
+            });
+        }
+        
+        // 显示错误
+        function showError(msg) {
+            var container = document.getElementById('productContent');
+            if (container) {
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 100px;">' +
+                    '<div style="font-size: 24px; margin-bottom: 20px; color: #666;">' + msg + '</div>' +
+                    '<p style="margin-bottom: 30px; color: #999;">Извините, запрошенный вами товар не существует или снят с продажи</p>' +
+                    '<a href="index.html" style="padding: 10px 20px; background-color: #0F4F9A; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">Вернуться на главную</a>' +
+                    '</div>';
+            }
+        }
+        
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM готов, начинаем загружать детали товара');
+            loadProduct();
+        });
+        
+        // 如果DOM已经加载，立即执行
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            loadProduct();
+        }
+    </script>
+    
+    <!-- 加载模板脚本 -->
+    <script src="templates/load-templates.js"></script>
+</body>
+</html>

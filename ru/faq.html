@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - SHAKOLN Auto Parts</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* Unified link style */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* страницаpage title */
+        .page-title {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* FAQContent */
+        .faq-content {
+            padding: 40px 0;
+        }
+        
+        .faq-section {
+            margin-bottom: 40px;
+        }
+        
+        .faq-section h2 {
+            font-size: 24px;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .faq-list {
+            list-style: none;
+        }
+        
+        .faq-item {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: #333;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .faq-answer {
+            padding: 0 20px 20px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+        }
+        
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        
+        .faq-item.active .faq-question {
+            border-bottom: 1px solid #e0e0e0;
+            background-color: #f0f0f0;
+        }
+        
+        .faq-item.active .faq-question::after {
+            content: '▼';
+            transform: rotate(180deg);
+        }
+        
+        .faq-question::after {
+            content: '▼';
+            font-size: 12px;
+            color: #999;
+            transition: transform 0.3s ease;
+        }
+        
+        /* Контакты */
+        .contact-section {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        
+        .contact-section h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .contact-section p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .contact-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #0F4F9A;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .contact-button:hover {
+            background-color: #0C448A;
+        }
+        
+
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 992px) {
+        }
+        
+        @media (max-width: 768px) {
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">Главная</a>
+            <span>></span>
+            <span>FAQ</span>
+        </div>
+    </div>
+    
+    <!-- страницаpage title -->
+    <div class="page-title">
+        <div class="container">
+            <h1>FAQ</h1>
+            <p>Answer questions you may have，Help you better understandSHAKOLN Auto Parts</p>
+        </div>
+    </div>
+    
+    <!-- FAQContent -->
+    <div class="container faq-content">
+        <!-- Товарrelated questions -->
+        <div class="faq-section">
+            <h2>Товарrelated questions</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">IfHow to choose suitable for meofvehicle modelofPartsшт？</div>
+                    <div class="faq-answer">
+                        <p>You can through usofМодели автоSystem，Enter your vehicle model information，System will automatically match suitablePartsшт。You can alsoКонтактыcustomer service team，Provide your vehicle model information，We will provide you with professional selection advice。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">SHAKOLN Auto PartsofТоварHow is the quality？</div>
+                    <div class="faq-answer">
+                        <p>SHAKOLN Auto PartsofТоварManufactured with high-quality materials and advanced processes，strictly manufactured according to original factory standards，Ensure perfect matching with original vehicle。We have a comprehensive quality management system，obtained ISO9001 quality management system certification，EnsureТоварQuality is stable and reliable。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">ТоварHow long is the warranty period？</div>
+                    <div class="faq-answer">
+                        <p>WeofТоварWarranty period is12ШтукMonth，FromТоварCalculated from the date of delivery。Within the warranty period，IfТоварquality issues appear，We will replace or repair it for you free of charge。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">How to identifySHAKOLN Auto Partsauthenticity？</div>
+                    <div class="faq-answer">
+                        <p>SHAKOLN Auto PartsofТоварAll have unique anti-counterfeiting labels，You can use our official website or customer service hotlineПоискТоварauthenticity。At the same time，We recommend purchasing through authorized channelsSHAKOLN Auto PartsofТовар，to ensureТоварauthenticity。</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Order related questions -->
+        <div class="faq-section">
+            <h2>Order related questions</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">IfWhatPlace an order to purchaseТовар？</div>
+                    <div class="faq-answer">
+                        <p>You can through usofofficial website、Phone or emailштPlace an order to purchaseТовар。Wecustomer service teamwill provide youProfessionalofТоварconsultation and ordering services。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">Can the order be modified after confirmation?</div>
+                    <div class="faq-answer">
+                        <p>After order confirmation，If order information needs modification，Please before order shipmentКонтактыcustomer service team，We will handle it for you based on the actual situation。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">IfWhatПоискOrderСтатус？</div>
+                    <div class="faq-answer">
+                        <p>You can use our official website or customer service hotlineПоискOrderСтатус。We will update order processing in a timely manner，Ensure you can track order progress anytime。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">What payment methods are supported?</div>
+                    <div class="faq-answer">
+                        <p>We support multiple payment methods such as bank transfer, Alipay, WeChat Pay。Specific payment methods can be discussed with ourcustomer service teamdiscussОК。</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Logistics related questions -->
+        <div class="faq-section">
+            <h2>Logistics related questions</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">ДоставкаHow long does it take？</div>
+                    <div class="faq-answer">
+                        <p>According to your location，ДоставкаTime is generally1-7ШтукWorking days。We will according to your needs，Choose the most suitable logistics method，EnsureТоварtimely delivery。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">IfWhatПоискLogistics information？</div>
+                    <div class="faq-answer">
+                        <p>After order shipment，We will via mailштor SMS to send you a logisticsNumber，You can contact us throughlogistics trackingNumberon the correspondingoflogistics company websiteПоискLogistics information。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">How is logistics cost calculated?</div>
+                    <div class="faq-answer">
+                        <p>Logistics cost according toТоварweight、Volume and delivery address。We will provide you with a reasonable logistics cost quotation，Ensure transparent logistics cost。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">ТоварHow about packaging？</div>
+                    <div class="faq-answer">
+                        <p>WeofТоварUse professional packaging materials，EnsureТоварnot damaged during transportation。For fragile items，We will take additional protective measures。</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- After-sales service questions -->
+        <div class="faq-section">
+            <h2>After-sales service questions</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">How to apply for after-sales service?</div>
+                    <div class="faq-answer">
+                        <p>You can contact us throughPhone、Mailштor online customer service forPleaseafter-salesService。When applying，Please provide your order number、Информация о продуктахand problem description，Our customer service team will handle it for you promptly。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">What is the after-sales service process like?</div>
+                    <div class="faq-answer">
+                        <p>The after-sales service process includes：problem submission, problem assessment, solution formulation, service implementation and after-sales follow-up。We will track the entire service process，Ensure problems are resolved promptly。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">ТоварHow to handle quality issues？</div>
+                    <div class="faq-answer">
+                        <p>IfТоварquality issues appear，Please promptlyКонтактыcustomer service team。We will provide you with repair, replacement or refund services based on the actual situation，Ensure your rights and interests are protected。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">What are the after-sales service hours?</div>
+                    <div class="faq-answer">
+                        <p>Our after-sales service hours are 9:00-18:00 on working days。For urgent issues，We will respond and handle within 24 hours。</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Other questions -->
+        <div class="faq-section">
+            <h2>Other questions</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">How to becomeSHAKOLN Auto Partsdealer？</div>
+                    <div class="faq-answer">
+                        <p>If you are interested in becomingSHAKOLN Auto Partsdealer，PleaseКонтактыsales team，Provide yourofИнформацияand business needs，We will provide you with a detailed cooperation plan。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">SHAKOLN Auto PartsofКорпоративная культураWhat is？</div>
+                    <div class="faq-answer">
+                        <p>SHAKOLN Auto PartsofКорпоративная культураis：Integrity、Innovation、Professional、Service。We are committed to providing customers with high-qualityofТоварand quality service，to become an industry-leadingofautoPartsштSupplier。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">How to contactSHAKOLN Auto Parts？</div>
+                    <div class="faq-answer">
+                        <p>You can contact us through the following waysКонтакты：Phone: 400 626 0128，Email: shakoln@163.com，Address: No. 69, Xiaohongmen, Chaoyang District, Beijing。</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">SHAKOLN Auto PartsofИсторияwhat is it likeof？</div>
+                    <div class="faq-answer">
+                        <p>SHAKOLN Auto PartsEstablished in2010Year，After years of development，has become a professionalMercedes-BenzBMWPartsштSupplier。The company has a modern factory and professional team，ТоварSold to both domestic and foreign markets。</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Контакты -->
+    <div class="contact-section">
+        <div class="container">
+            <h2>Any other questions?</h2>
+            <p>If you have any other questions，Welcome at any timeКонтактыcustomer service team</p>
+            <a href="contact.html" class="contact-button">Контакты</a>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <script>
+        // FAQ Collapsible Function
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+    </script>
+    
+    <!-- Загрузить скрипт шаблонов -->
+    <script src="../../templates/load-templates.js"></script>
+</body>
+</html>

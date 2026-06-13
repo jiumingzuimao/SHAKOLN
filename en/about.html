@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Saken Auto Parts</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* Unified Link Style */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* PagePage Title */
+        .page-title {
+            background-color: white;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            color: #0F4F9A;
+        }
+        
+        /* Company Profile */
+        .company-intro {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .company-intro h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .intro-content {
+            line-height: 1.6;
+        }
+        
+        .intro-content p {
+            margin-bottom: 20px;
+        }
+        
+        /* History */
+        .development-history {
+            padding: 60px 0;
+            background-color: #f5f7fa;
+            margin-bottom: 40px;
+        }
+        
+        .development-history h2 {
+            color: #0F4F9A;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background-color: #0F4F9A;
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background-color: #FF6C00;
+            border-radius: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .timeline-content {
+            position: relative;
+            width: 45%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            left: 55%;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: #0F4F9A;
+            margin-bottom: 10px;
+        }
+        
+        /* Enterprise Mission, Vision and Values */
+        .mission-vision {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .mission-vision h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .mv-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .mv-item {
+            text-align: center;
+            padding: 30px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+        }
+        
+        .mv-item h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+
+        
+        /* Honors */
+        .honors-certifications {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .honors-certifications h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .honors-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .honor-item {
+            text-align: center;
+        }
+        
+        .honor-image {
+            width: 100%;
+            height: 180px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            object-fit: contain;
+            background-color: #f5f7fa;
+        }
+        
+
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">Home</a>
+            <span>></span>
+            <span>About Us</span>
+        </div>
+    </div>
+    
+    <!-- Company Profile -->
+    <div class="container company-intro">
+        <h2>Company Profile</h2>
+        <div class="intro-content">
+            <p>　　Committed to safety、Reliable、High-quality partspcs，In the process of development，Our company continues to innovate，Established long-term and stable relationships with many well-known enterprises at home and abroadofCooperative relationships，Business scale and market influence continue to expand。We know that customers are the cornerstone of enterprise development，Always take customer needs as the guide，Continuously improveProductsQuality and service levels。</p>
+            <p>　　Future，Beijing Yunfu Automobile Trade Co., Ltd.Will continue to uphold"Honest Operation，Quality First"concept，Strive to improveBrandValue，Expand market territory，Provide customers with more high-quality auto partspcsand professional services，Strive to become a leading auto partspcsIndustry leaderBrand。</p>
+            <p>　　Beijing Yunfu Automobile Trade Co., Ltd.Established in2013year9month6day，Located in the capital of China——Beijing City。Since its establishment，The company is always committed to providing high-quality auto partspcs，Business scope covers major auto parts markets in China。The company currently has50professional and experienced staff members，Committed to providing customers with high-qualityProductsand excellent services。</p>
+            <p>　　We have our ownBrand——SakenSHAKOLN，Focus on R&D and sales of high-performance auto partspcs。OurProductsRich in variety，Covering engine partspcs、Brake System、Suspension systems and morePieceCategory，Meet the diverse needs of different customers。We always adhere to the principle of quality first，Strictly ControlProductsofProcess，Ensure everyproductsAll meet international standards。</p>
+        </div>
+    </div>
+    
+    <!-- History -->
+    <div class="development-history">
+        <div class="container">
+            <h2>History</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2015year</div>
+                        <h3>Company established</h3>
+                        <p>2015Beijing Yunfu established on August 6</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2017year</div>
+                        <h3>First self-owned store</h3>
+                        <p>FirstSaken（SHAKOLN）Self-ownedBrandStore（BeijingSakenStore）<br>2017year9month6day</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2018year</div>
+                        <h3>Second self-owned store</h3>
+                        <p>SecondSaken（SHAKOLN）Self-ownedBrandStore（HangzhouSakenStore）<br>2018year2month21day</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2019year</div>
+                        <h3>Third self-owned store</h3>
+                        <p>ThirdSaken（SHAKOLN）Self-ownedBrandStore（ChengduSakenStore）<br>2019year5month6day</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2020year</div>
+                        <h3>Fourth self-owned store</h3>
+                        <p>FourthSaken（SHAKOLN）Self-ownedBrandStore（XiangheSakenStore）<br>2020year6month6day</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2021year</div>
+                        <h3>Fifth self-owned store</h3>
+                        <p>FifthSaken（SHAKOLN）Self-ownedBrandStore（JinanSakenStore）<br>2021year8month7day</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2022year</div>
+                        <h3>Sixth self-owned store</h3>
+                        <p>SixthSaken（SHAKOLN）Self-ownedBrandStore（GuangzhouSakenStore）<br>2022year5month24day</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2023year</div>
+                        <h3>Seventh self-owned store</h3>
+                        <p>SeventhSaken（SHAKOLN）Self-ownedBrandStore（ChangshanSakenStore）<br>2023year3month21day</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024year</div>
+                        <h3>Eighth self-owned store</h3>
+                        <p>EighthSaken（SHAKOLN）Self-ownedBrandStore（ChongqingSakenStore）<br>2024year4month16day</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Enterprise Mission, Vision and Values -->
+    <div class="container mission-vision">
+        <h2>Enterprise Mission / Vision / Values</h2>
+        <div class="mv-grid">
+            <div class="mv-item">
+                <h3>Enterprise Mission</h3>
+                <p>Provide customers with high-quality autoPartsand professional services，Promote the healthy development of the automotive aftermarket</p>
+            </div>
+            <div class="mv-item">
+                <h3>Enterprise Vision</h3>
+                <p>Become a leading in ChinaMercedes-Benz/BMWAutoPartsSupplier，Build a well-known brand in the industryBrand</p>
+            </div>
+            <div class="mv-item">
+                <h3>Core Values</h3>
+                <p>Quality First, Customer First, Honest Operation, Innovation and Development</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Honors -->
+    <div class="container honors-certifications">
+        <h2>Honors</h2>
+        <div class="honors-grid">
+            <div class="honor-item">
+                <img src="../img/qiyezizhi/tu1.png" alt="Key Credit CertificationBrand" class="honor-image">
+                <p>Key Credit CertificationBrand</p>
+            </div>
+            <div class="honor-item">
+                <img src="../img/qiyezizhi/tu2.png" alt="Member of China Automobile Maintenance Industry Association" class="honor-image">
+                <p>Member of China Automobile Maintenance Industry Association</p>
+            </div>
+            <div class="honor-item">
+                <img src="../img/qiyezizhi/tu3.png" alt="Key Credit CertificationBrand" class="honor-image">
+                <p>Key Credit CertificationBrand</p>
+            </div>
+            <div class="honor-item">
+                <img src="../img/qiyezizhi/tu4.png" alt="Member of China Automobile Maintenance Industry Association" class="honor-image">
+                <p>Member of China Automobile Maintenance Industry Association</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Load template script -->
+    <script src="../../templates/load-templates.js"></script>
+</body>
+</html>

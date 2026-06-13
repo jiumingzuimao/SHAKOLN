@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>质量控制 - 萨肯汽配</title>
+    <!-- Tailwind CSS -->
+    <script src="assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 0;
+        }
+        
+        .top-nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .top-nav-left {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .top-nav-left a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .language-selector a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .language-selector a.active {
+            color: #0F4F9A;
+            font-weight: bold;
+        }
+        
+        .phone-number {
+            color: #0F4F9A;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        /* 主导航栏 */
+        .main-nav {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px 0;
+        }
+        
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            flex: 1;
+        }
+        
+        .logo img {
+            height: 60px;
+        }
+        
+        .nav-menu {
+            flex: 3;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+        
+        .nav-menu a {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .nav-menu a:hover {
+            color: #0F4F9A;
+        }
+        
+        .nav-menu a.active {
+            color: #0F4F9A;
+        }
+        
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #0F4F9A;
+        }
+        
+        .quick-functions {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 20px;
+        }
+        
+        .quick-functions a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background-color: #0F4F9A;
+            color: white;
+            padding: 15px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        nav ul li:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        nav ul li:hover a {
+            color: white;
+        }
+        
+        nav ul li a:active {
+            color: white;
+        }
+        
+        .wechat-btn {
+            background-color: #FF6C00;
+            border: none;
+            padding: 8px 16px;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* 快捷功能栏 */
+        .quick-functions {
+            background-color: white;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .functions-list {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .function-item {
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .function-item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .function-item a {
+            display: inline-block;
+            padding: 15px 25px;
+            text-decoration: none;
+            color: #333;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 0;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+        
+        .function-item a:hover {
+            background-color: #0F4F9A;
+            color: white;
+            border-color: #0F4F9A;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* 质量控制概述 */
+        .quality-overview {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .section-content {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .section-text {
+            flex: 1;
+        }
+        
+        .section-text h2 {
+            font-size: 24px;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+        }
+        
+        .section-text p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .section-image {
+            flex: 1;
+        }
+        
+        .section-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* 质量检测设备 */
+        .quality-equipment {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .section-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .equipment-item {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .equipment-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .equipment-item img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+        
+        .equipment-item h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .equipment-item p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 质量控制流程 */
+        .quality-process {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #e0e0e0;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        
+        .process-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .process-step .step-number {
+            width: 50px;
+            height: 50px;
+            background-color: #0F4F9A;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+        
+        .process-step h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .process-step p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 质量认证 */
+        .quality-certifications {
+            padding: 60px 0;
+        }
+        
+        .certifications-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        
+        .certification-item {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .certification-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .certification-item img {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+        }
+        
+        .certification-item h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .certification-item p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* 质量承诺 */
+        .quality-commitment {
+            padding: 60px 0;
+            background-color: #0F4F9A;
+            color: white;
+        }
+        
+        .commitment-content {
+            text-align: center;
+        }
+        
+        .commitment-content h2 {
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+        
+        .commitment-items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .commitment-item {
+            text-align: center;
+        }
+        
+        .commitment-item h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .commitment-item p {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        /* 页脚 */
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 60px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+        
+        .footer-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #0F4F9A;
+        }
+        
+        .footer-section p {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .footer-section a:hover {
+            color: #0F4F9A;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid #444;
+            margin-top: 40px;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #ccc;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .container {
+                width: 90%;
+            }
+            
+            .nav-menu {
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .section-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .equipment-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .certifications-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .commitment-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-nav-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .quick-functions {
+                justify-content: center;
+            }
+            
+            .process-steps {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .process-steps::before {
+                display: none;
+            }
+            
+            .equipment-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .certifications-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">首页</a>
+            <span>></span>
+            <a href="factory.html">工厂</a>
+            <span>></span>
+            <span>质量控制</span>
+        </div>
+    </div>
+    
+    <!-- 页面标题 -->
+    <div class="page-title">
+        <div class="container">
+            <h1>质量控制</h1>
+            <p>严格的质量控制体系，确保每一个配件的品质</p>
+        </div>
+    </div>
+    
+    <!-- 质量控制概述 -->
+    <div class="quality-overview">
+        <div class="container section-content">
+            <div class="section-text">
+                <h2>质量控制概述</h2>
+                <p>萨肯汽配始终将产品质量放在首位，建立了完善的质量管理体系。从原材料采购到成品出厂，每一个环节都严格把控，确保为客户提供高品质的奔驰宝马配件。</p>
+                <p>我们拥有先进的检测设备和专业的质量控制团队，实施全流程质量监控，确保每一个产品都符合国际标准和客户要求。</p>
+                <p>通过ISO9001质量管理体系认证，我们的质量控制流程已达到国际先进水平，为客户提供可靠的产品质量保障。</p>
+            </div>
+            <div class="section-image">
+                <img src="img/quality-control.jpg" alt="质量控制">
+            </div>
+        </div>
+    </div>
+    
+    <!-- 质量检测设备 -->
+    <div class="quality-equipment">
+        <div class="container">
+            <div class="section-title">
+                <h2>质量检测设备</h2>
+                <p>先进的检测设备，确保产品质量</p>
+            </div>
+            <div class="equipment-grid">
+                <div class="equipment-item">
+                    <img src="img/equipment-measuring.jpg" alt="精密测量仪器">
+                    <h3>精密测量仪器</h3>
+                    <p>用于测量配件的尺寸、精度和表面质量，确保产品符合设计要求。</p>
+                </div>
+                <div class="equipment-item">
+                    <img src="img/equipment-material.jpg" alt="材料测试设备">
+                    <h3>材料测试设备</h3>
+                    <p>检测原材料的成分、强度和耐用性，确保使用优质材料。</p>
+                </div>
+                <div class="equipment-item">
+                    <img src="img/equipment-fatigue.jpg" alt="疲劳测试设备">
+                    <h3>疲劳测试设备</h3>
+                    <p>模拟配件在实际使用中的受力情况，测试其耐用性和可靠性。</p>
+                </div>
+                <div class="equipment-item">
+                    <img src="img/equipment-surface.jpg" alt="表面光洁度测试仪">
+                    <h3>表面光洁度测试仪</h3>
+                    <p>检测配件表面的光洁度和粗糙度，确保产品外观质量。</p>
+                </div>
+                <div class="equipment-item">
+                    <img src="img/equipment-hardness.jpg" alt="硬度测试仪">
+                    <h3>硬度测试仪</h3>
+                    <p>测试配件的硬度，确保材料性能符合要求。</p>
+                </div>
+                <div class="equipment-item">
+                    <img src="img/equipment-leak.jpg" alt="泄漏测试设备">
+                    <h3>泄漏测试设备</h3>
+                    <p>测试密封件和容器的泄漏情况，确保产品密封性能。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 质量控制流程 -->
+    <div class="quality-process">
+        <div class="container">
+            <div class="section-title">
+                <h2>质量控制流程</h2>
+                <p>严格的质量控制流程，确保每一个环节的质量</p>
+            </div>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3>原材料检验</h3>
+                    <p>对所有原材料进行严格检验，确保符合质量标准。</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3>生产过程控制</h3>
+                    <p>在生产过程中进行实时质量监控，确保生产工艺符合要求。</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3>成品检验</h3>
+                    <p>对成品进行全面检验，确保产品符合设计要求和客户需求。</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3>包装检验</h3>
+                    <p>检验产品包装是否符合要求，确保产品在运输过程中不受损坏。</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <h3>出厂检验</h3>
+                    <p>最终检验，确保所有产品符合出厂标准。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 质量认证 -->
+    <div class="quality-certifications">
+        <div class="container">
+            <div class="section-title">
+                <h2>质量认证</h2>
+                <p>获得多项国际质量认证，确保产品品质</p>
+            </div>
+            <div class="certifications-grid">
+                <div class="certification-item">
+                    <img src="img/cert-iso9001.jpg" alt="ISO9001认证">
+                    <h3>ISO9001质量管理体系认证</h3>
+                    <p>符合国际质量管理标准，确保产品质量稳定可靠。</p>
+                </div>
+                <div class="certification-item">
+                    <img src="img/cert-iso14001.jpg" alt="ISO14001认证">
+                    <h3>ISO14001环境管理体系认证</h3>
+                    <p>符合国际环境管理标准，注重环保生产。</p>
+                </div>
+                <div class="certification-item">
+                    <img src="img/cert-iatf16949.jpg" alt="IATF16949认证">
+                    <h3>IATF16949汽车行业质量管理体系认证</h3>
+                    <p>符合汽车行业专业质量管理标准。</p>
+                </div>
+                <div class="certification-item">
+                    <img src="img/cert-ce.jpg" alt="CE认证">
+                    <h3>CE认证</h3>
+                    <p>符合欧洲市场准入标准，产品可在欧洲市场销售。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 质量承诺 -->
+    <div class="quality-commitment">
+        <div class="container">
+            <div class="commitment-content">
+                <h2>质量承诺</h2>
+                <p>我们承诺为客户提供高品质的奔驰宝马配件，以下是我们的质量承诺：</p>
+                <div class="commitment-items">
+                    <div class="commitment-item">
+                        <h3>优质原材料</h3>
+                        <p>所有产品均使用优质原材料，确保产品性能和耐用性。</p>
+                    </div>
+                    <div class="commitment-item">
+                        <h3>严格检测</h3>
+                        <p>每一个产品都经过严格的质量检测，确保符合标准。</p>
+                    </div>
+                    <div class="commitment-item">
+                        <h3>完善服务</h3>
+                        <p>提供完善的售后服务，确保客户满意度。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- 加载模板脚本 -->
+    <script src="templates/load-templates.js"></script>
+</body>
+</html>

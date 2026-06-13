@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生产设备 - 萨肯汽配</title>
+    <!-- Tailwind CSS -->
+    <script src="assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 头部样式 */
+        header {
+            background-color: #0F4F9A;
+            color: white;
+            padding: 15px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        nav ul li:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        nav ul li:hover a {
+            color: white;
+        }
+        
+        nav ul li a:active {
+            color: white;
+        }
+        
+        .hotline {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .wechat-btn {
+            background-color: #FF6C00;
+            border: none;
+            padding: 8px 16px;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* 快捷功能栏 */
+        .quick-functions {
+            background-color: white;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .functions-list {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .function-item {
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .function-item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .function-item a {
+            display: inline-block;
+            padding: 15px 25px;
+            text-decoration: none;
+            color: #333;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 0;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+        
+        .function-item a:hover {
+            background-color: #0F4F9A;
+            color: white;
+            border-color: #0F4F9A;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            background-color: white;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            color: #0F4F9A;
+        }
+        
+        /* 生产设备 */
+        .equipment-section {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .equipment-section h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .equipment-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .equipment-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .equipment-image {
+            width: 200px;
+            height: 150px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+        }
+        
+        .equipment-info {
+            flex: 1;
+        }
+        
+        .equipment-info h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+        .equipment-info p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .equipment-specs {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .spec-item {
+            display: flex;
+            margin-bottom: 5px;
+        }
+        
+        .spec-label {
+            width: 100px;
+            font-weight: bold;
+        }
+        
+        .spec-value {
+            flex: 1;
+        }
+        
+        /* 设备优势 */
+        .equipment-advantages {
+            background-color: #f5f7fa;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+        }
+        
+        .equipment-advantages h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .advantages-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .advantage-item {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .advantage-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .advantage-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #0F4F9A;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .advantage-item h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+        .advantage-item p {
+            line-height: 1.6;
+        }
+        
+        /* 底部 */
+        footer {
+            background-color: #0F4F9A;
+            color: white;
+            padding: 40px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+        }
+        
+        .footer-section p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">首页</a>
+            <span>></span>
+            <a href="factory.html">实力工厂</a>
+            <span>></span>
+            <span>生产设备</span>
+        </div>
+    </div>
+    
+    <!-- 页面标题 -->
+    <div class="container page-title">
+        <h1>生产设备</h1>
+    </div>
+    
+    <!-- 生产设备 -->
+    <div class="container equipment-section">
+        <h2>先进生产设备</h2>
+        <div class="equipment-grid">
+            <div class="equipment-item">
+                <div class="equipment-image"></div>
+                <div class="equipment-info">
+                    <h3>CNC加工中心</h3>
+                    <p>采用德国进口CNC加工中心，高精度加工设备，确保配件精度和质量。</p>
+                    <div class="equipment-specs">
+                        <div class="spec-item">
+                            <div class="spec-label">加工精度：</div>
+                            <div class="spec-value">±0.01mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">主轴转速：</div>
+                            <div class="spec-value">12000rpm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">控制系统：</div>
+                            <div class="spec-value">西门子828D</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="equipment-item">
+                <div class="equipment-image"></div>
+                <div class="equipment-info">
+                    <h3>自动化生产线</h3>
+                    <p>全自动化生产线，提高生产效率，保证产品一致性和稳定性。</p>
+                    <div class="equipment-specs">
+                        <div class="spec-item">
+                            <div class="spec-label">生产速度：</div>
+                            <div class="spec-value">120件/小时</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">自动化程度：</div>
+                            <div class="spec-value">95%</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">生产精度：</div>
+                            <div class="spec-value">±0.02mm</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="equipment-item">
+                <div class="equipment-image"></div>
+                <div class="equipment-info">
+                    <h3>精密检测设备</h3>
+                    <p>先进的检测仪器，确保每一个配件都符合严格的质量标准。</p>
+                    <div class="equipment-specs">
+                        <div class="spec-item">
+                            <div class="spec-label">检测精度：</div>
+                            <div class="spec-value">±0.005mm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">检测项目：</div>
+                            <div class="spec-value">尺寸、硬度、材质</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">检测效率：</div>
+                            <div class="spec-value">60件/小时</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="equipment-item">
+                <div class="equipment-image"></div>
+                <div class="equipment-info">
+                    <h3>表面处理设备</h3>
+                    <p>先进的表面处理设备，提高配件的耐腐蚀性和使用寿命。</p>
+                    <div class="equipment-specs">
+                        <div class="spec-item">
+                            <div class="spec-label">处理工艺：</div>
+                            <div class="spec-value">电泳、喷涂、电镀</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">处理厚度：</div>
+                            <div class="spec-value">10-50μm</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">环保标准：</div>
+                            <div class="spec-value">符合国家环保要求</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 设备优势 -->
+    <div class="container equipment-advantages">
+        <h2>设备优势</h2>
+        <div class="advantages-list">
+            <div class="advantage-item">
+                <div class="advantage-icon">1</div>
+                <h3>高精度</h3>
+                <p>采用先进的CNC加工设备，确保配件精度达到±0.01mm，满足原厂标准</p>
+            </div>
+            <div class="advantage-item">
+                <div class="advantage-icon">2</div>
+                <h3>高效率</h3>
+                <p>自动化生产线，生产效率提高300%，保证及时交付</p>
+            </div>
+            <div class="advantage-item">
+                <div class="advantage-icon">3</div>
+                <h3>高品质</h3>
+                <p>先进的检测设备，100%检测，确保产品质量</p>
+            </div>
+            <div class="advantage-item">
+                <div class="advantage-icon">4</div>
+                <h3>一致性</h3>
+                <p>自动化生产，保证产品一致性，减少人为误差</p>
+            </div>
+            <div class="advantage-item">
+                <div class="advantage-icon">5</div>
+                <h3>环保性</h3>
+                <p>采用环保工艺，符合国家环保标准，绿色生产</p>
+            </div>
+            <div class="advantage-item">
+                <div class="advantage-icon">6</div>
+                <h3>智能化</h3>
+                <p>智能生产管理系统，实时监控生产状态，提高管理效率</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- 加载模板脚本 -->
+    <script src="templates/load-templates.js"></script>
+</body>
+</html>

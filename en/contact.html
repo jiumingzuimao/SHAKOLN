@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Saken Auto Parts</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* Unified Link Style */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* PagePage Title */
+        .page-title {
+            background-color: white;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            color: #0F4F9A;
+        }
+        
+        /* Quick Contact Card */
+        .quick-contact {
+            background-color: white;
+            padding: 40px;
+            margin-top: 60px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .quick-contact h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .contact-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            justify-items: center;
+        }
+        
+        .contact-card {
+            text-align: center;
+            padding: 30px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .contact-card h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+        /* Detailed Address */
+        .detailed-address {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .detailed-address h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .address-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .address-item {
+            padding: 30px;
+            border-radius: 8px;
+            background-color: #f5f7fa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .address-item h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+        /* DepartmentContact Info */
+        .department-contact {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .department-contact h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .department-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .department-table th,
+        .department-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .department-table th {
+            background-color: #f5f7fa;
+            color: #0F4F9A;
+        }
+        
+        /* Online MessageForm */
+        .message-form {
+            background-color: #0F2B46;
+            color: white;
+            padding: 60px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+        
+        .message-form h2 {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-group textarea {
+            height: 150px;
+        }
+        
+        .submit-btn {
+            background-color: #FF6C00;
+            border: none;
+            padding: 12px 30px;
+            color: white;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        /* Service Promise */
+        .service-commitment {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .service-commitment h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .commitment-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .commitment-item {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .commitment-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #0F4F9A;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .commitment-content h3 {
+            color: #0F4F9A;
+            margin-bottom: 10px;
+        }
+        
+
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">Home</a>
+            <span>></span>
+            <span>Contact Us</span>
+        </div>
+    </div>
+    
+    <!-- Quick Contact Card -->
+    <div class="container quick-contact">
+        <h2>Quick Contact</h2>
+        <div class="contact-cards">
+            <div class="contact-card">
+                <img src="../img/lianxiwomen/20xiaoshifuwu.svg" alt="Service Hotline" class="contact-icon">
+                <h3>Service Hotline</h3>
+                <p>400-626-0128</p>
+                <p>2424-hour service</p>
+            </div>
+            <div class="contact-card">
+                <img src="../img/lianxiwomen/weixinkefu.svg" alt="WeChat Service" class="contact-icon">
+                <h3>WeChat Service</h3>
+                <p>sakenqp123</p>
+                <p>Online Consultation</p>
+            </div>
+            <div class="contact-card">
+                <img src="../img/lianxiwomen/youxiang.svg" alt="Email" class="contact-icon">
+                <h3>Email</h3>
+                <p>shakoln@163.com</p>
+                <p>Business Inquiry</p>
+            </div>
+            <div class="contact-card">
+                <img src="../img/lianxiwomen/dizhi.svg" alt="Address" class="contact-icon">
+                <h3>Address</h3>
+                <p>No. 69, Xiaohongmen, Chaoyang District, Beijing</p>
+                <p>Headquarters Address</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Detailed Address -->
+    <div class="container detailed-address">
+        <h2>Detailed Address</h2>
+        <div class="address-list">
+            <div class="address-item">
+                <h3>Headquarters Address</h3>
+                <p>No. 69, Xiaohongmen, Chaoyang District, Beijing</p>
+                <p>Phone：010-12345678</p>
+                <p>Business Hours：Monday to Friday 9:00-18:00</p>
+            </div>
+            <div class="address-item">
+                <h3>National Warehouses</h3>
+                <p>Shanghai Warehouse: Anting Auto City, Jiading District, Shanghai</p>
+                <p>Guangzhou Warehouse: Taihe Town, Baiyun District, Guangzhou</p>
+                <p>Chengdu Warehouse: Longquanyi Auto City, Chengdu</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Service Promise -->
+    <div class="container service-commitment">
+        <h2>Service Promise</h2>
+        <div class="commitment-list">
+            <div class="commitment-item">
+                <div class="commitment-icon">1</div>
+                <div class="commitment-content">
+                    <h3>Genuine Guarantee</h3>
+                    <p>AllPartsAll parts are OEM or high-quality aftermarketpcs，Quality guaranteed</p>
+                </div>
+            </div>
+            <div class="commitment-item">
+                <div class="commitment-icon">2</div>
+                <div class="commitment-content">
+                    <h3>In Stock</h3>
+                    <p>Huge inventory, most parts ship same day</p>
+                </div>
+            </div>
+            <div class="commitment-item">
+                <div class="commitment-icon">3</div>
+                <div class="commitment-content">
+                    <h3>Fast Delivery</h3>
+                    <p>Cooperate with multiple logistics companies, covering most regions in China</p>
+                </div>
+            </div>
+            <div class="commitment-item">
+                <div class="commitment-icon">4</div>
+                <div class="commitment-content">
+                    <h3>After-sales</h3>
+                    <p>7-day no-question return, 1-year warranty service</p>
+                </div>
+            </div>
+            <div class="commitment-item">
+                <div class="commitment-icon">5</div>
+                <div class="commitment-content">
+                    <h3>Technical Support</h3>
+                    <p>Professional technical team，ProvideInstallationand technical consultation</p>
+                </div>
+            </div>
+            <div class="commitment-item">
+                <div class="commitment-icon">6</div>
+                <div class="commitment-content">
+                    <h3>Return and Exchange Policy</h3>
+                    <p>Comprehensive return and exchange process, protecting customer rights</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Load template script -->
+    <script src="../../templates/load-templates.js"></script>
+</body>
+</html>

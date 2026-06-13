@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用条款 - Saken Auto Parts</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background-color: #0F4F9A;
+            color: white;
+            padding: 15px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        nav ul li:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        nav ul li:hover a {
+            color: white;
+        }
+        
+        nav ul li a:active {
+            color: white;
+        }
+        
+        .hotline {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .wechat-btn {
+            background-color: #FF6C00;
+            border: none;
+            padding: 8px 16px;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* 快捷功能栏 */
+        .quick-functions {
+            background-color: white;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .functions-list {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .function-item {
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .function-item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .function-item a {
+            display: inline-block;
+            padding: 15px 25px;
+            text-decoration: none;
+            color: #333;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 0;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+        
+        .function-item a:hover {
+            background-color: #0F4F9A;
+            color: white;
+            border-color: #0F4F9A;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* Page面标题 */
+        .page-title {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* 使用条款内容 */
+        .terms-content {
+            padding: 40px 0;
+            background-color: white;
+        }
+        
+        .terms-section {
+            margin-bottom: 40px;
+        }
+        
+        .terms-section h2 {
+            font-size: 24px;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .terms-section h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            margin-top: 30px;
+        }
+        
+        .terms-section p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        .terms-section ul {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            margin-left: 20px;
+        }
+        
+        .terms-section li {
+            margin-bottom: 10px;
+        }
+        
+        /* Page脚 */
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 60px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+        
+        .footer-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #0F4F9A;
+        }
+        
+        .footer-section p {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .footer-section a:hover {
+            color: #0F4F9A;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid #444;
+            margin-top: 40px;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #ccc;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .container {
+                width: 90%;
+            }
+            
+            .nav-menu {
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .top-nav-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .quick-functions {
+                justify-content: center;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">Home</a>
+            <span>></span>
+            <span>使用条款</span>
+        </div>
+    </div>
+    
+    <!-- Page面标题 -->
+    <div class="page-title">
+        <div class="container">
+            <h1>使用条款</h1>
+            <p>Saken Auto Parts网站使用条款和条pcs</p>
+        </div>
+    </div>
+    
+    <!-- 使用条款内容 -->
+    <div class="container terms-content">
+        <div class="terms-section">
+            <h2>1. 接受条款</h2>
+            <p>通过访问或使用Saken Auto Parts（以下简称"我们"）的官方网站，您同意遵守本使用条款。如果您不同意本条款，请勿访问或使用我们的网站。</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2>2. 网站使用</h2>
+            <h3>2.1 许可</h3>
+            <p>我们授予您有限的、非排他性的、不可转让的许可，允许您访问和使用我们的网站，仅供Piece人或商业目的。</p>
+            
+            <h3>2.2 禁止行为</h3>
+            <p>在使用我们的网站时，您不得：</p>
+            <ul>
+                <li>违反任何法律法规</li>
+                <li>侵犯他人的知识产权或其他权利</li>
+                <li>干扰或破坏网站的正常运行</li>
+                <li>上传或传播恶意代码、病毒或其他有害内容</li>
+                <li>收集或存储他人的Piece人信息</li>
+                <li>使用自动化工具或爬虫访问网站</li>
+                <li>从事任何可能损害我们或其他用户利益的行为</li>
+            </ul>
+        </div>
+        
+        <div class="terms-section">
+            <h2>3. 知识产权</h2>
+            <p>网站上的所有内容，包括但不限于文本、图像、视频、音频、标志、商标等，均为我们或我们的许可方的财产，受知识产权法律保护。</p>
+            <p>未经我们的书面许可，您不得复制、修改、分发、传播、展示、表演、出版、许可或以其他方式使用任何内容。</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2>4. Product Info</h2>
+            <p>我们尽力确保网站上的Product Info准确、完整，但不保证其准确性、完整性或及时性。Products价格、规格、可用性等信息可能随时变更，恕不另行通知。</p>
+            <p>Product Image仅供参考，实际Products可能与图片有所不同。</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2>5. 订单和支付</h2>
+            <h3>5.1 订单确认</h3>
+            <p>当您在网站上下单时，我们会发送订单确认邮pcs，但这并不构成我们接受订单。我们保留拒绝或取消任何订单的权利，包括但不限于：</p>
+            <ul>
+                <li>Products缺货</li>
+                <li>定价错误</li>
+                <li>涉嫌欺诈</li>
+                <li>违反本使用条款</li>
+            </ul>
+            
+            <h3>5.2 支付</h3>
+            <p>您应按照订单确认中的金额和支付方式支付货款。我们支持多种支付方式，具体以网站显示为准。</p>
+            <p>您应确保支付信息的准确性和安全性，如有任何问题，请Contact Us的客服人员。</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2>6. 退货和退款</h2>
+            <p>如需退货或退款，请按照我们的退货政策执行。具体退货政策请参考网站上的相关Page面或联系客服人员。</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2>7. 免责声明</h2>
+            <p>网站及其内容按"原样"提供，不提供任何形式的保证，包括但不限于：</p>
+            <ul>
+                <li>适销性保证</li>
+                <li>适合特定用途的保证</li>
+                <li>不侵权的保证</li>
+            </ul>
+            <p>我们不保证网站不会中断、没有错误，或病毒或其他有害成分。</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2>8. 责任限制</h2>
+            <p>在法律允许的最大范围内，我们不对因使用或无法使用网站而导致的任何直接、间接、偶然、特殊或后果性损害负责，包括但不限于利润损失、数据损失、商誉损失等。</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2>9. 链接Go to三方网站</h2>
+            <p>网站可能包含指向第三方网站的链接，这些链接仅供参考。我们不对第三方网站的内容、隐私政策或做法负责，也不认可这些网站。</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2>10. 使用条款的修改</h2>
+            <p>我们可能会不时修改本使用条款。修改后的条款将在网站上发布，生效日期将在条款顶部注明。您应定期查看本条款，了解任何更改。</p>
+            <p>继续使用网站即表示您接受修改后的条款。</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2>11. 适用法律</h2>
+            <p>本使用条款受中华人民共和国法律管辖，任何争议应提交至有管辖权的法院解决。</p>
+        </div>
+        
+        <div class="terms-section">
+            <h2>12. Contact Us</h2>
+            <p>如果您对本使用条款有任何疑问，请通过以下方式Contact Us：</p>
+            <ul>
+                <li>电话：400 626 0128</li>
+                <li>Email: shakoln@163.com</li>
+                <li>地址：北京市朝阳区小红门 69 号</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Load template script -->
+    <script src="../../templates/load-templates.js"></script>
+</body>
+</html>

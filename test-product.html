@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试产品中心</title>
+    <!-- Tailwind CSS -->
+    <script src="assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .product-card { background: white; padding: 10px; margin: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .product-card img { width: 100px; height: 100px; object-fit: cover; }
+        .loading { text-align: center; padding: 50px; }
+        .error { color: red; }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <h1>产品中心测试</h1>
+    <div id="content" class="loading">
+        <div>加载中...</div>
+    </div>
+
+    <script>
+        async function loadData() {
+            try {
+                // 加载产品图片映射
+                const imagesResponse = await fetch('product-images.json');
+                const imagesMap = await imagesResponse.json();
+                console.log('图片映射加载成功:', Object.keys(imagesMap).length, '个OE号');
+                
+                // 加载产品数据
+                const productsResponse = await fetch('product-data.json');
+                const data = await productsResponse.json();
+                // 产品数据可能是对象（包含products数组）或直接是数组
+                const products = data.products || data;
+                console.log('产品数据加载成功:', products.length, '个产品');
+                
+                // 筛选有图片的产品
+                const productsWithImages = products.filter(p => imagesMap[p.code]);
+                console.log('有图片的产品:', productsWithImages.length, '个');
+                
+                // 显示前6个产品
+                const content = document.getElementById('content');
+                content.innerHTML = productsWithImages.slice(0, 6).map(p => `
+                    <div class="product-card">
+                        <img src="${imagesMap[p.code][0]}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/100'">
+                        <h3>${p.name}</h3>
+                        <p>OE: ${p.code}</p>
+                        <p>品牌: ${p.series}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('加载失败:', error);
+                document.getElementById('content').innerHTML = `
+                    <div class="error">加载失败: ${error.message}</div>
+                    <div>请检查控制台了解详细错误信息</div>
+                `;
+            }
+        }
+        
+        loadData();
+    </script>
+</body>
+</html>

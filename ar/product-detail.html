@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل المنتج - SHAKOLN قطع غيار السيارات</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- إعدادات مخصصة -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* التنقل بين الصفحات */
+        .breadcrumb {
+            padding: 20px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb a {
+            color: #0F4F9A;
+            text-decoration: none;
+        }
+        
+        .breadcrumb span {
+            color: #666;
+            margin: 0 10px;
+        }
+        
+        /* المنتج详情 */
+        .product-detail {
+            padding: 40px 0;
+        }
+        
+        .product-content {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr; /* 减小宽度1/4: 2fr → 1.5fr */
+            gap: 40px;
+            align-items: flex-start;
+        }
+        
+        /* المنتج图片 */
+        .product-images {
+            background-color: white;
+            padding: 37.5px; /* 放大1/4: 30px * 1.25 = 37.5px */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-image {
+            width: 100%;
+            max-width: 625px; /* 放大1/4: 500px * 1.25 = 625px */
+            height: 500px; /* 放大1/4: 400px * 1.25 = 500px */
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 25px; /* 放大1/4: 20px * 1.25 = 25px */
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* حاوية الصور المصغرة - محاذاة لليسار */
+        .thumbnail-container {
+            display: flex;
+            gap: 12.5px; /* 放大1/4: 10px * 1.25 = 12.5px */
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+        
+        /* أنماط الصور المصغرة */
+        .thumbnail {
+            width: 100px; /* 放大1/4: 80px * 1.25 = 100px */
+            height: 100px; /* 放大1/4: 80px * 1.25 = 100px */
+            object-fit: cover;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .thumbnail:hover {
+            border-color: #0F4F9A;
+        }
+        
+        .thumbnail.active {
+            border-color: #0F4F9A;
+            box-shadow: 0 0 0 2px rgba(15, 79, 154, 0.3);
+        }
+        
+        /* نافذة عرض الصورة المكبرة */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .lightbox.show {
+            display: flex;
+        }
+        
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 10000;
+        }
+        
+        .lightbox-close:hover {
+            color: #FF6C00;
+        }
+        
+        /* أنماط الصورة الرئيسية القابلة للنقر */
+        .main-image {
+            cursor: zoom-in;
+            transition: transform 0.3s;
+        }
+        
+        .main-image:hover {
+            transform: scale(1.02);
+        }
+        
+        /* المنتج信息 */
+        .product-info {
+            background-color: white;
+            padding: 37.5px; /* 放大1/4: 30px * 1.25 = 37.5px */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .product-info h1 {
+            color: #0F4F9A;
+            margin-bottom: 25px; /* 放大1/4: 20px * 1.25 = 25px */
+            font-size: 30px; /* 放大1/4: 24px * 1.25 = 30px */
+        }
+        
+        .product-details {
+            margin-bottom: 37.5px; /* 放大1/4: 30px * 1.25 = 37.5px */
+            flex-grow: 1;
+        }
+        
+        .detail-item {
+            display: flex;
+            margin-bottom: 18.75px; /* 放大1/4: 15px * 1.25 = 18.75px */
+        }
+        
+        .detail-item label {
+            width: 150px; /* 放大1/4: 120px * 1.25 = 150px */
+            font-weight: bold;
+            color: #666;
+            font-size: 17.5px; /* 放大1/4: 14px * 1.25 = 17.5px */
+        }
+        
+        .detail-item span {
+            font-size: 17.5px; /* 放大1/4: 14px * 1.25 = 17.5px */
+        }
+        
+        .product-actions {
+            margin-top: 50px; /* 放大1/4: 40px * 1.25 = 50px */
+        }
+        
+        .btn {
+            padding: 15px 37.5px; /* 放大1/4: 12px 30px * 1.25 = 15px 37.5px */
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 17.5px; /* 放大1/4: 14px * 1.25 = 17.5px */
+            font-weight: bold;
+            transition: all 0.3s;
+            display: block;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background-color: #0F4F9A;
+            color: white;
+        }
+        
+        /* المنتج描述 */
+        .product-description {
+            margin-top: 50px; /* 放大1/4: 40px * 1.25 = 50px */
+            background-color: white;
+            padding: 37.5px; /* 放大1/4: 30px * 1.25 = 37.5px */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            grid-column: 1 / -1;
+        }
+        
+        .product-description h3 {
+            color: #0F4F9A;
+            margin-bottom: 25px; /* 放大1/4: 20px * 1.25 = 25px */
+            font-size: 25px; /* 放大1/4: 20px * 1.25 = 25px */
+        }
+        
+        .product-description p {
+            font-size: 17.5px; /* 放大1/4: 14px * 1.25 = 17.5px */
+        }
+        
+        .product-description p {
+            line-height: 1.8;
+            color: #666;
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- نافذة عرض الصورة المكبرة -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightboxImage" src="" alt="تكبير الصورة">
+    </div>
+    
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- التنقل بين الصفحات -->
+    <div class="breadcrumb">
+        <div class="container">
+            <a href="index.html">الرئيسية</a>
+            <span>&gt;</span>
+            <span>تفاصيل المنتج</span>
+        </div>
+    </div>
+    
+    <!-- المنتج详情 -->
+    <div class="product-detail">
+        <div class="container">
+            <div class="product-content" id="productContent">
+                <!-- المنتج将在这里渲染 -->
+                <div style="grid-column: 1 / -1; text-align: center; padding: 100px;">
+                    <div style="font-size: 24px; margin-bottom: 20px;">جارٍ التحميل...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+
+    <script>
+        // 对URL进行编码
+        function encodePath(path) {
+            if (!path) return path;
+            var parts = path.split('/');
+            var encodedParts = [];
+            for (var i = 0; i < parts.length; i++) {
+                encodedParts.push(encodeURIComponent(parts[i]));
+            }
+            return encodedParts.join('/');
+        }
+        
+        // 读取URL参数
+        function getURLParam(name) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+        
+        // 产品图片基础URL（从Gitee仓库读取图片，不传到GitHub）
+        const PRODUCT_IMAGE_BASE_URL = 'https://gitee.com/shakoln_0/sakon-website/raw/master/';
+
+        // افتراضي图片
+        var defaultImages = [
+            '../img/chexing/benchiCji.jpg',
+            '../img/chexing/BMW3xi.jpg',
+            '../img/chexing/benchiEji.jpg',
+            '../img/chexing/benchiSji.jpg',
+            '../img/chexing/BMW5xi.jpg'
+        ];
+
+        // 当前显示的图片索引
+        window.currentImageIndex = 0;
+
+        // 渲染المنتج
+        function renderProduct(product) {
+            var container = document.getElementById('productContent');
+            if (!container) return;
+
+            // 获取所有المنتج图片（从Gitee仓库读取）
+            var productImages = [];
+            var productKey = product.code || product.oe;
+            if (window.productImageMap && window.productImageMap[productKey]) {
+                productImages = window.productImageMap[productKey].slice(0, 5).map(function(img) {
+                    return PRODUCT_IMAGE_BASE_URL + img;
+                });
+            }
+            // 如果不够5张，用افتراضي图片补充
+            while (productImages.length < 5) {
+                productImages.push(defaultImages[productImages.length % defaultImages.length]);
+            }
+            
+            container.innerHTML = '<div class="product-images">' +
+                '<img class="main-image" id="mainProductImage" src="' + productImages[0] + '" alt="' + product.name + '" onclick="openLightbox()" onerror="this.src=\'' + defaultImages[0] + '\'">' +
+                '<div class="thumbnail-container">' +
+                productImages.map(function(img, idx) {
+                    return '<img class="thumbnail' + (idx === 0 ? ' active' : '') + '" src="' + img + '" onclick="changeMainImage(' + idx + ')" onerror="this.src=\'' + defaultImages[0] + '\'">';
+                }).join('') +
+                '</div>' +
+                '</div>' +
+                '<div class="product-info">' +
+                '<h1>' + product.name + '</h1>' +
+                '<div class="product-details">' +
+                '<div class="detail-item"><label>رقم OE:</label><span>' + (product.code || product.oe || '') + '</span></div>' +
+                '<div class="detail-item"><label>اسم قطعة الغيار:</label><span>' + product.name + '</span></div>' +
+                '<div class="detail-item"><label>العلامة التجارية:</label><span>' + (product.brand || 'SHAKOLN') + '</span></div>' +
+                '<div class="detail-item"><label>الموديل:</label><span>' + (product.model || product.series || '') + '</span></div>' +
+                '<div class="detail-item"><label>الفئة:</label><span>' + (product.category || '') + '</span></div>' +
+                '<div class="detail-item"><label>المخزون:</label><span>' + (product.stock || 'متوفر') + '</span></div>' +
+                '</div>' +
+                '<div class="product-actions">' +
+                '<a href="quote.html" class="btn btn-primary">طلب عرض سعر</a>' +
+                '</div>' +
+                '</div>' +
+                '<div class="product-description">' +
+                '<h3>وصف المنتج</h3>' +
+                '<p>' + (product.description || 'هذا المنتج هو قطعة غيار عالية الجودة من SHAKOLN قطع غيار السيارات، مصنوعة من مواد عالية الجودة، مع أداء ممتاز وعمر طويل، مما يضمن تشغيل مركبتك بشكل طبيعي.') + '</p>' +
+                '</div>';
+            
+            // 保存图片عمود表供切换使用
+            window.currentProductImages = productImages;
+        }
+        
+        // 切换主图
+        function changeMainImage(index) {
+            var mainImage = document.getElementById('mainProductImage');
+            var thumbnails = document.querySelectorAll('.thumbnail');
+            
+            if (mainImage && window.currentProductImages && window.currentProductImages[index]) {
+                mainImage.src = window.currentProductImages[index];
+                
+                // 更新缩略图选中状态
+                thumbnails.forEach(function(thumb, idx) {
+                    if (idx === index) {
+                        thumb.classList.add('active');
+                    } else {
+                        thumb.classList.remove('active');
+                    }
+                });
+            }
+        }
+        
+        // 打开lightbox
+        function openLightbox() {
+            var lightbox = document.getElementById('lightbox');
+            var lightboxImage = document.getElementById('lightboxImage');
+            var mainImage = document.getElementById('mainProductImage');
+            
+            if (lightbox && lightboxImage && mainImage) {
+                lightboxImage.src = mainImage.src;
+                lightbox.classList.add('show');
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            }
+        }
+        
+        // 关闭lightbox
+        function closeLightbox() {
+            var lightbox = document.getElementById('lightbox');
+            
+            if (lightbox) {
+                lightbox.classList.remove('show');
+                document.body.style.overflow = ''; // 恢复背景滚动
+            }
+        }
+        
+        // 键盘ESC键关闭lightbox
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+        
+        // تحميلالمنتج数据
+        function loadProduct() {
+            var oe = getURLParam('oe') || getURLParam('code');
+            if (!oe) {
+                showError('معلمة غير صالحة، يرجى تقديم رقم OE صالح');
+                return;
+            }
+            
+            console.log('正在查找المنتج，OE号:', oe);
+            
+            // 先تحميلالمنتج图片映射
+            fetch('./product-images.json')
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(imageMap) {
+                    window.productImageMap = imageMap;
+                    
+                    // 再从 product-data.json 查找المنتج
+                    return fetch('./product-data.json');
+                })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    var product = null;
+                    // 从 products 数组中查找
+                    if (data.products && data.products.length > 0) {
+                        for (var i = 0; i < data.products.length; i++) {
+                            if (data.products[i].code === oe) {
+                                product = data.products[i];
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (product) {
+                        console.log('找到المنتج:', product);
+                        renderProduct(product);
+                    } else {
+                        // 如果没找到，尝试从 hot_products 或 home_products 查找
+                        tryFindFromOtherSources(oe);
+                    }
+                })
+                .catch(function(err) {
+                    console.error('تحميلالمنتج数据失败:', err);
+                    tryFindFromOtherSources(oe);
+                });
+        }
+        
+        // 从其他数据源查找
+        function tryFindFromOtherSources(oe) {
+            console.log('尝试从其他数据源查找...');
+            
+            // 先تحميلالمنتج图片映射（如果还没有）
+            var loadImageMapPromise = Promise.resolve(window.productImageMap);
+            if (!window.productImageMap) {
+                loadImageMapPromise = fetch('./product-images.json')
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(imageMap) {
+                        window.productImageMap = imageMap;
+                        return imageMap;
+                    });
+            }
+            
+            loadImageMapPromise.then(function() {
+                // 尝试从 hot_products 查找
+                return fetch('./data/hot_products.json');
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(products) {
+                var product = null;
+                for (var i = 0; i < products.length; i++) {
+                    if (products[i].oe === oe) {
+                        product = products[i];
+                        break;
+                    }
+                }
+                
+                if (product) {
+                    console.log('从爆款推荐找到المنتج:', product);
+                    // 如果المنتج没有图片，尝试从 product-images.json 查找
+                    if (!product.image && window.productImageMap && window.productImageMap[product.oe]) {
+                        product.image = '' + window.productImageMap[product.oe][0];
+                    } else if (product.image && !True) {
+                        product.image = '' + product.image;
+                    }
+                    renderProduct(product);
+                } else {
+                    // 从 home_products 查找
+                    return fetch('./data/home_products.json');
+                }
+            })
+            .then(function(response) {
+                if (response) return response.json();
+            })
+            .then(function(products) {
+                if (products) {
+                    var product = null;
+                    for (var i = 0; i < products.length; i++) {
+                        if (products[i].oe === oe) {
+                            product = products[i];
+                            break;
+                        }
+                    }
+                    
+                    if (product) {
+                        console.log('从المنتج中心找到المنتج:', product);
+                        // 如果المنتج没有图片，尝试从 product-images.json 查找
+                        if (!product.image && window.productImageMap && window.productImageMap[product.oe]) {
+                            product.image = '' + window.productImageMap[product.oe][0];
+                        } else if (product.image && !True) {
+                            product.image = '' + product.image;
+                        }
+                        renderProduct(product);
+                    } else {
+                        showError('المنتج不存在');
+                    }
+                }
+            })
+            .catch(function(err) {
+                console.error('查找失败:', err);
+                showError('فشل التحميل');
+            });
+        }
+        
+        // 显示错误
+        function showError(msg) {
+            var container = document.getElementById('productContent');
+            if (container) {
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 100px;">' +
+                    '<div style="font-size: 24px; margin-bottom: 20px; color: #666;">' + msg + '</div>' +
+                    '<p style="margin-bottom: 30px; color: #999;">عذراً، المنتج الذي تبحث عنه غير موجود أو تم سحبه</p>' +
+                    '<a href="index.html" style="padding: 10px 20px; background-color: #0F4F9A; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">العودة إلى الصفحة الرئيسية</a>' +
+                    '</div>';
+            }
+        }
+        
+        // الصفحة面تحميل时执行
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM就绪，开始تحميلالمنتج详情');
+            loadProduct();
+        });
+        
+        // إذا كان DOM محمل بالفعل، قم بالتنفيذ فوراً
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            loadProduct();
+        }
+    </script>
+    
+    <!-- تحميل نص البرنامج النماذج -->
+    <script src="templates/load-templates.js"></script>
+</body>
+</html>

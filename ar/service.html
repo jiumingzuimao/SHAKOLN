@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الخدمات - SHAKOLN قطع غيار السيارات</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* Unified Link Style */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* عنوان الصفحة */
+        .page-title {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* نظرة عامة على الخدمة */
+        .service-overview {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .section-content {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .section-text {
+            flex: 1;
+        }
+        
+        .section-text h2 {
+            font-size: 24px;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+        }
+        
+        .section-text p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .section-image {
+            flex: 1;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .section-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .image-overlay .title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .image-overlay .subtitle {
+            font-size: 20px;
+            font-weight: normal;
+        }
+        
+        /* فريقنا */
+        .our-team {
+            padding: 60px 0;
+            background-color: #fff;
+        }
+        
+        .team-photo {
+            margin-bottom: 30px;
+        }
+        
+        .team-photo img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .team-description {
+            text-align: center;
+        }
+        
+        .team-description p {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        /* عناصر الخدمة */
+        .service-items {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .section-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .service-item {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .service-item img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .service-item img.service-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .service-item h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .service-item p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* عملية الخدمة */
+        .service-process {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #e0e0e0;
+            z-index: 1;
+        }
+        
+        .process-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            padding-top: 70px;
+        }
+        
+        .process-step .step-number {
+            width: 50px;
+            height: 50px;
+            background-color: #0F4F9A;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .process-step h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .process-step p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* ميزة الخدمة */
+        .service-advantages {
+            padding: 60px 0;
+        }
+        
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+        
+        .advantage-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+        }
+        
+        .advantage-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            background-color: #0F4F9A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .advantage-icon {
+            width: 36px;
+            height: 36px;
+            filter: brightness(0) invert(1) !important;
+        }
+        
+        .advantage-content h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .advantage-content p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* الأسئلة الشائعة */
+        .faq-section {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .faq-question:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .faq-answer {
+            padding: 0 20px 20px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+        }
+        
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        
+        .faq-item.active .faq-question {
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        /* اتصل بنا */
+        .contact-section {
+            padding: 60px 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .contact-content {
+            text-align: center;
+        }
+        
+        .contact-content h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .contact-content p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .contact-item {
+            text-align: center;
+        }
+        
+        .contact-item h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .contact-item p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .contact-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: white;
+            color: #0F4F9A;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .contact-button:hover {
+            background-color: #f5f5f5;
+        }
+        
+
+        
+        /* تصميم متجاوب */
+        @media (max-width: 1200px) {
+            .container {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .section-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .service-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .advantages-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .process-steps {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .process-steps::before {
+                display: none;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- عنوان الحجز -->
+    <div id="header-placeholder"></div>
+    
+    <!-- التنقل في الخبز -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">الرئيسية</a>
+            <span>></span>
+            <span>الخدمات</span>
+        </div>
+    </div>
+    
+    <!-- عنوان الصفحة -->
+    <div class="page-title">
+        <div class="container">
+            <h1>الخدمات</h1>
+            <p>فريق خدمة احترافي، يقدم لك دعمًا شاملاً</p>
+        </div>
+    </div>
+    
+    <!-- نظرة عامة على الخدمة -->
+    <div class="service-overview">
+        <div class="container section-content">
+            <div class="section-text">
+                <h2>نظرة عامة على الخدمة</h2>
+                <p>SHAKOLN قطع غيار السيارات ملتزم بتزويد العملاء بدعم خدمة شاملة، من استشارة المنتج إلى الضمان، فريقنا الاحترافي سوف يوفر لك أفضل تجربة خدمة.</p>
+                <p>لدينا فريق خدمة ذو خبرة، يمكن أن يوفر لك استشارة فنية احترافية، نصائح اختيار المنتج، دليل التثبيت والدعم، لضمان تلبية احتياجاتك في الوقت المحدد.</p>
+                <p>سواء كنت وكيلًا، متجرًا للصيانة أو مستخدمًا نهائيًا، سوف نقدم لك خدمة احترافية وفعالة، لحل جميع مشاكلك، مما يجعل عملك أكثر سلاسة.</p>
+            </div>
+            <div class="section-image">
+                <img src="../img/kfbj.png" alt="الخدمات">
+                <div class="image-overlay">
+                    <div class="title">الخدمات</div>
+                    <div class="subtitle">فريق احترافي • خدمة مدروسة</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- فريقنا -->
+    <div class="our-team">
+        <div class="container">
+            <div class="section-title">
+                <h2>فريقنا</h2>
+                <p>فريق خدمة احترافي، يوفر لك خدمة عالية الجودة</p>
+            </div>
+            <div class="team-photo">
+                <img src="../img/tdzp.jpg" alt="صور الفريق">
+            </div>
+            <div class="team-description">
+                <p>لدينا فريق خدمة ذو خبرة، احترافي وفعال، يملك كل عضو خبرة صناعية عميقة ومعرفة مهنية ثابتة. يتلقى أعضاء الفريق تدريبًا احترافيًا نظاميًا بشكل مستمر، لتطوير مستوى الخدمة والمهارات المهنية بشكل مستمر، لضمان حصول كل عميل على أفضل وأكثر تجربة خدمة مدروسة.</p>
+                <p>نلتزم بفلسفة الخدمة "العميل أولا"، وضع احتياجات العميل دائمًا في المقام الأول، الاستماع إلى عملائنا بحرص، حل مشاكل العملاء بتقنية احترافية وموقف صادق.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- عناصر الخدمة -->
+    <div class="service-items">
+        <div class="container">
+            <div class="section-title">
+                <h2>عناصر الخدمة</h2>
+                <p>نقدم مجموعة متنوعة من عناصر الخدمة لتلبية احتياجاتك المختلفة</p>
+            </div>
+            <div class="service-grid">
+                <div class="service-item">
+                    <img src="../img/fuwuxiangm/jishuzhichi.svg" alt="الدعم الفني" class="service-icon">
+                    <h3>الدعم الفني</h3>
+                    <p>يوفر استشارة فنية احترافية ونصائح اختيار المنتج، يساعدك على اختيار القطع المناسبة.</p>
+                </div>
+                <div class="service-item">
+                    <img src="../img/fuwuxiangm/anzhuangzhidao.svg" alt="دليل التثبيت" class="service-icon">
+                    <h3>دليل التثبيت</h3>
+                    <p>يوفر دليل التثبيت وتوثيق فني مفصل، يضمن التثبيت والاستخدام السليم لقطع الغيار.</p>
+                </div>
+                <div class="service-item">
+                    <img src="../img/fuwuxiangm/shouhoufuwu.svg" alt="خدمة بعد البيع" class="service-icon">
+                    <h3>خدمة بعد البيع</h3>
+                    <p>يوفر خدمة بعد البيع شاملة، يحل المشاكل المختلفة التي تواجه أثناء استخدام المنتج.</p>
+                </div>
+                <div class="service-item">
+                    <img src="../img/fuwuxiangm/chanpinzhibao.svg" alt="الضمان" class="service-icon">
+                    <h3>الضمان</h3>
+                    <p>يوفر ضمان جودة المنتج، لضمان حماية حقوقك.</p>
+                </div>
+                <div class="service-item">
+                    <img src="../img/fuwuxiangm/wuliuzhichi.svg" alt="دعم اللوجستيات" class="service-icon">
+                    <h3>دعم اللوجستيات</h3>
+                    <p>يوفر خدمات لوجستية فعالة، يضمن التوصيل في الوقت المحدد.</p>
+                </div>
+                <div class="service-item">
+                    <img src="../img/fuwuxiangm/peixunfuwu.svg" alt="التدريب" class="service-icon">
+                    <h3>التدريب</h3>
+                    <p>يوفر للوكلاء ومتاجر الصيانة تدريبًا على معرفة المنتجات والتقنية.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- عملية الخدمة -->
+    <div class="service-process">
+        <div class="container">
+            <div class="section-title">
+                <h2>عملية الخدمة</h2>
+                <p>عملية خدمة معيارية لضمان جودة الخدمة</p>
+            </div>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3>استشارة الاحتياجات</h3>
+                    <p>العملاء عبر الهاتف أو البريد أو خدمة العملاء عبر الإنترنت لاستشارة المنتجات واحتياجات الخدمة.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3>تقييم احترافي</h3>
+                    <p>فريقنا الاحترافي يقوم بتقييم احتياجات العميل، تقديم الحلول.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3>صياغة الحل</h3>
+                    <p>وفقاً لاحتياجات العميل، صياغة خطة خدمة شخصية.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3>تنفيذ الخدمة</h3>
+                    <p>تنفيذ الخدمات وفقاً للخطة، لضمان جودة الخدمة.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <h3>متابعة بعد البيع</h3>
+                    <p>بعد اكتمال الخدمة، إجراء متابعة بعد البيع، لضمان رضا العميل.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ميزة الخدمة -->
+    <div class="service-advantages">
+        <div class="container">
+            <div class="section-title">
+                <h2>ميزة الخدمة</h2>
+                <p>ميزات الخدمة لدينا، توفر لك تجربة أفضل</p>
+            </div>
+            <div class="advantages-grid">
+                <div class="advantage-item">
+                    <div class="advantage-icon-wrapper">
+                        <img src="../img/fuwuyoushi/tuandui.svg" alt="فريق احترافي" class="advantage-icon">
+                    </div>
+                    <div class="advantage-content">
+                        <h3>فريق احترافي</h3>
+                        <p>مع فريق احترافي ذو خبرة، يمكن أن يوفر لك دعمًا فنيًا وخدمة احترافية.</p>
+                    </div>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon-wrapper">
+                        <img src="../img/fuwuyoushi/24xiaoshi.svg" alt="استجابة سريعة" class="advantage-icon">
+                    </div>
+                    <div class="advantage-content">
+                        <h3>استجابة سريعة</h3>
+                        <p>استجابة لاحتياجات العميل في غضون 24 ساعة، لضمان حل المشاكل في الوقت المحدد.</p>
+                    </div>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon-wrapper">
+                        <img src="../img/fuwuyoushi/gexinghuafuwu.svg" alt="خدمة شخصية" class="advantage-icon">
+                    </div>
+                    <div class="advantage-content">
+                        <h3>خدمة شخصية</h3>
+                        <p>وفقاً لاحتياجات العميل، يوفر خطة خدمة شخصية.</p>
+                    </div>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon-wrapper">
+                        <img src="../img/fuwuyoushi/quanchenggenzong.svg" alt="تتبع كامل" class="advantage-icon">
+                    </div>
+                    <div class="advantage-content">
+                        <h3>تتبع كامل</h3>
+                        <p>تتبع كامل لعملية الخدمات، لضمان جودة الخدمة ورضا العميل.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- الأسئلة الشائعة -->
+    <div class="faq-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>الأسئلة الشائعة</h2>
+                <p>إجابة الأسئلة التي قد تكون لديك</p>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>كيف اختار قطع غيار السيارة المناسبة لي؟</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>يمكنك عبر نظام موديلات السيارات لدينا، إدخال معلومات طراز سيارتك، سيقوم النظام تلقائيًا بمطابقة قطع الغيار المناسبة. يمكنك الاتصال بفريق خدمة العملاء لدينا، تقديم معلومات طراز سيارتك، سوف نقدم لك نصائح اختيار احترافية.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>كم مدة ضمان المنتج؟</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>مدة ضمان المنتج لدينا هي 12 شهرًا، محسوبة من تاريخ التوصيل للمنتج. في غضون فترة الضمان، إذا واجهت مشاكل جودة في المنتج، سوف نستبدل أو نصلح لك مجانًا.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>كيف أتقدم بطلب خدمة بعد البيع؟</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>يمكنك عبر الهاتف أو البريد أو خدمة العملاء عبر الإنترنت لطلب خدمة بعد البيع. عند التقديم، الرجاء تقديم رقم طلبك ومعلومات المنتجات ووصف المشكلة، سوف يقوم فريق خدمة العملاء لدينا بالتعامل معها على الفور.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>كم يستغرق التوصيل؟</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>وفقاً لموقعك الجغرافي، وقت التوصيل بشكل عام هو 1-7 أيام عمل. سوف نقوم وفقاً لاحتياجاتك باختيار طريقة اللوجستيات المناسبة، لضمان التوصيل في الوقت المحدد.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>كيف أصبح وكيل SHAKOLN قطع غيار السيارات؟</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>إذا كنت مهتمًا بأن تصبح وكيل SHAKOLN قطع غيار السيارات، الرجاء الاتصال بفريق المبيعات لدينا، تقديم معلومات شركتك واحتياجاتك التجارية، سوف نقدم لك خطة تعاون مفصلة.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- اتصل بنا -->
+    <div class="contact-section">
+        <div class="container">
+            <div class="contact-content">
+                <h2>اتصل بنا</h2>
+                <p>إذا كانت لديك أي أسئلة أو احتياجات، مرحبًا الاتصال بنا في أي وقت</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <h3>الهاتف</h3>
+                        <p>400 626 0128</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>البريد الإلكتروني</h3>
+                        <p>shakoln@163.com</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>خدمة العملاء عبر الإنترنت</h3>
+                        <p>أيام العمل 9:00-18:00</p>
+                    </div>
+                </div>
+                <a href="contact.html" class="contact-button">اعرف المزيد</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- تذييل الحجز -->
+    <div id="footer-placeholder"></div>
+    
+    <script>
+        // وظيفة طي FAQ
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+    </script>
+    
+    <!-- تحميل نص البرنامج النماذج -->
+    <script src="../../templates/load-templates.js"></script>
+</body>
+</html>

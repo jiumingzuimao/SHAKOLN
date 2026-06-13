@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة السيارات - قطع غيار SHAKOLN</title>
+    <script src="assets/tailwind.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF7A00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .model-card-hover {
+                transition: all 0.3s ease;
+            }
+            .model-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+        /* أنماط صور الموديلات الشعبية */
+        .model-image {
+            position: relative;
+            overflow: hidden;
+        }
+        .model-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 79, 154, 0.6);
+            z-index: 1;
+        }
+        .model-image-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            z-index: 2;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            padding: 0 10px;
+        }
+        .model-image-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .model-image-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+        }
+        
+        /* أنماط منطقة بحث الموديل */
+        .search-section {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .search-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .search-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .search-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            position: relative;
+        }
+        .search-tab.active {
+            color: #0066cc;
+        }
+        .search-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 20px;
+            width: calc(100% - 40px);
+            height: 2px;
+            background-color: #0066cc;
+        }
+        /* إخفاء جميع نماذج البحث، عرض القطعة الأولى بشكل افتراضي */
+        .search-form-wrap {
+            display: none;
+        }
+        .search-form-wrap.active {
+            display: block;
+        }
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: flex-start;
+            margin-top: 15px;
+        }
+        .form-row {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        .form-input-wide {
+            width: 100%;
+            min-width: 500px;
+            max-width: 700px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .search-btn {
+            padding: 12px 30px;
+            background-color: #0066cc;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 24px;
+            white-space: nowrap;
+        }
+        .search-btn:hover {
+            background-color: #004499;
+        }
+        
+        .parts-table a:hover {
+            text-decoration: underline;
+        }
+        
+        /* أنماط منطقة نتائج البحث */
+        .result-section {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 40px;
+            display: none;
+        }
+        .result-section:not(.hidden) {
+            display: block;
+        }
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+        }
+        .car-info {
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+        .car-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .car-info-row:last-child {
+            margin-bottom: 0;
+        }
+        .car-info-item {
+            flex: 1;
+        }
+        .car-info strong {
+            color: #0F4F9A;
+            display: inline-block;
+        }
+        .parts-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .parts-table th, .parts-table td {
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            text-align: left;
+        }
+        .parts-table th {
+            background-color: #f5f5f5;
+            color: #0F4F9A;
+            font-weight: 600;
+        }
+        .parts-table tr:hover {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <div id="header-placeholder"></div>
+    
+    <div class="bg-gray-100 border-b border-border py-5">
+        <div class="container" style="width: 1200px; margin: 0 auto;">
+            <div class="flex items-center space-x-3 text-sm">
+                <a href="index.html" class="text-gray-600 hover:text-primary">الرئيسية</a>
+                <span class="text-gray-400">></span>
+                <span class="text-gray-900">قائمة الموديلات</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container" style="width: 1200px; margin: 0 auto; padding: 40px 0;">
+        <div class="search-section">
+            <div class="search-title">البحث عن توافق القطع</div>
+            
+            <div class="search-tabs">
+                <div class="search-tab active" data-tab="vin-tab" onclick="switchTab('vin-tab', this)">البحث برقم VIN</div>
+                <div class="search-tab" data-tab="chassis-tab" onclick="switchTab('chassis-tab', this)">البحث برقم الشاسي</div>
+                <div class="search-tab" data-tab="model-tab" onclick="switchTab('model-tab', this)">البحث باختيار الموديل</div>
+            </div>
+            
+            <div class="search-form-wrap active" id="vin-tab">
+                <div class="search-form">
+                    <div class="form-group">
+                        <label class="form-label">رقم VIN <span style="color:red;">*</span></label>
+                        <input type="text" class="form-input-wide" id="vin-input" placeholder="الرجاء إدخال 17 رقم VIN (مثل LBV5S310XMSXXXXXX)" maxlength="17">
+                    </div>
+
+                    <button class="search-btn" onclick="searchByVIN()">البحث عن قطع متوافقة</button>
+                </div>
+            </div>
+
+            <div class="search-form-wrap" id="chassis-tab">
+                <div class="search-form">
+                    <div class="form-group">
+                        <label class="form-label">رقم الشاسي <span style="color:red;">*</span></label>
+                        <input type="text" class="form-input-wide" id="chassis-input" placeholder="الرجاء إدخال رقم الشاسي (مثل F18, W222, G38)">
+                    </div>
+                    <button class="search-btn" onclick="searchByChassis()">البحث عن قطع متوافقة</button>
+                </div>
+            </div>
+
+            <div class="search-form-wrap" id="model-tab">
+                <div class="search-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">العلامة <span style="color:red;">*</span></label>
+                            <select class="form-select" id="model-brand" onchange="changeSeries()">
+                                <option value="">الرجاء اختيار العلامة</option>
+                                <option value="benz">Mercedes-Benz</option>
+                                <option value="bmw">بي إم دبليو</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">السلسلة <span style="color:red;">*</span></label>
+                            <select class="form-select" id="model-series">
+                                <option value="">الرجاء اختيار العلامة أولاً</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">الموديل <span style="color:red;">*</span></label>
+                            <select class="form-select" id="model-type">
+                                <option value="">الرجاء اختيار السلسلة أولاً</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">السنة</label>
+                            <select class="form-select" id="model-year">
+                                <option value="">الرجاء اختيار السنة</option>
+                                <option value="2025">2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="search-btn" onclick="searchByModel()">البحث عن قطع متوافقة</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="result-section hidden" id="resultSection">
+            <div class="result-title">نتائج البحث</div>
+            <div id="brandWarning"></div>
+            <div class="car-info" id="carInfo"></div>
+            <table class="parts-table">
+                <thead>
+                    <tr>
+                        <th>الرقم</th>
+                        <th>فئة القطعة</th>
+                        <th>اسم القطعة</th>
+                        <th>رقم OE</th>
+                        <th>رقم SHAKOLN</th>
+                        <th>حالة التوافق</th>
+                        <th>الإجراء</th>
+                    </tr>
+                </thead>
+                <tbody id="partsTable">
+                </tbody>
+            </table>
+            <div id="pagination"></div>
+        </div>
+    </div>
+    
+    <div class="py-15 bg-light">
+        <div class="container" style="width: 1200px; margin: 0 auto;">
+            <h2 class="text-center text-2xl font-medium text-primary mb-10">الموديلات الشعبية</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/benchiCji.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">Mercedes-Benz الفئة C</div>
+                            <div class="model-image-subtitle">سيارة فاخرة</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">Mercedes-Benz الفئة C</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">السنة：2020-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">رقم الشاسي：W206</div>
+                    <a href="product.html?chassis=W206&brand=Mercedes-Benz" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">عرض القطع</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/benchiEji.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">Mercedes-Benzالفئة E</div>
+                            <div class="model-image-subtitle">سيارة تنفيذية</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">Mercedes-Benz الفئة E</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">السنة：2021-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">رقم الشاسي：W213</div>
+                    <a href="product.html?chassis=W213&brand=Mercedes-Benz" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">عرض القطع</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/BMW3xi.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">بي إم دبليو الفئة 3</div>
+                            <div class="model-image-subtitle">سيارة رياضية</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">بي إم دبليو الفئة 3</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">السنة：2019-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">رقم الشاسي：G20</div>
+                    <a href="product.html?chassis=G20&brand=بي إم دبليو" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">عرض القطع</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/BMW5xi.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">بي إم دبليو الفئة 5</div>
+                            <div class="model-image-subtitle">سيارة أعمال</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">بي إم دبليو الفئة 5</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">السنة：2020-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">رقم الشاسي：G30</div>
+                    <a href="product.html?chassis=G30&brand=بي إم دبليو" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">عرض القطع</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/benchiGLC.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">Mercedes-Benz GLC</div>
+                            <div class="model-image-subtitle">SUV فاخر</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">Mercedes-Benz GLC</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">السنة：2020-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">رقم الشاسي：X253</div>
+                    <a href="product.html?chassis=X253&brand=Mercedes-Benz" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">عرض القطع</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/BMWX3.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">بي إم دبليو X3</div>
+                            <div class="model-image-subtitle">SUV متوسط الحجم</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">بي إم دبليو X3</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">السنة：2018-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">رقم الشاسي：G01</div>
+                    <a href="product.html?chassis=G01&brand=بي إم دبليو" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">عرض القطع</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/benchiSji.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">Mercedes-Benz الفئة S</div>
+                            <div class="model-image-subtitle">سيارة رائدة</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">Mercedes-Benz الفئة S</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">السنة：2021-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">رقم الشاسي：W223</div>
+                    <a href="product.html?chassis=W223&brand=Mercedes-Benz" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">عرض القطع</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/BMW7xi.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">بي إم دبليو الفئة 7</div>
+                            <div class="model-image-subtitle">رائد فاخر</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">بي إم دبليو الفئة 7</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">السنة：2022-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">رقم الشاسي：G70</div>
+                    <a href="product.html?chassis=G70&brand=بي إم دبليو" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">عرض القطع</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="footer-placeholder"></div>
+
+    <!-- <script src="scripts/products.js"></script> -->
+    <script src="templates/load-templates.js"></script>
+    
+    
+
+<script>
+// المتغيرات العالمية
+let currentPage = 1;
+const itemsPerPage = 20;
+let currentResults = [];
+
+// بيانات العلامة
+const brandOptions = [
+  { "value": "benz", "label": "Mercedes-Benz" },
+  { "value": "bmw", "label": "بي إم دبليو" }
+];
+
+// قائمة سلاسل BMW
+const bmwSeriesList = [
+  {"value": "1", "label": "الفئة 1"},
+  {"value": "2", "label": "الفئة 2"},
+  {"value": "3", "label": "الفئة 3"},
+  {"value": "4", "label": "الفئة 4"},
+  {"value": "5", "label": "الفئة 5"},
+  {"value": "6", "label": "الفئة 6/GT"},
+  {"value": "7", "label": "الفئة 7"},
+  {"value": "8", "label": "الفئة 8"},
+  {"value": "x1", "label": "X1"},
+  {"value": "x2", "label": "X2"},
+  {"value": "x3", "label": "X3"},
+  {"value": "x4", "label": "X4"},
+  {"value": "x5", "label": "X5"},
+  {"value": "x6", "label": "X6"},
+  {"value": "x7", "label": "X7"},
+  {"value": "xm", "label": "XM"},
+  {"value": "z", "label": "سلسلة Z"},
+  {"value": "i", "label": "الفئة i (كهربائية)"},
+  {"value": "m", "label": "سلسلة M"}
+];
+
+// الموديلات المقابلة لكل سلسلة BMW (مع رقم الشاسي)
+const bmwModelMap = {
+  "1": [
+    {"value": "1_e81", "label": "الفئة 1(E81/E82/E87/E88)", "chassis": ["E81", "E82", "E87", "E88"]},
+    {"value": "1_f20", "label": "الفئة 1(F20/F21)", "chassis": ["F20", "F21"]},
+    {"value": "1_f40", "label": "الفئة 1(F40)", "chassis": ["F40"]},
+    {"value": "1_f52", "label": "الفئة 1(F52 صنع في الصين)", "chassis": ["F52"]},
+    {"value": "1_f70", "label": "الفئة 1(F70)", "chassis": ["F70"]}
+  ],
+  "2": [
+    {"value": "2_f22", "label": "الفئة 2(F22/F23)", "chassis": ["F22", "F23"]},
+    {"value": "2_f44", "label": "الفئة 2(F44)", "chassis": ["F44"]},
+    {"value": "2_f45", "label": "الفئة 2(F45/F46)", "chassis": ["F45", "F46"]},
+    {"value": "2_g42", "label": "الفئة 2(G42)", "chassis": ["G42"]}
+  ],
+  "3": [
+    {"value": "3_e21", "label": "الفئة 3(E21)", "chassis": ["E21"]},
+    {"value": "3_e30", "label": "الفئة 3(E30)", "chassis": ["E30"]},
+    {"value": "3_e36", "label": "الفئة 3(E36)", "chassis": ["E36"]},
+    {"value": "3_e46", "label": "الفئة 3(E46)", "chassis": ["E46"]},
+    {"value": "3_e90", "label": "الفئة 3(E90/E91/E92/E93)", "chassis": ["E90", "E91", "E92", "E93"]},
+    {"value": "3_f30", "label": "الفئة 3(F30/F31/F34/F35)", "chassis": ["F30", "F31", "F34", "F35"]},
+    {"value": "3_g20", "label": "الفئة 3(G20)", "chassis": ["G20"]},
+    {"value": "3_g28", "label": "الفئة 3(G28 صنع في الصين)", "chassis": ["G28"]}
+  ],
+  "4": [
+    {"value": "4_f32", "label": "الفئة 4(F32/F33/F36)", "chassis": ["F32", "F33", "F36"]},
+    {"value": "4_g22", "label": "الفئة 4(G22/G23/G26)", "chassis": ["G22", "G23", "G26"]}
+  ],
+  "5": [
+    {"value": "5_e12", "label": "الفئة 5(E12)", "chassis": ["E12"]},
+    {"value": "5_e28", "label": "الفئة 5(E28)", "chassis": ["E28"]},
+    {"value": "5_e34", "label": "الفئة 5(E34)", "chassis": ["E34"]},
+    {"value": "5_e39", "label": "الفئة 5(E39)", "chassis": ["E39"]},
+    {"value": "5_e60", "label": "الفئة 5(E60/E61)", "chassis": ["E60", "E61"]},
+    {"value": "5_f10", "label": "الفئة 5(F10/F11/F18)", "chassis": ["F10", "F11", "F18"]},
+    {"value": "5_g30", "label": "الفئة 5(G30)", "chassis": ["G30"]},
+    {"value": "5_g38", "label": "الفئة 5(G38 صنع في الصين)", "chassis": ["G38"]}
+  ],
+  "6": [
+    {"value": "6_e24", "label": "الفئة 6(E24)", "chassis": ["E24"]},
+    {"value": "6_e63", "label": "الفئة 6(E63/E64)", "chassis": ["E63", "E64"]},
+    {"value": "6_f06", "label": "الفئة 6(F06/F12/F13)", "chassis": ["F06", "F12", "F13"]},
+    {"value": "6_g32", "label": "الفئة 6(G32)", "chassis": ["G32"]}
+  ],
+  "7": [
+    {"value": "7_e23", "label": "الفئة 7(E23)", "chassis": ["E23"]},
+    {"value": "7_e32", "label": "الفئة 7(E32)", "chassis": ["E32"]},
+    {"value": "7_e38", "label": "الفئة 7(E38)", "chassis": ["E38"]},
+    {"value": "7_e65", "label": "الفئة 7(E65/E66)", "chassis": ["E65", "E66"]},
+    {"value": "7_f01", "label": "الفئة 7(F01/F02)", "chassis": ["F01", "F02"]},
+    {"value": "7_g11", "label": "الفئة 7(G11/G12)", "chassis": ["G11", "G12"]},
+    {"value": "7_g70", "label": "الفئة 7(G70)", "chassis": ["G70"]}
+  ],
+  "8": [
+    {"value": "8_e31", "label": "الفئة 8(E31)", "chassis": ["E31"]},
+    {"value": "8_g14", "label": "الفئة 8(G14/G15/G16)", "chassis": ["G14", "G15", "G16"]},
+    {"value": "8_g77", "label": "الفئة 8(G77)", "chassis": ["G77"]}
+  ],
+  "x1": [
+    {"value": "x1_e84", "label": "X1(E84)", "chassis": ["E84"]},
+    {"value": "x1_f48", "label": "X1(F48/F49)", "chassis": ["F48", "F49"]},
+    {"value": "x1_u11", "label": "X1(U11/U12)", "chassis": ["U11", "U12"]}
+  ],
+  "x2": [
+    {"value": "x2_f39", "label": "X2(F39)", "chassis": ["F39"]},
+    {"value": "x2_u10", "label": "X2(U10)", "chassis": ["U10"]}
+  ],
+  "x3": [
+    {"value": "x3_e83", "label": "X3(E83)", "chassis": ["E83"]},
+    {"value": "x3_f25", "label": "X3(F25)", "chassis": ["F25"]},
+    {"value": "x3_g01", "label": "X3(G01)", "chassis": ["G01"]},
+    {"value": "x3_g08", "label": "X3(G08 صنع في الصين)", "chassis": ["G08"]},
+    {"value": "x3_g45", "label": "X3(G45)", "chassis": ["G45"]}
+  ],
+  "x4": [
+    {"value": "x4_f26", "label": "X4(F26)", "chassis": ["F26"]},
+    {"value": "x4_g02", "label": "X4(G02)", "chassis": ["G02"]}
+  ],
+  "x5": [
+    {"value": "x5_e53", "label": "X5(E53)", "chassis": ["E53"]},
+    {"value": "x5_e70", "label": "X5(E70)", "chassis": ["E70"]},
+    {"value": "x5_f15", "label": "X5(F15)", "chassis": ["F15"]},
+    {"value": "x5_g05", "label": "X5(G05)", "chassis": ["G05"]},
+    {"value": "x5_g18", "label": "X5(G18 صنع في الصين)", "chassis": ["G18"]}
+  ],
+  "x6": [
+    {"value": "x6_e71", "label": "X6(E71)", "chassis": ["E71"]},
+    {"value": "x6_f16", "label": "X6(F16)", "chassis": ["F16"]},
+    {"value": "x6_g06", "label": "X6(G06)", "chassis": ["G06"]}
+  ],
+  "x7": [
+    {"value": "x7_g07", "label": "X7(G07)", "chassis": ["G07"]}
+  ],
+  "xm": [
+    {"value": "xm_g09", "label": "XM(G09)", "chassis": ["G09"]}
+  ],
+  "z": [
+    {"value": "z_e85", "label": "Z4(E85/E86)", "chassis": ["E85", "E86"]},
+    {"value": "z_e89", "label": "Z4(E89)", "chassis": ["E89"]},
+    {"value": "z_g29", "label": "Z4(G29)", "chassis": ["G29"]}
+  ],
+  "i": [
+    {"value": "i_i01", "label": "i3(I01)", "chassis": ["I01"]},
+    {"value": "i_g28", "label": "i3(G28)", "chassis": ["G28"]},
+    {"value": "i_g26", "label": "i4(G26)", "chassis": ["G26"]},
+    {"value": "i_g08", "label": "iX3(G08)", "chassis": ["G08"]},
+    {"value": "i_i20", "label": "iX(I20)", "chassis": ["I20"]},
+    {"value": "i_g70", "label": "i7(G70)", "chassis": ["G70"]},
+    {"value": "i_g60", "label": "i5(G60)", "chassis": ["G60"]}
+  ],
+  "m": [
+    {"value": "m_f87", "label": "M2(F87)", "chassis": ["F87"]},
+    {"value": "m_g87", "label": "M2(G87)", "chassis": ["G87"]},
+    {"value": "m_e30", "label": "M3(E30)", "chassis": ["E30"]},
+    {"value": "m_e36", "label": "M3(E36)", "chassis": ["E36"]},
+    {"value": "m_e46", "label": "M3(E46)", "chassis": ["E46"]},
+    {"value": "m_e90", "label": "M3(E90/E92/E93)", "chassis": ["E90", "E92", "E93"]},
+    {"value": "m_f80", "label": "M3(F80)", "chassis": ["F80"]},
+    {"value": "m_g80", "label": "M3(G80)", "chassis": ["G80"]},
+    {"value": "m_f82", "label": "M4(F82/F83)", "chassis": ["F82", "F83"]},
+    {"value": "m_g82", "label": "M4(G82/G83)", "chassis": ["G82", "G83"]},
+    {"value": "m_e28", "label": "M5(E28)", "chassis": ["E28"]},
+    {"value": "m_e34", "label": "M5(E34)", "chassis": ["E34"]},
+    {"value": "m_e39", "label": "M5(E39)", "chassis": ["E39"]},
+    {"value": "m_e60", "label": "M5(E60/E61)", "chassis": ["E60", "E61"]},
+    {"value": "m_f10", "label": "M5(F10)", "chassis": ["F10"]},
+    {"value": "m_g90", "label": "M5(G90)", "chassis": ["G90"]},
+    {"value": "m_g14", "label": "M8(G14/G15/G16)", "chassis": ["G14", "G15", "G16"]},
+    {"value": "m_f97", "label": "X3 M(F97)", "chassis": ["F97"]},
+    {"value": "m_f98", "label": "X4 M(F98)", "chassis": ["F98"]},
+    {"value": "m_f95", "label": "X5 M(F95)", "chassis": ["F95"]},
+    {"value": "m_f96", "label": "X6 M(F96)", "chassis": ["F96"]}
+  ]
+};
+
+// قائمة سلاسل Mercedes-Benz
+const benzSeriesList = [
+  {"value": "a", "label": "الفئة A"},
+  {"value": "b", "label": "الفئة B"},
+  {"value": "c", "label": "الفئة C"},
+  {"value": "e", "label": "الفئة E"},
+  {"value": "s", "label": "الفئة S"},
+  {"value": "cla", "label": "CLA"},
+  {"value": "cls", "label": "CLS"},
+  {"value": "gla", "label": "GLA"},
+  {"value": "glb", "label": "GLB"},
+  {"value": "glc", "label": "GLC"},
+  {"value": "gle", "label": "GLE"},
+  {"value": "gls", "label": "GLS"},
+  {"value": "g", "label": "الفئة G"}
+];
+
+// الموديلات المقابلة لكل سلسلة Mercedes-Benz (مع رقم الشاسي)
+const benzModelMap = {
+  "a": [
+    {"value": "a_w168", "label": "الفئة A(W168)", "chassis": ["W168"]},
+    {"value": "a_w169", "label": "الفئة A(W169)", "chassis": ["W169"]},
+    {"value": "a_w176", "label": "الفئة A(W176)", "chassis": ["W176"]},
+    {"value": "a_w177", "label": "الفئة A(W177)", "chassis": ["W177"]},
+    {"value": "a_v177", "label": "الفئة A(V177 صنع في الصين صالون)", "chassis": ["V177"]}
+  ],
+  "b": [
+    {"value": "b_w245", "label": "الفئة B(W245)", "chassis": ["W245"]},
+    {"value": "b_w246", "label": "الفئة B(W246)", "chassis": ["W246"]},
+    {"value": "b_w247", "label": "الفئة B(W247)", "chassis": ["W247"]}
+  ],
+  "c": [
+    {"value": "c_w202", "label": "الفئة C(W202)", "chassis": ["W202"]},
+    {"value": "c_w203", "label": "الفئة C(W203)", "chassis": ["W203"]},
+    {"value": "c_w204", "label": "الفئة C(W204)", "chassis": ["W204"]},
+    {"value": "c_w205", "label": "الفئة C(W205)", "chassis": ["W205"]},
+    {"value": "c_w206", "label": "الفئة C(W206)", "chassis": ["W206"]}
+  ],
+  "e": [
+    {"value": "e_w124", "label": "الفئة E(W124)", "chassis": ["W124"]},
+    {"value": "e_w210", "label": "الفئة E(W210)", "chassis": ["W210"]},
+    {"value": "e_w211", "label": "الفئة E(W211)", "chassis": ["W211"]},
+    {"value": "e_w212", "label": "الفئة E(W212)", "chassis": ["W212"]},
+    {"value": "e_w213", "label": "الفئة E(W213)", "chassis": ["W213"]},
+    {"value": "e_w214", "label": "الفئة E(W214)", "chassis": ["W214"]}
+  ],
+  "s": [
+    {"value": "s_w140", "label": "الفئة S(W140)", "chassis": ["W140"]},
+    {"value": "s_w220", "label": "الفئة S(W220)", "chassis": ["W220"]},
+    {"value": "s_w221", "label": "الفئة S(W221)", "chassis": ["W221"]},
+    {"value": "s_w222", "label": "الفئة S(W222)", "chassis": ["W222"]},
+    {"value": "s_w223", "label": "الفئة S(W223)", "chassis": ["W223"]}
+  ],
+  "cla": [
+    {"value": "cla_c117", "label": "CLA(C117)", "chassis": ["C117"]},
+    {"value": "cla_c118", "label": "CLA(C118)", "chassis": ["C118"]}
+  ],
+  "cls": [
+    {"value": "cls_c219", "label": "CLS(C219)", "chassis": ["C219"]},
+    {"value": "cls_c218", "label": "CLS(C218)", "chassis": ["C218"]},
+    {"value": "cls_c257", "label": "CLS(C257)", "chassis": ["C257"]}
+  ],
+  "gla": [
+    {"value": "gla_x156", "label": "GLA(X156)", "chassis": ["X156"]},
+    {"value": "gla_h247", "label": "GLA(H247)", "chassis": ["H247"]}
+  ],
+  "glb": [
+    {"value": "glb_x247", "label": "GLB(X247)", "chassis": ["X247"]}
+  ],
+  "glc": [
+    {"value": "glc_x204", "label": "GLK(X204)", "chassis": ["X204"]},
+    {"value": "glc_x253", "label": "GLC(X253)", "chassis": ["X253"]},
+    {"value": "glc_x254", "label": "GLC(X254)", "chassis": ["X254"]}
+  ],
+  "gle": [
+    {"value": "gle_w163", "label": "ML(W163)", "chassis": ["W163"]},
+    {"value": "gle_w164", "label": "ML(W164)", "chassis": ["W164"]},
+    {"value": "gle_w166", "label": "ML/GLE(W166)", "chassis": ["W166"]},
+    {"value": "gle_w167", "label": "GLE(W167)", "chassis": ["W167"]},
+    {"value": "gle_c292", "label": "GLE كوبيه(C292)", "chassis": ["C292"]}
+  ],
+  "gls": [
+    {"value": "gls_x166", "label": "GL/GLS(X166)", "chassis": ["X166"]},
+    {"value": "gls_x167", "label": "GLS(X167)", "chassis": ["X167"]}
+  ],
+  "g": [
+    {"value": "g_w460", "label": "الفئة G(W460)", "chassis": ["W460"]},
+    {"value": "g_w461", "label": "الفئة G(W461)", "chassis": ["W461"]},
+    {"value": "g_w463", "label": "الفئة G(W463)", "chassis": ["W463"]},
+    {"value": "g_w464", "label": "الفئة G(W464)", "chassis": ["W464"]},
+    {"value": "g_w465", "label": "الفئة G(W465)", "chassis": ["W465"]}
+  ]
+};
+
+// بيانات السنة
+const yearOptions = [
+  {"value": "2015", "label": "2015"},
+  {"value": "2016", "label": "2016"},
+  {"value": "2017", "label": "2017"},
+  {"value": "2018", "label": "2018"},
+  {"value": "2019", "label": "2019"},
+  {"value": "2020", "label": "2020"},
+  {"value": "2021", "label": "2021"},
+  {"value": "2022", "label": "2022"},
+  {"value": "2023", "label": "2023"},
+  {"value": "2024", "label": "2024"},
+  {"value": "2025", "label": "2025"},
+  {"value": "2026", "label": "2026"}
+];
+
+// وظيفة التبديل بين العلامات
+function switchTab(tabId, btn) {
+    document.querySelectorAll('.search-form-wrap').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.search-tab').forEach(b => {
+        b.classList.remove('active');
+    });
+    
+    document.getElementById(tabId).classList.add('active');
+    if (btn) {
+        btn.classList.add('active');
+    }
+}
+
+// ربط السلاسل
+function changeSeries() {
+    const brand = document.getElementById('model-brand').value;
+    const seriesSelect = document.getElementById('model-series');
+    const typeSelect = document.getElementById('model-type');
+    const yearSelect = document.getElementById('model-year');
+    
+    console.log('changeSeries called, brand:', brand);
+    
+    seriesSelect.innerHTML = '<option value="">الرجاء اختيار السلسلة</option>';
+    typeSelect.innerHTML = '<option value="">الرجاء اختيار السلسلة أولاً</option>';
+    yearSelect.innerHTML = '<option value="">الرجاء اختيار الموديل أولاً</option>';
+    
+    if (brand === 'benz') {
+        console.log('Loading benz series');
+        benzSeriesList.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.value;
+            option.textContent = item.label;
+            seriesSelect.appendChild(option);
+        });
+    } else if (brand === 'bmw') {
+        console.log('Loading bmw series');
+        bmwSeriesList.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.value;
+            option.textContent = item.label;
+            seriesSelect.appendChild(option);
+        });
+        console.log('bmw series loaded');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded');
+    // ربط الموديلات
+    document.getElementById('model-series').addEventListener('change', function() {
+        const brand = document.getElementById('model-brand').value;
+        const series = this.value;
+        const typeSelect = document.getElementById('model-type');
+        const yearSelect = document.getElementById('model-year');
+        
+        console.log('Series changed, brand:', brand, 'series:', series);
+        
+        typeSelect.innerHTML = '<option value="">الرجاء اختيار الموديل المحدد</option>';
+        yearSelect.innerHTML = '<option value="">الرجاء اختيار الموديل أولاً</option>';
+        
+        let modelList = [];
+        if (brand === 'benz' && benzModelMap[series]) {
+            modelList = benzModelMap[series];
+        } else if (brand === 'bmw' && bmwModelMap[series]) {
+            modelList = bmwModelMap[series];
+        }
+        
+        console.log('modelList length:', modelList.length);
+        
+        modelList.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.value;
+            option.textContent = item.label;
+            option.dataset.chassis = item.chassis.join(',');
+            typeSelect.appendChild(option);
+        });
+    });
+
+    // ربط السنوات
+    document.getElementById('model-type').addEventListener('change', function() {
+        const yearSelect = document.getElementById('model-year');
+        
+        yearSelect.innerHTML = '<option value="">الرجاء اختيار السنة</option>';
+        
+        yearOptions.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.value;
+            option.textContent = item.label;
+            yearSelect.appendChild(option);
+        });
+    });
+});
+
+// البحث بواسطة VIN
+async function searchByVIN() {
+    const vin = document.getElementById('vin-input').value.toUpperCase();
+    
+    if (!vin || vin.length !== 17) {
+        alert('الرجاء إدخال 17 رقم VIN صالح');
+        return;
+    }
+    
+    // تحليل كود VIN
+    const parsedVIN = parseVIN(vin);
+    
+    let carInfo = {
+        brand: parsedVIN.brand || '',
+        vin: vin,
+        chassis: parsedVIN.chassis,
+        model: parsedVIN.model,
+        year: parsedVIN.year || '2024'
+    };
+    
+    // إذا لم يتم التعرف على العلامة، عرض تحذير
+    if (!parsedVIN.brand) {
+        document.getElementById('brandWarning').innerHTML = `
+            <div style="color: #e53935; padding: 10px; background: #ffebee; border-radius: 4px; margin-bottom: 15px;">
+                ⚠️ تحذير: لا يمكن التعرف على العلامة من كود VIN، يرجى التحقق من صحة كود VIN
+            </div>
+        `;
+        return;
+    } else {
+        document.getElementById('brandWarning').innerHTML = '';
+    }
+    
+    await showResults('بحث بواسطة VIN', carInfo);
+}
+
+// البحث برقم الشاسي
+async function searchByChassis() {
+    const chassis = document.getElementById('chassis-input').value.toUpperCase();
+    
+    if (!chassis) {
+        alert('الرجاء إدخال رقم الشاسي');
+        return;
+    }
+    
+    await showResults('البحث برقم الشاسي', { chassis: chassis });
+}
+
+// البحث باختيار الموديل
+async function searchByModel() {
+    const brand = document.getElementById('model-brand').value;
+    const series = document.getElementById('model-series').value;
+    const typeSelect = document.getElementById('model-type');
+    const type = typeSelect.value;
+    const year = document.getElementById('model-year').value;
+    
+    if (!brand || !series || !type) {
+        alert('الرجاء إكمال الحقول المطلوبة');
+        return;
+    }
+    
+    // الحصول على رقم الشاسي المقابل للموديل
+    const selectedOption = typeSelect.options[typeSelect.selectedIndex];
+    const chassis = selectedOption.dataset.chassis || '';
+    
+    // الحصول على اسم السلسلة
+    let seriesName = '';
+    if (brand === 'benz') {
+        const seriesItem = benzSeriesList.find(item => item.value === series);
+        seriesName = seriesItem ? seriesItem.label : series;
+    } else {
+        const seriesItem = bmwSeriesList.find(item => item.value === series);
+        seriesName = seriesItem ? seriesItem.label : series;
+    }
+    
+    // الحصول على اسم الموديل
+    let modelName = selectedOption.textContent;
+    
+    await showResults('الموديلبحث', {
+        brand: brand === 'benz' ? 'Mercedes-Benz' : 'BMW',
+        series: seriesName,
+        type: modelName,
+        year: year || '2024',
+        chassis: chassis
+    });
+}
+
+// وظيفة تحليل VIN
+function parseVIN(vin) {
+    const result = {
+        brand: '',
+        chassis: '',
+        model: '',
+        year: ''
+    };
+    
+    if (!vin || vin.length !== 17) {
+        return result;
+    }
+    
+    // التعرف على العلامة من أول 3 أحرف من VIN
+    const wmi = vin.substring(0, 3);
+    const brandCodeMap = {
+        'WDD': 'Mercedes-Benz', 'WDC': 'Mercedes-Benz', 'WDB': 'Mercedes-Benz',
+        'WBA': 'BMW', 'WBX': 'BMW', 'WBV': 'BMW', 'WBS': 'BMW', 'LBV': 'BMW'
+    };
+    
+    if (brandCodeMap[wmi]) {
+        result.brand = brandCodeMap[wmi];
+    }
+    
+    // خريطة رقم الشاسي إلى العلامة
+    const chassisToBrand = {
+        'W205': 'Mercedes-Benz', 'W213': 'Mercedes-Benz', 'W222': 'Mercedes-Benz', 'W204': 'Mercedes-Benz', 'W212': 'Mercedes-Benz',
+        'W221': 'Mercedes-Benz', 'W203': 'Mercedes-Benz', 'W166': 'Mercedes-Benz', 'W251': 'Mercedes-Benz', 'W164': 'Mercedes-Benz',
+        'W246': 'Mercedes-Benz', 'W253': 'Mercedes-Benz', 'W176': 'Mercedes-Benz', 'W117': 'Mercedes-Benz', 'W211': 'Mercedes-Benz',
+        'W220': 'Mercedes-Benz', 'W218': 'Mercedes-Benz', 'W207': 'Mercedes-Benz', 'W447': 'Mercedes-Benz', 'W167': 'Mercedes-Benz',
+        'W206': 'Mercedes-Benz', 'W254': 'Mercedes-Benz', 'W214': 'Mercedes-Benz', 'W223': 'Mercedes-Benz', 'W463': 'Mercedes-Benz',
+        'F30': 'BMW', 'F10': 'BMW', 'F18': 'BMW', 'G05': 'BMW', 'G38': 'BMW',
+        'F35': 'BMW', 'F25': 'BMW', 'E90': 'BMW', 'E60': 'BMW', 'F02': 'BMW',
+        'E70': 'BMW', 'F15': 'BMW', 'F20': 'BMW', 'G12': 'BMW', 'G28': 'BMW',
+        'F49': 'BMW', 'E84': 'BMW', 'E83': 'BMW', 'F07': 'BMW', 'F16': 'BMW',
+        'G08': 'BMW', 'G01': 'BMW', 'G20': 'BMW', 'G30': 'BMW', 'F52': 'BMW'
+    };
+    
+    // خريطة رقم الشاسي إلى الموديل
+    const chassisToModel = {
+        'W205': 'الفئة C', 'W213': 'الفئة E', 'W222': 'الفئة S', 'W204': 'الفئة C', 'W212': 'الفئة E',
+        'W221': 'الفئة S', 'W203': 'الفئة C', 'W166': 'ML/GLE', 'W251': 'الفئة R', 'W164': 'ML',
+        'W246': 'الفئة B', 'W253': 'GLC', 'W176': 'الفئة A', 'W117': 'CLA', 'W211': 'الفئة E',
+        'W220': 'الفئة S', 'W218': 'CLS', 'W207': 'الفئة ECoupe', 'W447': 'الفئة V', 'W167': 'GLE',
+        'W206': 'الفئة C', 'W254': 'الفئة C', 'W214': 'الفئة E', 'W223': 'الفئة S', 'W463': 'الفئة G',
+        'F30': 'الفئة 3', 'F10': 'الفئة 5', 'F18': 'الفئة 5', 'G05': 'X5', 'G38': 'الفئة 5',
+        'F35': 'الفئة 3', 'F25': 'X3', 'E90': 'الفئة 3', 'E60': 'الفئة 5', 'F02': 'الفئة 7',
+        'E70': 'X5', 'F15': 'X5', 'F20': 'الفئة 1', 'G12': 'الفئة 7', 'G28': 'الفئة 3',
+        'F49': 'X1', 'E84': 'X1', 'E83': 'X3', 'F07': 'الفئة 5GT', 'F16': 'X6',
+        'G08': 'X3', 'G01': 'X3', 'G20': 'الفئة 3', 'G30': 'الفئة 5', 'F52': 'الفئة 1'
+    };
+    
+    // استنتاج العلامة والموديل من رقم الشاسي
+    const vds = vin.substring(3, 9);
+    const benzChassisMap = {
+        '205': 'W205', '213': 'W213', '222': 'W222', '204': 'W204', '212': 'W212'
+    };
+    const bmwChassisMap = {
+        '3A5': 'F30', '5A5': 'F18', '5D2': 'G38', 'M1C': 'G05', '2G8': 'G28'
+    };
+    
+    if (result.brand === 'Mercedes-Benz') {
+        const candidates = [vds.substring(0, 3), vds.substring(1, 4)];
+        for (const candidate of candidates) {
+            if (benzChassisMap[candidate]) {
+                result.chassis = benzChassisMap[candidate];
+                break;
+            }
+        }
+    } else if (result.brand === 'BMW') {
+        const candidates = [vds.substring(0, 3), vds.substring(1, 4), vds.substring(2, 5)];
+        for (const candidate of candidates) {
+            if (bmwChassisMap[candidate]) {
+                result.chassis = bmwChassisMap[candidate];
+                break;
+            }
+        }
+    }
+    
+    if (result.chassis && chassisToModel[result.chassis]) {
+        result.model = chassisToModel[result.chassis];
+    }
+    
+    const yearCode = vin.charAt(9);
+    const yearMap = {
+        'A': '2010', 'B': '2011', 'C': '2012', 'D': '2013', 'E': '2014',
+        'F': '2015', 'G': '2016', 'H': '2017', 'J': '2018', 'K': '2019',
+        'L': '2020', 'M': '2021', 'N': '2022', 'P': '2023', 'R': '2024',
+        'S': '2025'
+    };
+    if (yearMap[yearCode]) {
+        result.year = yearMap[yearCode];
+    }
+    
+    return result;
+}
+
+// عرض نتائج البحث
+async function showResults(searchType, carInfo) {
+    document.getElementById('resultSection').classList.remove('hidden');
+    
+    // احتفظ بالمنطق الأصلي أولاً
+    const chassisToBrand = {
+      'W168': 'Mercedes-Benz', 'W169': 'Mercedes-Benz', 'W176': 'Mercedes-Benz', 'W177': 'Mercedes-Benz', 'V177': 'Mercedes-Benz',
+      'W245': 'Mercedes-Benz', 'W246': 'Mercedes-Benz', 'W247': 'Mercedes-Benz',
+      'W202': 'Mercedes-Benz', 'W203': 'Mercedes-Benz', 'W204': 'Mercedes-Benz', 'W205': 'Mercedes-Benz', 'W206': 'Mercedes-Benz',
+      'W124': 'Mercedes-Benz', 'W210': 'Mercedes-Benz', 'W211': 'Mercedes-Benz', 'W212': 'Mercedes-Benz', 'W213': 'Mercedes-Benz', 'W214': 'Mercedes-Benz',
+      'W140': 'Mercedes-Benz', 'W220': 'Mercedes-Benz', 'W221': 'Mercedes-Benz', 'W222': 'Mercedes-Benz', 'W223': 'Mercedes-Benz',
+      'C117': 'Mercedes-Benz', 'C118': 'Mercedes-Benz',
+      'C219': 'Mercedes-Benz', 'C218': 'Mercedes-Benz', 'C257': 'Mercedes-Benz',
+      'X156': 'Mercedes-Benz', 'H247': 'Mercedes-Benz',
+      'X247': 'Mercedes-Benz',
+      'X204': 'Mercedes-Benz', 'X253': 'Mercedes-Benz', 'X254': 'Mercedes-Benz',
+      'W163': 'Mercedes-Benz', 'W164': 'Mercedes-Benz', 'W166': 'Mercedes-Benz', 'W167': 'Mercedes-Benz', 'C292': 'Mercedes-Benz',
+      'X166': 'Mercedes-Benz', 'X167': 'Mercedes-Benz',
+      'W460': 'Mercedes-Benz', 'W461': 'Mercedes-Benz', 'W463': 'Mercedes-Benz', 'W464': 'Mercedes-Benz', 'W465': 'Mercedes-Benz',
+      'F30': 'BMW', 'F10': 'BMW', 'F18': 'BMW', 'G05': 'BMW', 'G38': 'BMW',
+      'F35': 'BMW', 'F25': 'BMW', 'E90': 'BMW', 'E60': 'BMW', 'F02': 'BMW',
+      'E70': 'BMW', 'F15': 'BMW', 'F20': 'BMW', 'G12': 'BMW', 'G28': 'BMW',
+      'F49': 'BMW', 'E84': 'BMW', 'E83': 'BMW', 'F07': 'BMW', 'F16': 'BMW',
+      'G08': 'BMW', 'G01': 'BMW', 'G20': 'BMW', 'G30': 'BMW', 'F52': 'BMW'
+    };
+
+    const chassisToModel = {
+      'W168': 'الفئة A', 'W169': 'الفئة A', 'W176': 'الفئة A', 'W177': 'الفئة A', 'V177': 'الفئة A',
+      'W245': 'الفئة B', 'W246': 'الفئة B', 'W247': 'الفئة B',
+      'W202': 'الفئة C', 'W203': 'الفئة C', 'W204': 'الفئة C', 'W205': 'الفئة C', 'W206': 'الفئة C',
+      'W124': 'الفئة E', 'W210': 'الفئة E', 'W211': 'الفئة E', 'W212': 'الفئة E', 'W213': 'الفئة E', 'W214': 'الفئة E',
+      'W140': 'الفئة S', 'W220': 'الفئة S', 'W221': 'الفئة S', 'W222': 'الفئة S', 'W223': 'الفئة S',
+      'C117': 'CLA', 'C118': 'CLA',
+      'C219': 'CLS', 'C218': 'CLS', 'C257': 'CLS',
+      'X156': 'GLA', 'H247': 'GLA',
+      'X247': 'GLB',
+      'X204': 'GLK', 'X253': 'GLC', 'X254': 'GLC',
+      'W163': 'ML', 'W164': 'ML', 'W166': 'ML/GLE', 'W167': 'GLE', 'C292': 'GLE كوبيه',
+      'X166': 'GL/GLS', 'X167': 'GLS',
+      'W460': 'الفئة G', 'W461': 'الفئة G', 'W463': 'الفئة G', 'W464': 'الفئة G', 'W465': 'الفئة G',
+      'F30': 'الفئة 3', 'F10': 'الفئة 5', 'F18': 'الفئة 5', 'G05': 'X5', 'G38': 'الفئة 5',
+      'F35': 'الفئة 3', 'F25': 'X3', 'E90': 'الفئة 3', 'E60': 'الفئة 5', 'F02': 'الفئة 7',
+      'E70': 'X5', 'F15': 'X5', 'F20': 'الفئة 1', 'G12': 'الفئة 7', 'G28': 'الفئة 3',
+      'F49': 'X1', 'E84': 'X1', 'E83': 'X3', 'F07': 'الفئة 5GT', 'F16': 'X6',
+      'G08': 'X3', 'G01': 'X3', 'G20': 'الفئة 3', 'G30': 'الفئة 5', 'F52': 'الفئة 1'
+    };
+    
+    if (carInfo.chassis) {
+        const chassis = carInfo.chassis.toUpperCase();
+        if (chassisToBrand[chassis]) {
+            carInfo.brand = chassisToBrand[chassis];
+        }
+        if (chassisToModel[chassis]) {
+            carInfo.model = chassisToModel[chassis];
+        }
+    }
+    
+    // محاولة العثور على معلومات مطابقة من بيانات الموديل الكاملة، وتكميل المزيد من الحقول
+    let displayCarInfo = {...carInfo};
+    try {
+        const modelResponse = await fetch('data/car_models.json');
+        const modelData = await modelResponse.json();
+        if (modelData.success && modelData.data) {
+            // محاولة مطابقة من خلال رقم الشاسي
+            if (carInfo.chassis) {
+                const chassis = carInfo.chassis.toUpperCase();
+                const matchedModel = modelData.data.find(m => m.chassis && m.chassis.toUpperCase() === chassis);
+                if (matchedModel) {
+                    displayCarInfo = {
+                        ...carInfo,
+                        ...matchedModel,
+                        year: matchedModel.years || carInfo.year
+                    };
+                }
+            }
+        }
+    } catch (error) {
+        console.error('فشل تحميل بيانات الموديل:', error);
+    }
+    
+    // تحديد ترتيب الحقول التي تحتاج إلى عرضها
+    const fieldOrder = ['brand', 'model', 'chassis', 'year', 'engine', 'transmission'];
+    const labels = {
+        brand: 'العلامة',
+        model: 'الموديل',
+        chassis: 'رقم الشاسي',
+        year: 'السنة',
+        engine: 'المحرك',
+        transmission: 'ناقل الحركة'
+    };
+    
+    // تجميع الحقول التي لها قيمة بالترتيب
+    const fields = [];
+    fieldOrder.forEach(key => {
+        if (displayCarInfo[key]) {
+            fields.push({ key, value: displayCarInfo[key], label: labels[key] });
+        }
+    });
+    
+    // إنشاء HTML في صفين وثلاثة أعمدة
+    let carInfoHTML = '';
+    for (let i = 0; i < fields.length; i += 3) {
+        const rowFields = fields.slice(i, i + 3);
+        carInfoHTML += '<div class="car-info-row">';
+        rowFields.forEach(field => {
+            carInfoHTML += `<div class="car-info-item"><strong>${field.label}：</strong>${field.value}</div>`;
+        });
+        carInfoHTML += '</div>';
+    }
+    document.getElementById('carInfo').innerHTML = carInfoHTML;
+    
+    const brand = carInfo.brand;
+    const chassis = carInfo.chassis ? carInfo.chassis.toUpperCase() : '';
+    
+    let products = [];
+    let categoryMap = {};
+    try {
+        const productResponse = await fetch('product-data.json');
+        const productData = await productResponse.json();
+        products = productData.products || [];
+        
+        const categoryResponse = await fetch('category-structure.json');
+        const categoryData = await categoryResponse.json();
+        categoryMap = categoryData.product_map || categoryData.productMap || {};
+    } catch (error) {
+        console.error('فشل تحميل بيانات المنتج:', error);
+        document.getElementById('partsTable').innerHTML = '<tr><td colspan="7" style="text-align: center; color: #e53935;">فشل تحميل بيانات المنتج، يرجى تحديث الصفحة والمحاولة مرة أخرى</td></tr>';
+        return;
+    }
+    
+    let filteredProducts = products.filter(product => product.series === brand);
+    
+    if (chassis) {
+        // تقسيم إلى أرقام شاسية هدف متعددة
+        const targetChassisList = chassis.split(',').map(c => c.trim().toUpperCase()).filter(c => c);
+        
+        filteredProducts = filteredProducts.filter(product => {
+            const productModels = (product.model || '').toUpperCase();
+            
+            // التحقق مما إذا كان يطابق أي رقم شاسي هدف
+            for (const targetChassis of targetChassisList) {
+                if (productModels === targetChassis) {
+                    return true;
+                }
+                
+                const slashParts = productModels.split('/');
+                if (slashParts.some(part => part.trim() === targetChassis)) {
+                    return true;
+                }
+                
+                const commaParts = productModels.split(',');
+                for (const part of commaParts) {
+                    const trimmedPart = part.trim();
+                    if (trimmedPart === targetChassis) {
+                        return true;
+                    }
+                    const subParts = trimmedPart.split('/');
+                    if (subParts.some(sub => sub.trim() === targetChassis)) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        });
+    }
+    
+    currentResults = filteredProducts.map(product => {
+        let categoryDisplay = product.category;
+        const productCode = product.code;
+        if (categoryMap[productCode]) {
+            const catInfo = categoryMap[productCode];
+            categoryDisplay = (catInfo.system || product.category);
+        }
+        
+        return {
+            category: categoryDisplay,
+            name: product.name,
+            oe: product.code,
+            sakoln: 'SK-' + product.code,
+            status: 'متوافق تماماً'
+        };
+    });
+    
+    currentPage = 1;
+    renderCurrentPage();
+    
+    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+// عرض الصفحة الحالية
+function renderCurrentPage() {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageResults = currentResults.slice(startIndex, endIndex);
+    
+    let partsHTML = '';
+    if (pageResults.length > 0) {
+        pageResults.forEach((part, index) => {
+            const globalIndex = startIndex + index + 1;
+            partsHTML += `
+                <tr class="hover:bg-gray-50">
+                    <td style="text-align: center;">${globalIndex}</td>
+                    <td>${part.category}</td>
+                    <td>${part.name}</td>
+                    <td>${part.oe}</td>
+                    <td>${part.sakoln}</td>
+                    <td>${part.status}</td>
+                    <td>
+                        <a href="product-detail.html?oe=${encodeURIComponent(part.oe)}" 
+                           style="color: #ff7a00; text-decoration: none;">
+                            عرض التفاصيل
+                        </a>
+                    </td>
+                </tr>
+            `;
+        });
+    } else {
+        partsHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">لا توجد بيانات قطع غيار متوافقة لهذا الموديل</td></tr>';
+    }
+    
+    document.getElementById('partsTable').innerHTML = partsHTML;
+    renderPagination();
+}
+
+// عرض الترقيم
+function renderPagination() {
+    const totalPages = Math.ceil(currentResults.length / itemsPerPage);
+    const paginationContainer = document.getElementById('pagination');
+    
+    if (totalPages <= 1) {
+        paginationContainer.innerHTML = '';
+        return;
+    }
+    
+    let paginationHTML = '<div class="flex items-center justify-center gap-2 mt-4">';
+    
+    paginationHTML += `<button onclick="goToPage(${currentPage - 1})" 
+                        class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        ${currentPage === 1 ? 'disabled' : ''}>
+                        السابق
+                    </button>`;
+    
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `<button onclick="goToPage(${i})" 
+                            class="px-4 py-2 rounded-lg ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-100 hover:bg-gray-200'}">
+                            ${i}
+                        </button>`;
+    }
+    
+    paginationHTML += `<button onclick="goToPage(${currentPage + 1})" 
+                        class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        ${currentPage === totalPages ? 'disabled' : ''}>
+                        التالي
+                    </button>`;
+    
+    paginationHTML += `<span class="ml-4 text-gray-600">إجمالي ${currentResults.length} عنصر، صفحة ${currentPage}/${totalPages} من</span>`;
+    paginationHTML += '</div>';
+    
+    paginationContainer.innerHTML = paginationHTML;
+}
+
+// الانتقال إلى الصفحة
+function goToPage(page) {
+    const totalPages = Math.ceil(currentResults.length / itemsPerPage);
+    if (page < 1 || page > totalPages) return;
+    
+    currentPage = page;
+    renderCurrentPage();
+    
+    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

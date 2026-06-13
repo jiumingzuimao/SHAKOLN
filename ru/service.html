@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Услуги - SHAKOLN Auto Parts</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* Unified Link Style */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* страницаpage title */
+        .page-title {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* Service Overview */
+        .service-overview {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .section-content {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .section-text {
+            flex: 1;
+        }
+        
+        .section-text h2 {
+            font-size: 24px;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+        }
+        
+        .section-text p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .section-image {
+            flex: 1;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .section-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .image-overlay .title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .image-overlay .subtitle {
+            font-size: 20px;
+            font-weight: normal;
+        }
+        
+        /* weofteam */
+        .our-team {
+            padding: 60px 0;
+            background-color: #fff;
+        }
+        
+        .team-photo {
+            margin-bottom: 30px;
+        }
+        
+        .team-photo img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .team-description {
+            text-align: center;
+        }
+        
+        .team-description p {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        /* Service Items */
+        .service-items {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .section-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .service-item {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .service-item img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .service-item img.service-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .service-item h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .service-item p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* Service Process */
+        .service-process {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #e0e0e0;
+            z-index: 1;
+        }
+        
+        .process-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            padding-top: 70px;
+        }
+        
+        .process-step .step-number {
+            width: 50px;
+            height: 50px;
+            background-color: #0F4F9A;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .process-step h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .process-step p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* Преимущество сервиса */
+        .service-advantages {
+            padding: 60px 0;
+        }
+        
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+        
+        .advantage-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+        }
+        
+        .advantage-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            background-color: #0F4F9A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .advantage-icon {
+            width: 36px;
+            height: 36px;
+            filter: brightness(0) invert(1) !important;
+        }
+        
+        .advantage-content h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .advantage-content p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* FAQ */
+        .faq-section {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .faq-question:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .faq-answer {
+            padding: 0 20px 20px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+        }
+        
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        
+        .faq-item.active .faq-question {
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        /* Контакты */
+        .contact-section {
+            padding: 60px 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .contact-content {
+            text-align: center;
+        }
+        
+        .contact-content h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .contact-content p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .contact-item {
+            text-align: center;
+        }
+        
+        .contact-item h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .contact-item p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .contact-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: white;
+            color: #0F4F9A;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .contact-button:hover {
+            background-color: #f5f5f5;
+        }
+        
+
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .section-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .service-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .advantages-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .process-steps {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .process-steps::before {
+                display: none;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">Главная</a>
+            <span>></span>
+            <span>Услуги</span>
+        </div>
+    </div>
+    
+    <!-- страницаpage title -->
+    <div class="page-title">
+        <div class="container">
+            <h1>Услуги</h1>
+            <p>Professional Service Team, providing you with comprehensive support</p>
+        </div>
+    </div>
+    
+    <!-- Service Overview -->
+    <div class="service-overview">
+        <div class="container section-content">
+            <div class="section-text">
+                <h2>Service Overview</h2>
+                <p>SHAKOLN Auto Partscommitted to providing customers withprovidecomprehensiveofservice support，FromТоварconsultation toГарантия，Our professional team will provide you with the best service experience。</p>
+                <p>We have an experienced service team，can provide you with professional technical consultation、Товарselection advice、УстановкаandПоддержка，to ensure your needs are met in a timely manner。</p>
+                <p>Whether you are a dealer, repair shop, or end-user，we will provide professional and efficient service，to solve all your problems，making your business smoother。</p>
+            </div>
+            <div class="section-image">
+                <img src="../img/kfbj.png" alt="Услуги">
+                <div class="image-overlay">
+                    <div class="title">Услуги</div>
+                    <div class="subtitle">Professional Team•thoughtful service</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- weofteam -->
+    <div class="our-team">
+        <div class="container">
+            <div class="section-title">
+                <h2>weofteam</h2>
+                <p>Professional Service Team, providing you with quality service</p>
+            </div>
+            <div class="team-photo">
+                <img src="../img/tdzp.jpg" alt="team photos">
+            </div>
+            <div class="team-description">
+                <p>We have an experienced, professional and efficient service team，Each member has deep industry experience and solid professional knowledge。Team members receive regular systematic professional training，continuously improving service level and professional skills，to ensure every customer gets the best and most thoughtful service experience。</p>
+                <p>We adhere to the "Customer First" service philosophy，always putting customer needs first，listening to our customers carefully，solving customer problems with professional technology and sincere attitude。</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Service Items -->
+    <div class="service-items">
+        <div class="container">
+            <div class="section-title">
+                <h2>Service Items</h2>
+                <p>We offer a variety of service items to meet your different needs</p>
+            </div>
+            <div class="service-grid">
+                <div class="service-item">
+                    <img src="../img/fuwuxiangm/jishuzhichi.svg" alt="Техподдержка" class="service-icon">
+                    <h3>Техподдержка</h3>
+                    <p>provideProfessionaloftechnical consultationandТоварselection advice，help you choose the most suitableofpartsшт。</p>
+                </div>
+                <div class="service-item">
+                    <img src="../img/fuwuxiangm/anzhuangzhidao.svg" alt="Установка" class="service-icon">
+                    <h3>Установка</h3>
+                    <p>providedetailedУстановкаandtechnical documentation，ensurepartsштproper installation and use。</p>
+                </div>
+                <div class="service-item">
+                    <img src="../img/fuwuxiangm/shouhoufuwu.svg" alt="After-sales Service" class="service-icon">
+                    <h3>After-sales Service</h3>
+                    <p>providecomprehensiveofAfter-sales Service，solveТоварencountered during useofvarious problems。</p>
+                </div>
+                <div class="service-item">
+                    <img src="../img/fuwuxiangm/chanpinzhibao.svg" alt="Гарантия" class="service-icon">
+                    <h3>Гарантия</h3>
+                    <p>provideТоварQuality Warranty，to ensure your rights are protected。</p>
+                </div>
+                <div class="service-item">
+                    <img src="../img/fuwuxiangm/wuliuzhichi.svg" alt="Logistics Support" class="service-icon">
+                    <h3>Logistics Support</h3>
+                    <p>Provide efficient logistics services，ensureТоварtimely delivery。</p>
+                </div>
+                <div class="service-item">
+                    <img src="../img/fuwuxiangm/peixunfuwu.svg" alt="Обучение" class="service-icon">
+                    <h3>Обучение</h3>
+                    <p>for dealersandrepair shopprovideТоварknowledge and technical training。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Service Process -->
+    <div class="service-process">
+        <div class="container">
+            <div class="section-title">
+                <h2>Service Process</h2>
+                <p>Standardized service process to ensure service quality</p>
+            </div>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3>consultation needs</h3>
+                    <p>customers via phone、mailштor online customer service consultationТоварandservice needs。</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3>Professional Assessment</h3>
+                    <p>Our professional team assesses customer needs，providing solutions。</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3>Solution Formulation</h3>
+                    <p>According to customer needs，formulateШтукpersonalized service plan。</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3>Service Implementation</h3>
+                    <p>Implement services according to the plan，to ensure service quality。</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <h3>After-sales Follow-up</h3>
+                    <p>After service completion，conduct after-sales follow-up，to ensure customer satisfaction。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Преимущество сервиса -->
+    <div class="service-advantages">
+        <div class="container">
+            <div class="section-title">
+                <h2>Преимущество сервиса</h2>
+                <p>weofПреимущество сервиса，for youprovidebetterofexperience</p>
+            </div>
+            <div class="advantages-grid">
+                <div class="advantage-item">
+                    <div class="advantage-icon-wrapper">
+                        <img src="../img/fuwuyoushi/tuandui.svg" alt="Professional Team" class="advantage-icon">
+                    </div>
+                    <div class="advantage-content">
+                        <h3>Professional Team</h3>
+                        <p>with an experienced professional team，can provide you withprovideProfessionalofТехподдержкаandservice。</p>
+                    </div>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon-wrapper">
+                        <img src="../img/fuwuyoushi/24xiaoshi.svg" alt="Quick Response" class="advantage-icon">
+                    </div>
+                    <div class="advantage-content">
+                        <h3>Quick Response</h3>
+                        <p>Respond to customer needs within 24 hours，to ensure problems are resolved in a timely manner。</p>
+                    </div>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon-wrapper">
+                        <img src="../img/fuwuyoushi/gexinghuafuwu.svg" alt="Штукpersonalized service" class="advantage-icon">
+                    </div>
+                    <div class="advantage-content">
+                        <h3>Штукpersonalized service</h3>
+                        <p>According to customer needs，provideШтукpersonalized service plan。</p>
+                    </div>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon-wrapper">
+                        <img src="../img/fuwuyoushi/quanchenggenzong.svg" alt="Full Tracking" class="advantage-icon">
+                    </div>
+                    <div class="advantage-content">
+                        <h3>Full Tracking</h3>
+                        <p>Full process tracking of services，to ensure service quality and customer satisfaction。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FAQ -->
+    <div class="faq-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>FAQ</h2>
+                <p>Answer questions you may have</p>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How to choose suitable for mevehicle partsшт？</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>you can through usofМодели автоsystem，Enter your vehicle model information，The system will automatically match suitablepartsшт。You can alsoКонтактыcustomer service team，provide yourvehicle model information，We will provide you with professional selection advice。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>ТоварHow long is the warranty period？</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>weofТоварWarranty period is12Штукmonth，FromТоварcalculated from the date of delivery。Within the warranty period，IfТоварquality issues occur，We will replace or repair it for you free of charge。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How to apply for after-sales service？</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You can via phone、mailштor online customer service for after-sales service。When applying，Please provide your order number、Информация о продуктахand problem description，Our customer service team will handle it for you promptly。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>ДоставкаHow long does it take？</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>According to your geographical location，Доставкаtime is generally1-7Штукworking days。We will according to your needs，choose the most suitable logistics method，ensureТоварtimely delivery。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How to becomeSHAKOLN Auto Partsdealer？</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>If you are interested in becomingSHAKOLN Auto Partsdealer，PleaseКонтактыsales team，provide yourИнформацияand business needs，We will provide you with a detailed cooperation plan。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Контакты -->
+    <div class="contact-section">
+        <div class="container">
+            <div class="contact-content">
+                <h2>Контакты</h2>
+                <p>If you have any questions or needs，Welcome to contact us at any timeКонтакты</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <h3>phone</h3>
+                        <p>400 626 0128</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>email</h3>
+                        <p>shakoln@163.com</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>online customer service</h3>
+                        <p>Working Days 9:00-18:00</p>
+                    </div>
+                </div>
+                <a href="contact.html" class="contact-button">Узнать больше</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <script>
+        // FAQ Collapsible Function
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+    </script>
+    
+    <!-- Загрузить скрипт шаблонов -->
+    <script src="../../templates/load-templates.js"></script>
+</body>
+</html>

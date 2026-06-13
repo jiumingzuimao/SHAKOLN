@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发动机Серия - SHAKOLN Auto Parts</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 头部样式 */
+        header {
+            background-color: #0F4F9A;
+            color: white;
+            padding: 15px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        nav ul li:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        nav ul li:hover a {
+            color: white;
+        }
+        
+        nav ul li a:active {
+            color: white;
+        }
+        
+        .hotline {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .wechat-btn {
+            background-color: #FF6C00;
+            border: none;
+            padding: 8px 16px;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* 快捷功能栏 */
+        .quick-functions {
+            background-color: white;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .functions-list {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .function-item {
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .function-item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .function-item a {
+            display: inline-block;
+            padding: 15px 25px;
+            text-decoration: none;
+            color: #333;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 0;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+        
+        .function-item a:hover {
+            background-color: #0F4F9A;
+            color: white;
+            border-color: #0F4F9A;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* страница面标题 */
+        .page-title {
+            background-color: white;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            color: #0F4F9A;
+        }
+        
+        /* Товар分类 */
+        .product-category {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .category-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .category-item {
+            padding: 8px 16px;
+            background-color: #f5f7fa;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .category-item:hover {
+            background-color: #e6e9f0;
+        }
+        
+        .category-item.active {
+            background-color: #0F4F9A;
+            color: white;
+        }
+        
+        /* Товар列表 */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 180px;
+            background-color: #f5f7fa;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            object-fit: contain;
+        }
+        
+        .product-oe {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .product-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #FF6C00;
+            margin-bottom: 10px;
+        }
+        
+        .product-stock {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .product-btn {
+            background-color: #FF6C00;
+            border: none;
+            padding: 8px 16px;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        /* 分страница */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            padding: 16px 24px;
+            background: transparent;
+        }
+        
+        .pagination-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background: #ffffff;
+        }
+        
+        .pagination-btn:hover:not(.disabled) {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .pagination-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .pagination-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .pagination-ellipsis {
+            color: #9ca3af;
+            font-size: 14px;
+            padding: 0 4px;
+        }
+        
+        .pagination-jump {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #6b7280;
+            padding: 6px 12px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            height: 36px;
+        }
+        
+        .pagination-input {
+            width: 40px;
+            height: 24px;
+            padding: 0 6px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            box-sizing: border-box;
+            background: #ffffff;
+        }
+        
+        .pagination-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+        }
+        
+        .pagination-jump-btn {
+            padding: 4px 14px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #3b82f6;
+        }
+        
+        .pagination-jump-btn:hover {
+            background: #2563eb;
+        }
+        
+        /* 底部 */
+        footer {
+            background-color: #0F4F9A;
+            color: white;
+            padding: 40px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+        }
+        
+        .footer-section p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">Главная</a>
+            <span>></span>
+            <a href="product.html">Товары</a>
+            <span>></span>
+            <span>发动机Серия</span>
+        </div>
+    </div>
+    
+    <!-- страница面标题 -->
+    <div class="container page-title">
+        <h1>发动机Серия</h1>
+    </div>
+    
+    <!-- Товар分类 -->
+    <div class="container product-category">
+        <div class="category-list">
+            <div class="category-item active">全部发动机配шт</div>
+            <div class="category-item">发动机缸盖</div>
+            <div class="category-item">发动机缸体</div>
+            <div class="category-item">活塞及活塞环</div>
+            <div class="category-item">连杆</div>
+            <div class="category-item">曲轴</div>
+            <div class="category-item">凸轮轴</div>
+            <div class="category-item">气门及气门组шт</div>
+            <div class="category-item">正时系统</div>
+            <div class="category-item">燃油系统</div>
+            <div class="category-item">Система охлаждения</div>
+        </div>
+    </div>
+    
+    <!-- Товар列表 -->
+    <div class="container">
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-image"></div>
+                <div class="product-oe">OE: 11427512840</div>
+                <div class="product-name">发动机Крышка клапанной камеры</div>
+                <a href="/quote.html" class="product-price">Запрос цены</a>
+                <div class="product-stock">На складе: 50шт</div>
+                <button class="product-btn">立即询价</button>
+            </div>
+            <div class="product-card">
+                <div class="product-image"></div>
+                <div class="product-oe">OE: 13717580029</div>
+                <div class="product-name">发动机Свеча зажигания</div>
+                <a href="/quote.html" class="product-price">Запрос цены</a>
+                <div class="product-stock">На складе: 35шт</div>
+                <button class="product-btn">立即询价</button>
+            </div>
+            <div class="product-card">
+                <div class="product-image"></div>
+                <div class="product-oe">OE: 12120037898</div>
+                <div class="product-name">发动机Масляный фильтр</div>
+                <a href="/quote.html" class="product-price">Запрос цены</a>
+                <div class="product-stock">На складе: 20шт</div>
+                <button class="product-btn">立即询价</button>
+            </div>
+            <div class="product-card">
+                <div class="product-image"></div>
+                <div class="product-oe">OE: 34116850507</div>
+                <div class="product-name">发动机Воздушный фильтр</div>
+                <a href="/quote.html" class="product-price">Запрос цены</a>
+                <div class="product-stock">На складе: 65шт</div>
+                <button class="product-btn">立即询价</button>
+            </div>
+            <div class="product-card">
+                <div class="product-image"></div>
+                <div class="product-oe">OE: 11427512841</div>
+                <div class="product-name">发动机Водяной насос</div>
+                <a href="/quote.html" class="product-price">Запрос цены</a>
+                <div class="product-stock">На складе: 40шт</div>
+                <button class="product-btn">立即询价</button>
+            </div>
+            <div class="product-card">
+                <div class="product-image"></div>
+                <div class="product-oe">OE: 13717580030</div>
+                <div class="product-name">发动机燃油泵</div>
+                <a href="/quote.html" class="product-price">Запрос цены</a>
+                <div class="product-stock">На складе: 25шт</div>
+                <button class="product-btn">立即询价</button>
+            </div>
+            <div class="product-card">
+                <div class="product-image"></div>
+                <div class="product-oe">OE: 12120037899</div>
+                <div class="product-name">发动机正时皮带</div>
+                <a href="/quote.html" class="product-price">Запрос цены</a>
+                <div class="product-stock">На складе: 30шт</div>
+                <button class="product-btn">立即询价</button>
+            </div>
+            <div class="product-card">
+                <div class="product-image"></div>
+                <div class="product-oe">OE: 34116850508</div>
+                <div class="product-name">发动机冷却液</div>
+                <a href="/quote.html" class="product-price">Запрос цены</a>
+                <div class="product-stock">На складе: 55шт</div>
+                <button class="product-btn">立即询价</button>
+            </div>
+        </div>
+        
+        <!-- 分страница -->
+        <div class="pagination" id="pagination">
+            <!-- 分страница将通过JavaScript动态生成 -->
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Загрузить скрипт шаблонов -->
+    <script src="../../templates/load-templates.js"></script>
+    <script src="../templates/pagination.js"></script>
+    <script>
+        initPagination('.product-card', 'pagination');
+    </script>
+</body>
+</html>

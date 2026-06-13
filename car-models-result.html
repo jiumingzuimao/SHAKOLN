@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>车型查询结果 - 萨肯汽配</title>
+    <!-- Tailwind CSS -->
+    <script src="assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            background-color: white;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            color: #0F4F9A;
+        }
+        
+        /* 查询结果 */
+        .search-result {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .result-header {
+            margin-bottom: 30px;
+        }
+        
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+        }
+        
+        .car-info {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .car-info h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+        .car-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .car-detail-item {
+            display: flex;
+        }
+        
+        .detail-label {
+            width: 100px;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .detail-value {
+            flex: 1;
+        }
+        
+        /* 配件列表 */
+        .parts-section {
+            margin-bottom: 40px;
+        }
+        
+        .parts-section h2 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+        }
+        
+        .parts-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        .parts-table th,
+        .parts-table td {
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            text-align: left;
+        }
+        
+        .parts-table th {
+            background-color: #f5f7fa;
+            color: #0F4F9A;
+            font-weight: 600;
+        }
+        
+        .parts-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .part-name {
+            color: #0066cc;
+            font-weight: 500;
+        }
+        
+        .part-status {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            padding: 16px 24px;
+            background: transparent;
+        }
+        
+        .pagination-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background: #ffffff;
+        }
+        
+        .pagination-btn:hover:not(.disabled) {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .pagination-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .pagination-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .pagination-ellipsis {
+            color: #9ca3af;
+            font-size: 14px;
+            padding: 0 4px;
+        }
+        
+        .pagination-jump {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #6b7280;
+            padding: 6px 12px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            height: 36px;
+        }
+        
+        .pagination-input {
+            width: 40px;
+            height: 24px;
+            padding: 0 6px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            box-sizing: border-box;
+            background: #ffffff;
+        }
+        
+        .pagination-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+        }
+        
+        .pagination-jump-btn {
+            padding: 4px 14px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #3b82f6;
+        }
+        
+        .pagination-jump-btn:hover {
+            background: #2563eb;
+        }
+        
+        /* 相关车型 */
+        .related-models {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .related-models h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+        }
+        
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .model-item {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .model-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .model-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #0F4F9A;
+            margin-bottom: 10px;
+        }
+        
+        .model-year {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .model-btn {
+            background-color: #0F4F9A;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">首页</a>
+            <span>></span>
+            <a href="car-models.html">车型查询</a>
+            <span>></span>
+            <span>查询结果</span>
+        </div>
+    </div>
+    
+    <!-- 页面标题 -->
+    <div class="container page-title">
+        <h1>车型查询结果</h1>
+    </div>
+    
+    <!-- 查询结果 -->
+    <div class="container search-result">
+        <div class="result-header">
+            <div class="result-title">查询结果</div>
+            <div class="car-info">
+                <h3>车辆信息</h3>
+                <div class="car-details">
+                    <div class="car-detail-item">
+                        <div class="detail-label">品牌：</div>
+                        <div class="detail-value">奔驰 (BENZ)</div>
+                    </div>
+                    <div class="car-detail-item">
+                        <div class="detail-label">车型：</div>
+                        <div class="detail-value">C级 (C-Class)</div>
+                    </div>
+                    <div class="car-detail-item">
+                        <div class="detail-label">年款：</div>
+                        <div class="detail-value">2024</div>
+                    </div>
+                    <div class="car-detail-item">
+                        <div class="detail-label">底盘号：</div>
+                        <div class="detail-value">W206</div>
+                    </div>
+                    <div class="car-detail-item">
+                        <div class="detail-label">发动机：</div>
+                        <div class="detail-value">M264</div>
+                    </div>
+                    <div class="car-detail-item">
+                        <div class="detail-label">排量：</div>
+                        <div class="detail-value">2.0T</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 配件列表 -->
+        <div class="parts-section">
+            <h2>适配配件</h2>
+            <table class="parts-table">
+                <thead>
+                    <tr>
+                        <th>配件分类</th>
+                        <th>配件名称</th>
+                        <th>OE编号</th>
+                        <th>萨肯编号</th>
+                        <th>适配状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>发动机</td>
+                        <td class="part-name">机油滤清器</td>
+                        <td>11427512840</td>
+                        <td>SK-11427512840</td>
+                        <td class="part-status">完全适配</td>
+                        <td><a href="product-detail.html">查看详情</a></td>
+                    </tr>
+                    <tr>
+                        <td>发动机</td>
+                        <td class="part-name">空气滤清器</td>
+                        <td>13717580029</td>
+                        <td>SK-13717580029</td>
+                        <td class="part-status">完全适配</td>
+                        <td><a href="product-detail.html">查看详情</a></td>
+                    </tr>
+                    <tr>
+                        <td>电气</td>
+                        <td class="part-name">火花塞</td>
+                        <td>12120037898</td>
+                        <td>SK-12120037898</td>
+                        <td class="part-status">完全适配</td>
+                        <td><a href="product-detail.html">查看详情</a></td>
+                    </tr>
+                    <tr>
+                        <td>制动</td>
+                        <td class="part-name">刹车片</td>
+                        <td>34116850507</td>
+                        <td>SK-34116850507</td>
+                        <td class="part-status">完全适配</td>
+                        <td><a href="product-detail.html">查看详情</a></td>
+                    </tr>
+                    <tr>
+                        <td>冷却</td>
+                        <td class="part-name">冷却液</td>
+                        <td>00098988051</td>
+                        <td>SK-00098988051</td>
+                        <td class="part-status">完全适配</td>
+                        <td><a href="product-detail.html">查看详情</a></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- 分页 -->
+            <div class="pagination" id="pagination">
+                <!-- 分页将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 相关车型 -->
+    <div class="container related-models">
+        <h2>相关车型</h2>
+        <div class="models-grid">
+            <div class="model-item">
+                <div class="model-name">奔驰 C级</div>
+                <div class="model-year">2023款</div>
+                <button class="model-btn">查看配件</button>
+            </div>
+            <div class="model-item">
+                <div class="model-name">奔驰 C级</div>
+                <div class="model-year">2022款</div>
+                <button class="model-btn">查看配件</button>
+            </div>
+            <div class="model-item">
+                <div class="model-name">奔驰 E级</div>
+                <div class="model-year">2024款</div>
+                <button class="model-btn">查看配件</button>
+            </div>
+            <div class="model-item">
+                <div class="model-name">奔驰 S级</div>
+                <div class="model-year">2024款</div>
+                <button class="model-btn">查看配件</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- 加载模板脚本 -->
+    <script src="templates/load-templates.js"></script>
+    <script src="templates/pagination.js"></script>
+    <script>
+        initPagination('tbody tr', 'pagination');
+    </script>
+</body>
+</html>

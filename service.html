@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务中心 - 萨肯汽配</title>
+    <!-- Tailwind CSS -->
+    <script src="assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* 统一链接样式 */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* 服务概述 */
+        .service-overview {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .section-content {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .section-text {
+            flex: 1;
+        }
+        
+        .section-text h2 {
+            font-size: 24px;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+        }
+        
+        .section-text p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .section-image {
+            flex: 1;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .section-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .image-overlay .title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .image-overlay .subtitle {
+            font-size: 20px;
+            font-weight: normal;
+        }
+        
+        /* 我们的团队 */
+        .our-team {
+            padding: 60px 0;
+            background-color: #fff;
+        }
+        
+        .team-photo {
+            margin-bottom: 30px;
+        }
+        
+        .team-photo img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .team-description {
+            text-align: center;
+        }
+        
+        .team-description p {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        /* 服务项目 */
+        .service-items {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .section-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .service-item {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .service-item img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .service-item img.service-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .service-item h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .service-item p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 服务流程 */
+        .service-process {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #e0e0e0;
+            z-index: 1;
+        }
+        
+        .process-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            padding-top: 70px;
+        }
+        
+        .process-step .step-number {
+            width: 50px;
+            height: 50px;
+            background-color: #0F4F9A;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .process-step h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .process-step p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 服务优势 */
+        .service-advantages {
+            padding: 60px 0;
+        }
+        
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+        
+        .advantage-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+        }
+        
+        .advantage-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            background-color: #0F4F9A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .advantage-icon {
+            width: 36px;
+            height: 36px;
+            filter: brightness(0) invert(1) !important;
+        }
+        
+        .advantage-content h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .advantage-content p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 常见问题 */
+        .faq-section {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .faq-question:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .faq-answer {
+            padding: 0 20px 20px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+        }
+        
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        
+        .faq-item.active .faq-question {
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        /* 联系我们 */
+        .contact-section {
+            padding: 60px 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .contact-content {
+            text-align: center;
+        }
+        
+        .contact-content h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .contact-content p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .contact-item {
+            text-align: center;
+        }
+        
+        .contact-item h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .contact-item p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .contact-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: white;
+            color: #0F4F9A;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .contact-button:hover {
+            background-color: #f5f5f5;
+        }
+        
+
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .container {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .section-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .service-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .advantages-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .process-steps {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .process-steps::before {
+                display: none;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">首页</a>
+            <span>></span>
+            <span>服务中心</span>
+        </div>
+    </div>
+    
+    <!-- 页面标题 -->
+    <div class="page-title">
+        <div class="container">
+            <h1>服务中心</h1>
+            <p>专业的服务团队，为您提供全方位的支持</p>
+        </div>
+    </div>
+    
+    <!-- 服务概述 -->
+    <div class="service-overview">
+        <div class="container section-content">
+            <div class="section-text">
+                <h2>服务概述</h2>
+                <p>萨肯汽配致力于为客户提供全方位的服务支持，从产品咨询到售后保障，我们的专业团队将为您提供最优质的服务体验。</p>
+                <p>我们拥有一支经验丰富的服务团队，能够为您提供专业的技术咨询、产品选型建议、安装指导和售后支持，确保您的需求得到及时满足。</p>
+                <p>无论您是经销商、修理厂还是终端用户，我们都将以专业的态度和高效的服务，为您解决各种问题，让您的业务更加顺利。</p>
+            </div>
+            <div class="section-image">
+                <img src="img/kfbj.png" alt="服务中心">
+                <div class="image-overlay">
+                    <div class="title">服务中心</div>
+                    <div class="subtitle">专业团队•贴心服务</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 我们的团队 -->
+    <div class="our-team">
+        <div class="container">
+            <div class="section-title">
+                <h2>我们的团队</h2>
+                <p>专业的服务团队，为您提供优质的服务</p>
+            </div>
+            <div class="team-photo">
+                <img src="img/tdzp.jpg" alt="团队照片">
+            </div>
+            <div class="team-description">
+                <p>我们拥有一支经验丰富、专业高效的服务团队，每位成员都具备深厚的行业经验和扎实的专业知识。团队成员定期接受系统化的专业培训，不断提升服务水平与专业技能，以确保为每一位客户提供最优质、最贴心的服务体验。</p>
+                <p>我们秉承"客户至上"的服务理念，始终把客户的需求放在第一位，用心倾听客户的声音，用专业的技术和真诚的态度解决客户的问题。</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 服务项目 -->
+    <div class="service-items">
+        <div class="container">
+            <div class="section-title">
+                <h2>服务项目</h2>
+                <p>我们提供多种服务项目，满足您的不同需求</p>
+            </div>
+            <div class="service-grid">
+                <div class="service-item">
+                    <img src="img/fuwuxiangm/jishuzhichi.svg" alt="技术支持" class="service-icon">
+                    <h3>技术支持</h3>
+                    <p>提供专业的技术咨询和产品选型建议，帮助您选择最适合的配件。</p>
+                </div>
+                <div class="service-item">
+                    <img src="img/fuwuxiangm/anzhuangzhidao.svg" alt="安装指导" class="service-icon">
+                    <h3>安装指导</h3>
+                    <p>提供详细的安装指导和技术文档，确保配件正确安装使用。</p>
+                </div>
+                <div class="service-item">
+                    <img src="img/fuwuxiangm/shouhoufuwu.svg" alt="售后服务" class="service-icon">
+                    <h3>售后服务</h3>
+                    <p>提供完善的售后服务，解决产品使用过程中遇到的各种问题。</p>
+                </div>
+                <div class="service-item">
+                    <img src="img/fuwuxiangm/chanpinzhibao.svg" alt="产品质保" class="service-icon">
+                    <h3>产品质保</h3>
+                    <p>提供产品质量质保，确保您的权益得到保障。</p>
+                </div>
+                <div class="service-item">
+                    <img src="img/fuwuxiangm/wuliuzhichi.svg" alt="物流支持" class="service-icon">
+                    <h3>物流支持</h3>
+                    <p>提供高效的物流服务，确保产品及时送达。</p>
+                </div>
+                <div class="service-item">
+                    <img src="img/fuwuxiangm/peixunfuwu.svg" alt="培训服务" class="service-icon">
+                    <h3>培训服务</h3>
+                    <p>为经销商和修理厂提供产品知识和技术培训。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 服务流程 -->
+    <div class="service-process">
+        <div class="container">
+            <div class="section-title">
+                <h2>服务流程</h2>
+                <p>标准化的服务流程，确保服务质量</p>
+            </div>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3>咨询需求</h3>
+                    <p>客户通过电话、邮件或在线客服咨询产品和服务需求。</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3>专业评估</h3>
+                    <p>我们的专业团队对客户需求进行评估，提供解决方案。</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3>方案制定</h3>
+                    <p>根据客户需求，制定个性化的服务方案。</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3>服务实施</h3>
+                    <p>按照方案实施服务，确保服务质量。</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <h3>售后跟进</h3>
+                    <p>服务完成后，进行售后跟进，确保客户满意度。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 服务优势 -->
+    <div class="service-advantages">
+        <div class="container">
+            <div class="section-title">
+                <h2>服务优势</h2>
+                <p>我们的服务优势，为您提供更好的体验</p>
+            </div>
+            <div class="advantages-grid">
+                <div class="advantage-item">
+                    <div class="advantage-icon-wrapper">
+                        <img src="img/fuwuyoushi/tuandui.svg" alt="专业团队" class="advantage-icon">
+                    </div>
+                    <div class="advantage-content">
+                        <h3>专业团队</h3>
+                        <p>拥有经验丰富的专业团队，能够为您提供专业的技术支持和服务。</p>
+                    </div>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon-wrapper">
+                        <img src="img/fuwuyoushi/24xiaoshi.svg" alt="快速响应" class="advantage-icon">
+                    </div>
+                    <div class="advantage-content">
+                        <h3>快速响应</h3>
+                        <p>24小时内响应客户需求，确保问题得到及时解决。</p>
+                    </div>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon-wrapper">
+                        <img src="img/fuwuyoushi/gexinghuafuwu.svg" alt="个性化服务" class="advantage-icon">
+                    </div>
+                    <div class="advantage-content">
+                        <h3>个性化服务</h3>
+                        <p>根据客户需求，提供个性化的服务方案。</p>
+                    </div>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon-wrapper">
+                        <img src="img/fuwuyoushi/quanchenggenzong.svg" alt="全程跟踪" class="advantage-icon">
+                    </div>
+                    <div class="advantage-content">
+                        <h3>全程跟踪</h3>
+                        <p>服务全过程跟踪，确保服务质量和客户满意度。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 常见问题 -->
+    <div class="faq-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>常见问题</h2>
+                <p>解答您可能遇到的问题</p>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>如何选择适合我的车型的配件？</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>您可以通过我们的车型查询系统，输入您的车型信息，系统会自动为您匹配适合的配件。您也可以联系我们的客服人员，提供您的车型信息，我们将为您提供专业的选型建议。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>产品保修期是多久？</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>我们的产品保修期为12个月，从产品交付之日起计算。在保修期内，如产品出现质量问题，我们将免费为您更换或维修。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>如何申请售后服务？</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>您可以通过电话、邮件或在线客服申请售后服务。在申请时，请提供您的订单号、产品信息和问题描述，我们的客服人员将及时为您处理。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>物流配送需要多长时间？</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>根据您的地理位置，物流配送时间一般为1-7个工作日。我们会根据您的需求，选择最适合的物流方式，确保产品及时送达。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>如何成为萨肯汽配的经销商？</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>如果您有兴趣成为萨肯汽配的经销商，请联系我们的销售团队，提供您的公司信息和业务需求，我们将为您提供详细的合作方案。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 联系我们 -->
+    <div class="contact-section">
+        <div class="container">
+            <div class="contact-content">
+                <h2>联系我们</h2>
+                <p>如果您有任何问题或需求，欢迎随时联系我们</p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <h3>电话</h3>
+                        <p>400 626 0128</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>邮箱</h3>
+                        <p>shakoln@163.com</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>在线客服</h3>
+                        <p>工作日 9:00-18:00</p>
+                    </div>
+                </div>
+                <a href="contact.html" class="contact-button">了解更多</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+    
+    <script>
+        // FAQ 折叠功能
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+    </script>
+    
+    <!-- 加载模板脚本 -->
+    <script src="templates/load-templates.js"></script>
+</body>
+</html>

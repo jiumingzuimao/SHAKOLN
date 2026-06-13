@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加产品 - 后台管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background-color: #0F4F9A;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+                .sidebar-header {
+            padding: 30px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header .logo {
+            text-align: center;
+        }
+        
+        .sidebar-header .logo img {
+            height: 50px;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-header h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: #87CEEB;
+        }
+
+        .menu-item.active {
+            background-color: rgba(135, 206, 235, 0.3);
+            border-left-color: #87CEEB;
+            padding-top: 15px;
+            padding-bottom: 30px;
+            box-shadow: inset 0 0 20px rgba(135, 206, 235, 0.2);
+        }
+
+        .menu-item a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            font-size: 16px;
+            line-height: 20px;
+        }
+        
+        .menu-item a span:first-child {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item .menu-icon {
+            font-size: 18px;
+            margin-right: 15px;
+        }
+
+        .menu-item .menu-icon-img {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            filter: brightness(0) invert(1);
+            flex-shrink: 0;
+            align-self: center;
+        }
+
+        .menu-item .menu-arrow {
+            font-size: 12px;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+            align-self: center;
+        }
+
+        .menu-item.active .menu-arrow {
+            transform: rotate(90deg);
+        }
+
+        .submenu {
+            padding-left: 0;
+            padding-top: 0;
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.35);
+            display: none;
+        }
+
+        .submenu.active {
+            display: block;
+        }
+
+        .submenu-item {
+            padding: 12px 0 12px 60px;
+            text-align: left;
+        }
+
+        .submenu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .submenu-item.active {
+            background-color: rgba(255,255,255,0.15);
+        }
+
+        .submenu-item a {
+            font-size: 14px;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            display: block;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        /* 顶部导航 */
+        .top-nav {
+            background: white;
+            padding: 18px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-nav .welcome {
+            font-size: 16px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .top-nav .user-info {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .top-nav .user-info .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0F4F9A 0%, #0C448A 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 15px;
+            box-shadow: 0 2px 8px rgba(15,79,154,0.3);
+        }
+
+        .top-nav .user-info .user-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .top-nav .user-info .logout {
+            color: #0F4F9A;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.25s ease;
+        }
+
+        .top-nav .user-info .logout:hover {
+            background: rgba(15,79,154,0.1);
+        }
+
+        /* 内容卡片 */
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .content-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .content-card h2 {
+            color: #0F4F9A;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .content-card .breadcrumb {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .content-card .breadcrumb a {
+            color: #0F4F9A;
+            text-decoration: none;
+        }
+
+        .content-card .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0F4F9A 0%, #0C448A 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(15,79,154,0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(15,79,154,0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #FF6C00 0%, #e55a00 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255,108,0,0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(255,108,0,0.4);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #0F4F9A;
+            border: 1.5px solid #0F4F9A;
+        }
+
+        .btn-outline:hover {
+            background: rgba(15,79,154,0.05);
+            border-color: #0C448A;
+        }
+
+        .btn-sm {
+            padding: 6px 16px;
+            font-size: 13px;
+        }
+
+        /* 表单样式 */
+        .form-container {
+            max-width: 800px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group label .required {
+            color: #dc3545;
+            margin-left: 4px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e0e3e8;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.25s ease;
+            background: #fafbfc;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0F4F9A;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(15,79,154,0.1);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #999;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group .input-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        /* 文件上传 */
+        .upload-area {
+            border: 2px dashed #e0e3e8;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            background: #fafbfc;
+        }
+
+        .upload-area:hover {
+            border-color: #0F4F9A;
+            background: rgba(15,79,154,0.03);
+        }
+
+        .upload-area.dragover {
+            border-color: #0F4F9A;
+            background: rgba(15,79,154,0.08);
+            transform: scale(1.02);
+        }
+
+        .upload-area .upload-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+            color: #0F4F9A;
+        }
+
+        .upload-area .upload-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .upload-area .upload-hint {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        /* 图片预览 */
+        .image-preview {
+            margin-top: 15px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #e0e3e8;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 24px;
+            height: 24px;
+            background: rgba(0,0,0,0.6);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .preview-item .remove-btn:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        /* 表单操作区 */
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid #f0f2f5;
+        }
+
+        .form-actions .btn {
+            min-width: 100px;
+            justify-content: center;
+        }
+
+        /* 表单验证 */
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error textarea {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        .error-message {
+            display: none;
+            font-size: 12px;
+            color: #dc3545;
+            margin-top: 6px;
+        }
+
+        /* 成功提示 */
+        .success-message {
+            display: none;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            color: #155724;
+            font-size: 14px;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        .success-message .success-icon {
+            font-size: 18px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                padding: 15px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .top-nav {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .sidebar {
+                width: 60px;
+            }
+
+            .sidebar-header h1,
+            .sidebar-header p,
+            .menu-item span:not(.menu-icon),
+            .submenu-item a {
+                display: none;
+            }
+
+            .menu-item {
+                padding: 12px;
+                text-align: center;
+            }
+
+            .menu-item .menu-icon {
+                margin-right: 0;
+                font-size: 18px;
+            }
+
+            .submenu {
+                position: absolute;
+                left: 60px;
+                top: 0;
+                width: 200px;
+                background: #0F4F9A;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            }
+
+            .submenu-item {
+                padding: 12px 15px;
+            }
+
+            .main-content {
+                margin-left: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+                <div class="sidebar-header">
+            <div class="logo">
+                <img src="../assets/logo.svg" alt="萨肯 SHAKOLN">
+                <h1>后台管理系统</h1>
+                <p>专业汽配管理平台</p>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="menu-item">
+                <a href="index.html">
+                    <span>
+                        <img src="./icon/gongyezujian-yibiaopan.svg" alt="" class="menu-icon-img">
+                        仪表盘
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/chaxunzhongxin.svg" alt="" class="menu-icon-img">
+                        查询中心
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="oe-search.html">OE号查询</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="vin-search.html">车架号VIN查询</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="chassis-search.html">底盘号查询</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item active">
+                <a href="#">
+                    <span>
+                        <img src="./icon/a-chanpin3x.svg" alt="" class="menu-icon-img">
+                        产品管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu active">
+                    <div class="submenu-item">
+                        <a href="products.html">产品列表</a>
+                    </div>
+                    <div class="submenu-item active">
+                        <a href="product-add.html">添加产品</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-categories.html">产品分类</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-import.html">Excel批量导入</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/tupian.svg" alt="" class="menu-icon-img">
+                        图片管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="image-auto.html">自动读取图片</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="image-manage.html">图片管理</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/chexingguanli.svg" alt="" class="menu-icon-img">
+                        车型管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="car-models.html">车型列表</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="car-model-add.html">添加车型</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/dingdanguanli.svg" alt="" class="menu-icon-img">
+                        订单管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="orders.html">订单列表</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="order-detail.html">订单详情</a>
+                    </div>
+                </div>
+            </div>            <div class="menu-item">
+                <a href="quotes.html">
+                    <span>
+                        <img src="./icon/dingdanguanli.svg" alt="" class="menu-icon-img">
+                        报价管理
+                    </span>
+                </a>
+            </div>
+            
+
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/shouyeguanli.svg" alt="" class="menu-icon-img">
+                        首页管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="home-banner.html">Banner图片管理</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="home-products.html">产品中心管理</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="home-hot.html">爆款推荐管理</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/xitongshezhi.svg" alt="" class="menu-icon-img">
+                        系统设置
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="settings.html">基本设置</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="users.html">用户管理</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="permissions.html">权限设置</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div class="main-content">
+        <!-- 顶部导航 -->
+        <div class="top-nav">
+            <div class="welcome">欢迎回来，管理员</div>
+            <div class="user-info">
+                <div class="user-avatar">管</div>
+                <div class="user-name">管理员</div>
+                <a href="../admin-login.html" class="logout">退出登录</a>
+            </div>
+        </div>
+
+        <!-- 添加产品 -->
+        <div class="content-card">
+            <div class="card-header">
+                <h2>添加产品</h2>
+                <div class="breadcrumb">
+                    <a href="products.html">产品列表</a> / 添加产品
+                </div>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <span class="success-icon">✓</span>
+                <span>产品添加成功！</span>
+            </div>
+
+            <div class="form-container">
+                <form id="productForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">产品名称 <span class="required">*</span></label>
+                            <input type="text" id="productName" name="productName" placeholder="请输入产品名称">
+                            <div class="error-message" id="error-productName">请输入产品名称</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productOE">OE号 <span class="required">*</span></label>
+                            <input type="text" id="productOE" name="productOE" placeholder="请输入OE号">
+                            <div class="error-message" id="error-productOE">请输入OE号</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productCategory">产品分类 <span class="required">*</span></label>
+                            <select id="productCategory" name="productCategory">
+                                <option value="">请选择分类</option>
+                                <option value="发动机配件">发动机配件</option>
+                                <option value="变速箱配件">变速箱配件</option>
+                                <option value="转向系统">转向系统</option>
+                                <option value="制动系统">制动系统</option>
+                                <option value="车身内饰">车身内饰</option>
+                                <option value="车灯照明">车灯照明</option>
+                                <option value="通用密封橡胶件">通用密封橡胶件</option>
+                                <option value="空调系统">空调系统</option>
+                                <option value="底盘传动系统">底盘传动系统</option>
+                                <option value="进气排气系统">进气排气系统</option>
+                                <option value="车身外观">车身外观</option>
+                                <option value="电器电控">电器电控</option>
+                                <option value="悬挂减震系统">悬挂减震系统</option>
+                                <option value="冷却系统">冷却系统</option>
+                                <option value="精品系列">精品系列</option>
+                            </select>
+                            <div class="error-message" id="error-productCategory">请选择产品分类</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productBrand">适用品牌 <span class="required">*</span></label>
+                            <select id="productBrand" name="productBrand">
+                                <option value="">请选择品牌</option>
+                                <option value="奔驰">奔驰</option>
+                                <option value="宝马">宝马</option>
+                            </select>
+                            <div class="error-message" id="error-productBrand">请选择适用品牌</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productModel">适配车型</label>
+                            <input type="text" id="productModel" name="productModel" placeholder="请输入适配车型（如：W204, F18）">
+                            <div class="input-hint">多个车型用逗号分隔</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productStock">库存数量</label>
+                            <input type="number" id="productStock" name="productStock" placeholder="请输入库存数量" min="0">
+                            <div class="input-hint">默认值为"充足"</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="productDescription">产品描述</label>
+                        <textarea id="productDescription" name="productDescription" placeholder="请输入产品描述，支持详细说明产品特性、材质、适用范围等"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="productImage">产品图片</label>
+                        <label class="upload-area" for="productImage">
+                            <div class="upload-icon">📷</div>
+                            <div class="upload-text">点击或拖拽上传图片</div>
+                            <div class="upload-hint">支持 JPG、PNG 格式，单张不超过 2MB</div>
+                        </label>
+                        <input type="file" id="productImage" name="productImage" accept="image/*" multiple>
+                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productStatus">状态 <span class="required">*</span></label>
+                            <select id="productStatus" name="productStatus">
+                                <option value="active">上架</option>
+                                <option value="inactive">下架</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productUnit">单位</label>
+                            <input type="text" id="productUnit" name="productUnit" placeholder="如：个、件、套" value="个">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="window.location.href='products.html'">
+                            ← 返回列表
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            ✓ 保存产品
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 侧边栏菜单功能
+            var menuItems = document.querySelectorAll('.menu-item');
+
+            menuItems.forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    var submenu = this.querySelector('.submenu');
+                    if (submenu) {
+                        if (e.target.closest('.submenu') || e.target.closest('.submenu-item')) {
+                            return;
+                        }
+
+                        e.preventDefault();
+
+                        menuItems.forEach(function(menu) {
+                            if (menu !== item) {
+                                menu.classList.remove('active');
+                                var otherSubmenu = menu.querySelector('.submenu');
+                                if (otherSubmenu) otherSubmenu.classList.remove('active');
+                            }
+                        });
+
+                        this.classList.toggle('active');
+                        submenu.classList.toggle('active');
+                    }
+                });
+            });
+
+            // 文件上传预览
+            var productImage = document.getElementById('productImage');
+            var imagePreview = document.getElementById('imagePreview');
+
+            productImage.addEventListener('change', function(e) {
+                imagePreview.innerHTML = '';
+                var files = e.target.files;
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    if (file.type.startsWith('image/')) {
+                        var reader = new FileReader();
+                        reader.onload = function(event) {
+                            var previewItem = document.createElement('div');
+                            previewItem.className = 'preview-item';
+                            previewItem.innerHTML = `
+                                <img src="${event.target.result}" alt="预览">
+                                <button class="remove-btn" onclick="this.parentElement.remove()">×</button>
+                            `;
+                            imagePreview.appendChild(previewItem);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+
+            // 拖拽上传
+            var uploadArea = document.querySelector('.upload-area');
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                var files = e.dataTransfer.files;
+                productImage.files = files;
+                var event = new Event('change');
+                productImage.dispatchEvent(event);
+            });
+
+            // 表单验证和提交
+            var productForm = document.getElementById('productForm');
+            var successMessage = document.getElementById('successMessage');
+
+            productForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                successMessage.classList.remove('show');
+
+                // 验证表单
+                var isValid = validateForm();
+                if (!isValid) return;
+
+                // 收集表单数据
+                var formData = {
+                    name: document.getElementById('productName').value,
+                    code: document.getElementById('productOE').value,
+                    category: document.getElementById('productCategory').value,
+                    series: document.getElementById('productBrand').value,
+                    model: document.getElementById('productModel').value,
+                    stock: document.getElementById('productStock').value || '充足',
+                    description: document.getElementById('productDescription').value,
+                    status: document.getElementById('productStatus').value,
+                    unit: document.getElementById('productUnit').value || '个'
+                };
+
+                // 模拟提交
+                console.log('提交产品数据:', formData);
+                
+                // 显示成功消息
+                successMessage.classList.add('show');
+                
+                // 清空表单
+                productForm.reset();
+                imagePreview.innerHTML = '';
+
+                // 3秒后隐藏成功消息
+                setTimeout(function() {
+                    successMessage.classList.remove('show');
+                }, 3000);
+            });
+
+            function validateForm() {
+                var isValid = true;
+                
+                // 验证产品名称
+                var productName = document.getElementById('productName');
+                if (!productName.value.trim()) {
+                    showError(productName, 'error-productName');
+                    isValid = false;
+                } else {
+                    hideError(productName, 'error-productName');
+                }
+
+                // 验证OE号
+                var productOE = document.getElementById('productOE');
+                if (!productOE.value.trim()) {
+                    showError(productOE, 'error-productOE');
+                    isValid = false;
+                } else {
+                    hideError(productOE, 'error-productOE');
+                }
+
+                // 验证分类
+                var productCategory = document.getElementById('productCategory');
+                if (!productCategory.value) {
+                    showError(productCategory, 'error-productCategory');
+                    isValid = false;
+                } else {
+                    hideError(productCategory, 'error-productCategory');
+                }
+
+                // 验证品牌
+                var productBrand = document.getElementById('productBrand');
+                if (!productBrand.value) {
+                    showError(productBrand, 'error-productBrand');
+                    isValid = false;
+                } else {
+                    hideError(productBrand, 'error-productBrand');
+                }
+
+                return isValid;
+            }
+
+            function showError(input, errorId) {
+                input.parentElement.classList.add('error');
+                document.getElementById(errorId).style.display = 'block';
+            }
+
+            function hideError(input, errorId) {
+                input.parentElement.classList.remove('error');
+                document.getElementById(errorId).style.display = 'none';
+            }
+
+            // 输入框实时验证
+            document.querySelectorAll('.form-group input, .form-group select').forEach(function(input) {
+                input.addEventListener('blur', function() {
+                    var errorId = 'error-' + this.id;
+                    var errorElement = document.getElementById(errorId);
+                    if (errorElement) {
+                        if (!this.value.trim()) {
+                            showError(this, errorId);
+                        } else {
+                            hideError(this, errorId);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

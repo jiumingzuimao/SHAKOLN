@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业文化 - 萨肯汽配</title>
+    <!-- Tailwind CSS -->
+    <script src="assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 头部样式 */
+        header {
+            background-color: #0F4F9A;
+            color: white;
+            padding: 15px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        nav ul li:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        nav ul li:hover a {
+            color: white;
+        }
+        
+        nav ul li a:active {
+            color: white;
+        }
+        
+        .hotline {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .wechat-btn {
+            background-color: #FF6C00;
+            border: none;
+            padding: 8px 16px;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* 快捷功能栏 */
+        .quick-functions {
+            background-color: white;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .functions-list {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .function-item {
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .function-item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .function-item a {
+            display: inline-block;
+            padding: 15px 25px;
+            text-decoration: none;
+            color: #333;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 0;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+        
+        .function-item a:hover {
+            background-color: #0F4F9A;
+            color: white;
+            border-color: #0F4F9A;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            background-color: white;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            color: #0F4F9A;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* 企业文化 */
+        .company-culture {
+            background-color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .culture-section {
+            margin-bottom: 60px;
+        }
+        
+        .culture-section h2 {
+            color: #0F4F9A;
+            margin-bottom: 40px;
+            text-align: center;
+            font-size: 24px;
+        }
+        
+        .mv-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .mv-item {
+            text-align: center;
+            padding: 40px 30px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .mv-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .mv-item h3 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .mv-item p {
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        /* 核心价值观 */
+        .core-values {
+            background-color: #f5f7fa;
+            padding: 60px 0;
+            margin-bottom: 60px;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        
+        .value-item {
+            text-align: center;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .value-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .value-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #0F4F9A;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 24px;
+        }
+        
+        .value-item h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+        .value-item p {
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        /* 企业精神 */
+        .enterprise-spirit {
+            padding: 60px 0;
+        }
+        
+        .spirit-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .spirit-content h3 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            font-size: 20px;
+        }
+        
+        .spirit-content p {
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        /* 底部 */
+        footer {
+            background-color: #0F4F9A;
+            color: white;
+            padding: 40px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+        }
+        
+        .footer-section p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">首页</a>
+            <span>></span>
+            <a href="about.html">关于我们</a>
+            <span>></span>
+            <span>企业文化</span>
+        </div>
+    </div>
+    
+    <!-- 页面标题 -->
+    <div class="container page-title">
+        <h1>企业文化</h1>
+    </div>
+    
+    <!-- 企业文化 -->
+    <div class="company-culture">
+        <div class="container">
+            <!-- 企业使命愿景价值观 -->
+            <div class="culture-section">
+                <h2>企业使命 / 愿景 / 价值观</h2>
+                <div class="mv-grid">
+                    <div class="mv-item">
+                        <h3>企业使命</h3>
+                        <p>为客户提供高品质的汽车配件和专业的服务，推动汽车后市场的健康发展，为汽车行业的进步贡献力量。</p>
+                    </div>
+                    <div class="mv-item">
+                        <h3>企业愿景</h3>
+                        <p>成为国内领先的奔驰/宝马汽车配件供应商，打造行业知名品牌，为客户创造更大的价值。</p>
+                    </div>
+                    <div class="mv-item">
+                        <h3>核心价值观</h3>
+                        <p>品质第一、客户至上、诚信经营、创新发展，以专业精神和优质服务赢得客户信赖。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 核心价值观 -->
+            <div class="culture-section core-values">
+                <h2>核心价值观</h2>
+                <div class="values-grid">
+                    <div class="value-item">
+                        <div class="value-icon">质</div>
+                        <h3>品质第一</h3>
+                        <p>坚持以品质为核心，严格控制产品质量，确保每一件产品都符合高标准要求。</p>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-icon">客</div>
+                        <h3>客户至上</h3>
+                        <p>以客户需求为导向，提供个性化服务，建立长期稳定的合作关系。</p>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-icon">诚</div>
+                        <h3>诚信经营</h3>
+                        <p>坚持诚信为本，遵守商业道德，赢得客户和合作伙伴的信任。</p>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-icon">创</div>
+                        <h3>创新发展</h3>
+                        <p>不断创新，引进先进技术和管理理念，推动企业持续发展。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 企业精神 -->
+            <div class="culture-section enterprise-spirit">
+                <h2>企业精神</h2>
+                <div class="spirit-content">
+                    <h3>专业、创新、协作、共赢</h3>
+                    <p>专业：专注于奔驰/宝马汽车配件领域，不断提升专业知识和技能，为客户提供专业的解决方案。</p>
+                    <p>创新：积极探索新的技术和管理方法，不断创新产品和服务，保持企业的竞争力。</p>
+                    <p>协作：注重团队合作，加强内部沟通和协作，形成强大的团队合力。</p>
+                    <p>共赢：追求与客户、合作伙伴和员工的共赢，实现共同发展。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- 加载模板脚本 -->
+    <script src="templates/load-templates.js"></script>
+</body>
+</html>

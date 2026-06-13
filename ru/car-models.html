@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список моделей - Sakon Auto Parts</title>
+    <script src="assets/tailwind.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF7A00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .model-card-hover {
+                transition: all 0.3s ease;
+            }
+            .model-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+        /* 热门Модель图片样式 */
+        .model-image {
+            position: relative;
+            overflow: hidden;
+        }
+        .model-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 79, 154, 0.6);
+            z-index: 1;
+        }
+        .model-image-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            z-index: 2;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            padding: 0 10px;
+        }
+        .model-image-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .model-image-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+        }
+        
+        /* МодельПоиск区样式 */
+        .search-section {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .search-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .search-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .search-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            position: relative;
+        }
+        .search-tab.active {
+            color: #0066cc;
+        }
+        .search-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 20px;
+            width: calc(100% - 40px);
+            height: 2px;
+            background-color: #0066cc;
+        }
+        /* 隐藏所有Поиск表单，默认显示第一Штук */
+        .search-form-wrap {
+            display: none;
+        }
+        .search-form-wrap.active {
+            display: block;
+        }
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: flex-start;
+            margin-top: 15px;
+        }
+        .form-row {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        .form-input-wide {
+            width: 100%;
+            min-width: 500px;
+            max-width: 700px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .search-btn {
+            padding: 12px 30px;
+            background-color: #0066cc;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 24px;
+            white-space: nowrap;
+        }
+        .search-btn:hover {
+            background-color: #004499;
+        }
+        
+        .parts-table a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Результаты поиска区样式 */
+        .result-section {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 40px;
+            display: none;
+        }
+        .result-section:not(.hidden) {
+            display: block;
+        }
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+        }
+        .car-info {
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+        .car-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .car-info-row:last-child {
+            margin-bottom: 0;
+        }
+        .car-info-item {
+            flex: 1;
+        }
+        .car-info strong {
+            color: #0F4F9A;
+            display: inline-block;
+        }
+        .parts-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .parts-table th, .parts-table td {
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            text-align: left;
+        }
+        .parts-table th {
+            background-color: #f5f5f5;
+            color: #0F4F9A;
+            font-weight: 600;
+        }
+        .parts-table tr:hover {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <div id="header-placeholder"></div>
+    
+    <div class="bg-gray-100 border-b border-border py-5">
+        <div class="container" style="width: 1200px; margin: 0 auto;">
+            <div class="flex items-center space-x-3 text-sm">
+                <a href="index.html" class="text-gray-600 hover:text-primary">Главная</a>
+                <span class="text-gray-400">></span>
+                <span class="text-gray-900">Модель大全</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container" style="width: 1200px; margin: 0 auto; padding: 40px 0;">
+        <div class="search-section">
+            <div class="search-title">Поиск совместимых запчастей</div>
+            
+            <div class="search-tabs">
+                <div class="search-tab active" data-tab="vin-tab" onclick="switchTab('vin-tab', this)">Поиск по VIN</div>
+                <div class="search-tab" data-tab="chassis-tab" onclick="switchTab('chassis-tab', this)">Поиск по шасси</div>
+                <div class="search-tab" data-tab="model-tab" onclick="switchTab('model-tab', this)">Поиск по модели</div>
+            </div>
+            
+            <div class="search-form-wrap active" id="vin-tab">
+                <div class="search-form">
+                    <div class="form-group">
+                        <label class="form-label">VIN-код <span style="color:red;">*</span></label>
+                        <input type="text" class="form-input-wide" id="vin-input" placeholder="Введите 17-значный VIN (например, LBV5S310XMSXXXXXX)" maxlength="17">
+                    </div>
+
+                    <button class="search-btn" onclick="searchByVIN()">Поиск совместимых запчастей</button>
+                </div>
+            </div>
+
+            <div class="search-form-wrap" id="chassis-tab">
+                <div class="search-form">
+                    <div class="form-group">
+                        <label class="form-label">Номер шасси <span style="color:red;">*</span></label>
+                        <input type="text" class="form-input-wide" id="chassis-input" placeholder="Введите номер шасси (например, F18, W222, G38)">
+                    </div>
+                    <button class="search-btn" onclick="searchByChassis()">Поиск совместимых запчастей</button>
+                </div>
+            </div>
+
+            <div class="search-form-wrap" id="model-tab">
+                <div class="search-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Бренд <span style="color:red;">*</span></label>
+                            <select class="form-select" id="model-brand" onchange="changeSeries()">
+                                <option value="">Выберите бренд</option>
+                                <option value="benz">Mercedes-Benz</option>
+                                <option value="bmw">BMW</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Серия <span style="color:red;">*</span></label>
+                            <select class="form-select" id="model-series">
+                                <option value="">Сначала выберите бренд</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Модель <span style="color:red;">*</span></label>
+                            <select class="form-select" id="model-type">
+                                <option value="">Сначала выберите серию</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Год</label>
+                            <select class="form-select" id="model-year">
+                                <option value="">Выберите год</option>
+                                <option value="2025">2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="search-btn" onclick="searchByModel()">Поиск совместимых запчастей</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="result-section hidden" id="resultSection">
+            <div class="result-title">Результаты поиска</div>
+            <div id="brandWarning"></div>
+            <div class="car-info" id="carInfo"></div>
+            <table class="parts-table">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Категория</th>
+                        <th>Название запчасти</th>
+                        <th>Номер OE</th>
+                        <th>Номер SHAKOLN</th>
+                        <th>Совместимость</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+                <tbody id="partsTable">
+                </tbody>
+            </table>
+            <div id="pagination"></div>
+        </div>
+    </div>
+    
+    <div class="py-15 bg-light">
+        <div class="container" style="width: 1200px; margin: 0 auto;">
+            <h2 class="text-center text-2xl font-medium text-primary mb-10">热门Модель</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/benchiCji.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">Mercedes-Benz C-Class</div>
+                            <div class="model-image-subtitle">Премиум-седан</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">Mercedes-Benz C-Class</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">Год выпуска：2020-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">Номер шасси：W206</div>
+                    <a href="product.html?chassis=W206&brand=Mercedes-Benz" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">Посмотреть запчасти</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/benchiEji.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">Mercedes-BenzE-Class</div>
+                            <div class="model-image-subtitle">Бизнес-седан</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">Mercedes-Benz E-Class</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">Год выпуска：2021-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">Номер шасси：W213</div>
+                    <a href="product.html?chassis=W213&brand=Mercedes-Benz" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">Посмотреть запчасти</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/BMW3xi.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">BMW 3 Series</div>
+                            <div class="model-image-subtitle">Спортивный седан</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">BMW 3 Series</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">Год выпуска：2019-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">Номер шасси：G20</div>
+                    <a href="product.html?chassis=G20&brand=BMW" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">Посмотреть запчасти</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/BMW5xi.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">BMW 5 Series</div>
+                            <div class="model-image-subtitle">Бизнес-седан</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">BMW 5 Series</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">Год выпуска：2020-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">Номер шасси：G30</div>
+                    <a href="product.html?chassis=G30&brand=BMW" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">Посмотреть запчасти</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/benchiGLC.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">Mercedes-Benz GLC</div>
+                            <div class="model-image-subtitle">Премиум-SUV</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">Mercedes-Benz GLC</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">Год выпуска：2020-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">Номер шасси：X253</div>
+                    <a href="product.html?chassis=X253&brand=Mercedes-Benz" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">Посмотреть запчасти</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/BMWX3.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">BMW X3</div>
+                            <div class="model-image-subtitle">Среднеразмерный SUV</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">BMW X3</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">Год выпуска：2018-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">Номер шасси：G01</div>
+                    <a href="product.html?chassis=G01&brand=BMW" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">Посмотреть запчасти</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/benchiSji.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">Mercedes-Benz S-Class</div>
+                            <div class="model-image-subtitle">Флагманский седан</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">Mercedes-Benz S-Class</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">Год выпуска：2021-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">Номер шасси：W223</div>
+                    <a href="product.html?chassis=W223&brand=Mercedes-Benz" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">Посмотреть запчасти</a>
+                </div>
+                <div class="model-card bg-white rounded-lg shadow-md p-5 text-center model-card-hover">
+                    <div class="model-image w-full h-36 bg-gray-50 rounded-lg mb-4 bg-cover bg-center" style="background-image: url('img/chexing/BMW7xi.jpg');">
+                        <div class="model-image-text">
+                            <div class="model-image-title">BMW 7 Series</div>
+                            <div class="model-image-subtitle">Премиум-флагман</div>
+                        </div>
+                    </div>
+                    <div class="model-name text-base font-medium text-gray-800 mb-3">BMW 7 Series</div>
+                    <div class="model-info text-sm text-gray-600 mb-2">Год выпуска：2022-2025</div>
+                    <div class="model-info text-sm text-gray-600 mb-4">Номер шасси：G70</div>
+                    <a href="product.html?chassis=G70&brand=BMW" class="model-btn inline-block bg-primary text-white px-5 py-2 rounded-lg text-sm cursor-pointer hover:bg-white hover:text-primary transition-colors">Посмотреть запчасти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="footer-placeholder"></div>
+
+    <!-- <script src="scripts/products.js"></script> -->
+    <script src="templates/load-templates.js"></script>
+    
+    
+
+<script>
+// 全局变量
+let currentPage = 1;
+const itemsPerPage = 20;
+let currentResults = [];
+
+// Бренд数据
+const brandOptions = [
+  { "value": "benz", "label": "Mercedes-Benz" },
+  { "value": "bmw", "label": "BMW" }
+];
+
+// BMWСерия列表
+const bmwSeriesList = [
+  {"value": "1", "label": "1 Series"},
+  {"value": "2", "label": "2 Series"},
+  {"value": "3", "label": "3 Series"},
+  {"value": "4", "label": "4 Series"},
+  {"value": "5", "label": "5 Series"},
+  {"value": "6", "label": "6 Series/GT"},
+  {"value": "7", "label": "7 Series"},
+  {"value": "8", "label": "8 Series"},
+  {"value": "x1", "label": "X1"},
+  {"value": "x2", "label": "X2"},
+  {"value": "x3", "label": "X3"},
+  {"value": "x4", "label": "X4"},
+  {"value": "x5", "label": "X5"},
+  {"value": "x6", "label": "X6"},
+  {"value": "x7", "label": "X7"},
+  {"value": "xm", "label": "XM"},
+  {"value": "z", "label": "Z Series"},
+  {"value": "i", "label": "i Series (Electric)"},
+  {"value": "m", "label": "M Series"}
+];
+
+// BMW各Серия对应Модель(含Номер шасси)
+const bmwModelMap = {
+  "1": [
+    {"value": "1_e81", "label": "1 Series(E81/E82/E87/E88)", "chassis": ["E81", "E82", "E87", "E88"]},
+    {"value": "1_f20", "label": "1 Series(F20/F21)", "chassis": ["F20", "F21"]},
+    {"value": "1_f40", "label": "1 Series(F40)", "chassis": ["F40"]},
+    {"value": "1_f52", "label": "1 Series(F52 Китайская сборка)", "chassis": ["F52"]},
+    {"value": "1_f70", "label": "1 Series(F70)", "chassis": ["F70"]}
+  ],
+  "2": [
+    {"value": "2_f22", "label": "2 Series(F22/F23)", "chassis": ["F22", "F23"]},
+    {"value": "2_f44", "label": "2 Series(F44)", "chassis": ["F44"]},
+    {"value": "2_f45", "label": "2 Series(F45/F46)", "chassis": ["F45", "F46"]},
+    {"value": "2_g42", "label": "2 Series(G42)", "chassis": ["G42"]}
+  ],
+  "3": [
+    {"value": "3_e21", "label": "3 Series(E21)", "chassis": ["E21"]},
+    {"value": "3_e30", "label": "3 Series(E30)", "chassis": ["E30"]},
+    {"value": "3_e36", "label": "3 Series(E36)", "chassis": ["E36"]},
+    {"value": "3_e46", "label": "3 Series(E46)", "chassis": ["E46"]},
+    {"value": "3_e90", "label": "3 Series(E90/E91/E92/E93)", "chassis": ["E90", "E91", "E92", "E93"]},
+    {"value": "3_f30", "label": "3 Series(F30/F31/F34/F35)", "chassis": ["F30", "F31", "F34", "F35"]},
+    {"value": "3_g20", "label": "3 Series(G20)", "chassis": ["G20"]},
+    {"value": "3_g28", "label": "3 Series(G28 Китайская сборка)", "chassis": ["G28"]}
+  ],
+  "4": [
+    {"value": "4_f32", "label": "4 Series(F32/F33/F36)", "chassis": ["F32", "F33", "F36"]},
+    {"value": "4_g22", "label": "4 Series(G22/G23/G26)", "chassis": ["G22", "G23", "G26"]}
+  ],
+  "5": [
+    {"value": "5_e12", "label": "5 Series(E12)", "chassis": ["E12"]},
+    {"value": "5_e28", "label": "5 Series(E28)", "chassis": ["E28"]},
+    {"value": "5_e34", "label": "5 Series(E34)", "chassis": ["E34"]},
+    {"value": "5_e39", "label": "5 Series(E39)", "chassis": ["E39"]},
+    {"value": "5_e60", "label": "5 Series(E60/E61)", "chassis": ["E60", "E61"]},
+    {"value": "5_f10", "label": "5 Series(F10/F11/F18)", "chassis": ["F10", "F11", "F18"]},
+    {"value": "5_g30", "label": "5 Series(G30)", "chassis": ["G30"]},
+    {"value": "5_g38", "label": "5 Series(G38 Китайская сборка)", "chassis": ["G38"]}
+  ],
+  "6": [
+    {"value": "6_e24", "label": "6系(E24)", "chassis": ["E24"]},
+    {"value": "6_e63", "label": "6系(E63/E64)", "chassis": ["E63", "E64"]},
+    {"value": "6_f06", "label": "6系(F06/F12/F13)", "chassis": ["F06", "F12", "F13"]},
+    {"value": "6_g32", "label": "6系(G32)", "chassis": ["G32"]}
+  ],
+  "7": [
+    {"value": "7_e23", "label": "7 Series(E23)", "chassis": ["E23"]},
+    {"value": "7_e32", "label": "7 Series(E32)", "chassis": ["E32"]},
+    {"value": "7_e38", "label": "7 Series(E38)", "chassis": ["E38"]},
+    {"value": "7_e65", "label": "7 Series(E65/E66)", "chassis": ["E65", "E66"]},
+    {"value": "7_f01", "label": "7 Series(F01/F02)", "chassis": ["F01", "F02"]},
+    {"value": "7_g11", "label": "7 Series(G11/G12)", "chassis": ["G11", "G12"]},
+    {"value": "7_g70", "label": "7 Series(G70)", "chassis": ["G70"]}
+  ],
+  "8": [
+    {"value": "8_e31", "label": "8 Series(E31)", "chassis": ["E31"]},
+    {"value": "8_g14", "label": "8 Series(G14/G15/G16)", "chassis": ["G14", "G15", "G16"]},
+    {"value": "8_g77", "label": "8 Series(G77)", "chassis": ["G77"]}
+  ],
+  "x1": [
+    {"value": "x1_e84", "label": "X1(E84)", "chassis": ["E84"]},
+    {"value": "x1_f48", "label": "X1(F48/F49)", "chassis": ["F48", "F49"]},
+    {"value": "x1_u11", "label": "X1(U11/U12)", "chassis": ["U11", "U12"]}
+  ],
+  "x2": [
+    {"value": "x2_f39", "label": "X2(F39)", "chassis": ["F39"]},
+    {"value": "x2_u10", "label": "X2(U10)", "chassis": ["U10"]}
+  ],
+  "x3": [
+    {"value": "x3_e83", "label": "X3(E83)", "chassis": ["E83"]},
+    {"value": "x3_f25", "label": "X3(F25)", "chassis": ["F25"]},
+    {"value": "x3_g01", "label": "X3(G01)", "chassis": ["G01"]},
+    {"value": "x3_g08", "label": "X3(G08 Китайская сборка)", "chassis": ["G08"]},
+    {"value": "x3_g45", "label": "X3(G45)", "chassis": ["G45"]}
+  ],
+  "x4": [
+    {"value": "x4_f26", "label": "X4(F26)", "chassis": ["F26"]},
+    {"value": "x4_g02", "label": "X4(G02)", "chassis": ["G02"]}
+  ],
+  "x5": [
+    {"value": "x5_e53", "label": "X5(E53)", "chassis": ["E53"]},
+    {"value": "x5_e70", "label": "X5(E70)", "chassis": ["E70"]},
+    {"value": "x5_f15", "label": "X5(F15)", "chassis": ["F15"]},
+    {"value": "x5_g05", "label": "X5(G05)", "chassis": ["G05"]},
+    {"value": "x5_g18", "label": "X5(G18 Китайская сборка)", "chassis": ["G18"]}
+  ],
+  "x6": [
+    {"value": "x6_e71", "label": "X6(E71)", "chassis": ["E71"]},
+    {"value": "x6_f16", "label": "X6(F16)", "chassis": ["F16"]},
+    {"value": "x6_g06", "label": "X6(G06)", "chassis": ["G06"]}
+  ],
+  "x7": [
+    {"value": "x7_g07", "label": "X7(G07)", "chassis": ["G07"]}
+  ],
+  "xm": [
+    {"value": "xm_g09", "label": "XM(G09)", "chassis": ["G09"]}
+  ],
+  "z": [
+    {"value": "z_e85", "label": "Z4(E85/E86)", "chassis": ["E85", "E86"]},
+    {"value": "z_e89", "label": "Z4(E89)", "chassis": ["E89"]},
+    {"value": "z_g29", "label": "Z4(G29)", "chassis": ["G29"]}
+  ],
+  "i": [
+    {"value": "i_i01", "label": "i3(I01)", "chassis": ["I01"]},
+    {"value": "i_g28", "label": "i3(G28)", "chassis": ["G28"]},
+    {"value": "i_g26", "label": "i4(G26)", "chassis": ["G26"]},
+    {"value": "i_g08", "label": "iX3(G08)", "chassis": ["G08"]},
+    {"value": "i_i20", "label": "iX(I20)", "chassis": ["I20"]},
+    {"value": "i_g70", "label": "i7(G70)", "chassis": ["G70"]},
+    {"value": "i_g60", "label": "i5(G60)", "chassis": ["G60"]}
+  ],
+  "m": [
+    {"value": "m_f87", "label": "M2(F87)", "chassis": ["F87"]},
+    {"value": "m_g87", "label": "M2(G87)", "chassis": ["G87"]},
+    {"value": "m_e30", "label": "M3(E30)", "chassis": ["E30"]},
+    {"value": "m_e36", "label": "M3(E36)", "chassis": ["E36"]},
+    {"value": "m_e46", "label": "M3(E46)", "chassis": ["E46"]},
+    {"value": "m_e90", "label": "M3(E90/E92/E93)", "chassis": ["E90", "E92", "E93"]},
+    {"value": "m_f80", "label": "M3(F80)", "chassis": ["F80"]},
+    {"value": "m_g80", "label": "M3(G80)", "chassis": ["G80"]},
+    {"value": "m_f82", "label": "M4(F82/F83)", "chassis": ["F82", "F83"]},
+    {"value": "m_g82", "label": "M4(G82/G83)", "chassis": ["G82", "G83"]},
+    {"value": "m_e28", "label": "M5(E28)", "chassis": ["E28"]},
+    {"value": "m_e34", "label": "M5(E34)", "chassis": ["E34"]},
+    {"value": "m_e39", "label": "M5(E39)", "chassis": ["E39"]},
+    {"value": "m_e60", "label": "M5(E60/E61)", "chassis": ["E60", "E61"]},
+    {"value": "m_f10", "label": "M5(F10)", "chassis": ["F10"]},
+    {"value": "m_g90", "label": "M5(G90)", "chassis": ["G90"]},
+    {"value": "m_g14", "label": "M8(G14/G15/G16)", "chassis": ["G14", "G15", "G16"]},
+    {"value": "m_f97", "label": "X3 M(F97)", "chassis": ["F97"]},
+    {"value": "m_f98", "label": "X4 M(F98)", "chassis": ["F98"]},
+    {"value": "m_f95", "label": "X5 M(F95)", "chassis": ["F95"]},
+    {"value": "m_f96", "label": "X6 M(F96)", "chassis": ["F96"]}
+  ]
+};
+
+// Mercedes-BenzСерия列表
+const benzSeriesList = [
+  {"value": "a", "label": "A-Class"},
+  {"value": "b", "label": "B-Class"},
+  {"value": "c", "label": "C-Class"},
+  {"value": "e", "label": "E-Class"},
+  {"value": "s", "label": "S-Class"},
+  {"value": "cla", "label": "CLA"},
+  {"value": "cls", "label": "CLS"},
+  {"value": "gla", "label": "GLA"},
+  {"value": "glb", "label": "GLB"},
+  {"value": "glc", "label": "GLC"},
+  {"value": "gle", "label": "GLE"},
+  {"value": "gls", "label": "GLS"},
+  {"value": "g", "label": "G-Class"}
+];
+
+// Mercedes-Benz各Серия对应Модель(含Номер шасси)
+const benzModelMap = {
+  "a": [
+    {"value": "a_w168", "label": "A-Class(W168)", "chassis": ["W168"]},
+    {"value": "a_w169", "label": "A-Class(W169)", "chassis": ["W169"]},
+    {"value": "a_w176", "label": "A-Class(W176)", "chassis": ["W176"]},
+    {"value": "a_w177", "label": "A-Class(W177)", "chassis": ["W177"]},
+    {"value": "a_v177", "label": "A-Class(V177 Китайская сборка三厢)", "chassis": ["V177"]}
+  ],
+  "b": [
+    {"value": "b_w245", "label": "B-Class(W245)", "chassis": ["W245"]},
+    {"value": "b_w246", "label": "B-Class(W246)", "chassis": ["W246"]},
+    {"value": "b_w247", "label": "B-Class(W247)", "chassis": ["W247"]}
+  ],
+  "c": [
+    {"value": "c_w202", "label": "C-Class(W202)", "chassis": ["W202"]},
+    {"value": "c_w203", "label": "C-Class(W203)", "chassis": ["W203"]},
+    {"value": "c_w204", "label": "C-Class(W204)", "chassis": ["W204"]},
+    {"value": "c_w205", "label": "C-Class(W205)", "chassis": ["W205"]},
+    {"value": "c_w206", "label": "C-Class(W206)", "chassis": ["W206"]}
+  ],
+  "e": [
+    {"value": "e_w124", "label": "E-Class(W124)", "chassis": ["W124"]},
+    {"value": "e_w210", "label": "E-Class(W210)", "chassis": ["W210"]},
+    {"value": "e_w211", "label": "E-Class(W211)", "chassis": ["W211"]},
+    {"value": "e_w212", "label": "E-Class(W212)", "chassis": ["W212"]},
+    {"value": "e_w213", "label": "E-Class(W213)", "chassis": ["W213"]},
+    {"value": "e_w214", "label": "E-Class(W214)", "chassis": ["W214"]}
+  ],
+  "s": [
+    {"value": "s_w140", "label": "S-Class(W140 Тигр)", "chassis": ["W140"]},
+    {"value": "s_w220", "label": "S-Class(W220)", "chassis": ["W220"]},
+    {"value": "s_w221", "label": "S-Class(W221)", "chassis": ["W221"]},
+    {"value": "s_w222", "label": "S-Class(W222)", "chassis": ["W222"]},
+    {"value": "s_w223", "label": "S-Class(W223)", "chassis": ["W223"]}
+  ],
+  "cla": [
+    {"value": "cla_c117", "label": "CLA(C117)", "chassis": ["C117"]},
+    {"value": "cla_c118", "label": "CLA(C118)", "chassis": ["C118"]}
+  ],
+  "cls": [
+    {"value": "cls_c219", "label": "CLS(C219)", "chassis": ["C219"]},
+    {"value": "cls_c218", "label": "CLS(C218)", "chassis": ["C218"]},
+    {"value": "cls_c257", "label": "CLS(C257)", "chassis": ["C257"]}
+  ],
+  "gla": [
+    {"value": "gla_x156", "label": "GLA(X156)", "chassis": ["X156"]},
+    {"value": "gla_h247", "label": "GLA(H247)", "chassis": ["H247"]}
+  ],
+  "glb": [
+    {"value": "glb_x247", "label": "GLB(X247)", "chassis": ["X247"]}
+  ],
+  "glc": [
+    {"value": "glc_x204", "label": "GLK(X204)", "chassis": ["X204"]},
+    {"value": "glc_x253", "label": "GLC(X253)", "chassis": ["X253"]},
+    {"value": "glc_x254", "label": "GLC(X254)", "chassis": ["X254"]}
+  ],
+  "gle": [
+    {"value": "gle_w163", "label": "ML(W163)", "chassis": ["W163"]},
+    {"value": "gle_w164", "label": "ML(W164)", "chassis": ["W164"]},
+    {"value": "gle_w166", "label": "ML/GLE(W166)", "chassis": ["W166"]},
+    {"value": "gle_w167", "label": "GLE(W167)", "chassis": ["W167"]},
+    {"value": "gle_c292", "label": "GLE Coupe(C292)", "chassis": ["C292"]}
+  ],
+  "gls": [
+    {"value": "gls_x166", "label": "GL/GLS(X166)", "chassis": ["X166"]},
+    {"value": "gls_x167", "label": "GLS(X167)", "chassis": ["X167"]}
+  ],
+  "g": [
+    {"value": "g_w460", "label": "G-Class(W460)", "chassis": ["W460"]},
+    {"value": "g_w461", "label": "G-Class(W461)", "chassis": ["W461"]},
+    {"value": "g_w463", "label": "G-Class(W463)", "chassis": ["W463"]},
+    {"value": "g_w464", "label": "G-Class(W464)", "chassis": ["W464"]},
+    {"value": "g_w465", "label": "G-Class(W465)", "chassis": ["W465"]}
+  ]
+};
+
+// Год выпуска数据
+const yearOptions = [
+  {"value": "2015", "label": "2015"},
+  {"value": "2016", "label": "2016"},
+  {"value": "2017", "label": "2017"},
+  {"value": "2018", "label": "2018"},
+  {"value": "2019", "label": "2019"},
+  {"value": "2020", "label": "2020"},
+  {"value": "2021", "label": "2021"},
+  {"value": "2022", "label": "2022"},
+  {"value": "2023", "label": "2023"},
+  {"value": "2024", "label": "2024"},
+  {"value": "2025", "label": "2025"},
+  {"value": "2026", "label": "2026"}
+];
+
+// 标签切换功能
+function switchTab(tabId, btn) {
+    document.querySelectorAll('.search-form-wrap').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.search-tab').forEach(b => {
+        b.classList.remove('active');
+    });
+    
+    document.getElementById(tabId).classList.add('active');
+    if (btn) {
+        btn.classList.add('active');
+    }
+}
+
+// Обновление выбора серии
+function changeSeries() {
+    const brand = document.getElementById('model-brand').value;
+    const seriesSelect = document.getElementById('model-series');
+    const typeSelect = document.getElementById('model-type');
+    const yearSelect = document.getElementById('model-year');
+    
+    console.log('changeSeries called, brand:', brand);
+    
+    seriesSelect.innerHTML = '<option value="">Выберите серию</option>';
+    typeSelect.innerHTML = '<option value="">Сначала выберите серию</option>';
+    yearSelect.innerHTML = '<option value="">Сначала выберите модель</option>';
+    
+    if (brand === 'benz') {
+        console.log('Loading benz series');
+        benzSeriesList.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.value;
+            option.textContent = item.label;
+            seriesSelect.appendChild(option);
+        });
+    } else if (brand === 'bmw') {
+        console.log('Loading bmw series');
+        bmwSeriesList.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.value;
+            option.textContent = item.label;
+            seriesSelect.appendChild(option);
+        });
+        console.log('bmw series loaded');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded');
+    // Обновление выбора модели
+    document.getElementById('model-series').addEventListener('change', function() {
+        const brand = document.getElementById('model-brand').value;
+        const series = this.value;
+        const typeSelect = document.getElementById('model-type');
+        const yearSelect = document.getElementById('model-year');
+        
+        console.log('Series changed, brand:', brand, 'series:', series);
+        
+        typeSelect.innerHTML = '<option value="">Выберите модель</option>';
+        yearSelect.innerHTML = '<option value="">Сначала выберите модель</option>';
+        
+        let modelList = [];
+        if (brand === 'benz' && benzModelMap[series]) {
+            modelList = benzModelMap[series];
+        } else if (brand === 'bmw' && bmwModelMap[series]) {
+            modelList = bmwModelMap[series];
+        }
+        
+        console.log('modelList length:', modelList.length);
+        
+        modelList.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.value;
+            option.textContent = item.label;
+            option.dataset.chassis = item.chassis.join(',');
+            typeSelect.appendChild(option);
+        });
+    });
+
+    // Обновление выбора года
+    document.getElementById('model-type').addEventListener('change', function() {
+        const yearSelect = document.getElementById('model-year');
+        
+        yearSelect.innerHTML = '<option value="">Выберите год</option>';
+        
+        yearOptions.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.value;
+            option.textContent = item.label;
+            yearSelect.appendChild(option);
+        });
+    });
+});
+
+// Поиск по VIN
+async function searchByVIN() {
+    const vin = document.getElementById('vin-input').value.toUpperCase();
+    
+    if (!vin || vin.length !== 17) {
+        alert('Пожалуйста, введите 17-значный VIN-код');
+        return;
+    }
+    
+    // Парсинг VIN-кода
+    const parsedVIN = parseVIN(vin);
+    
+    let carInfo = {
+        brand: parsedVIN.brand || '',
+        vin: vin,
+        chassis: parsedVIN.chassis,
+        model: parsedVIN.model,
+        year: parsedVIN.year || '2024'
+    };
+    
+    // Если бренд не распознан, показать предупреждение
+    if (!parsedVIN.brand) {
+        document.getElementById('brandWarning').innerHTML = `
+            <div style="color: #e53935; padding: 10px; background: #ffebee; border-radius: 4px; margin-bottom: 15px;">
+                ⚠️ Предупреждение: Не удалось определить бренд по VIN-коду, проверьте правильность VIN
+            </div>
+        `;
+        return;
+    } else {
+        document.getElementById('brandWarning').innerHTML = '';
+    }
+    
+    await showResults('Поиск по VIN', carInfo);
+}
+
+// Поиск по номеру шасси
+async function searchByChassis() {
+    const chassis = document.getElementById('chassis-input').value.toUpperCase();
+    
+    if (!chassis) {
+        alert('Пожалуйста, введите номер шасси');
+        return;
+    }
+    
+    await showResults('Поиск по номеру шасси', { chassis: chassis });
+}
+
+// Поиск по выбору модели
+async function searchByModel() {
+    const brand = document.getElementById('model-brand').value;
+    const series = document.getElementById('model-series').value;
+    const typeSelect = document.getElementById('model-type');
+    const type = typeSelect.value;
+    const year = document.getElementById('model-year').value;
+    
+    if (!brand || !series || !type) {
+        alert('Пожалуйста, заполните обязательные поля');
+        return;
+    }
+    
+    // Получить номер шасси
+    const selectedOption = typeSelect.options[typeSelect.selectedIndex];
+    const chassis = selectedOption.dataset.chassis || '';
+    
+    // Получить название серии
+    let seriesName = '';
+    if (brand === 'benz') {
+        const seriesItem = benzSeriesList.find(item => item.value === series);
+        seriesName = seriesItem ? seriesItem.label : series;
+    } else {
+        const seriesItem = bmwSeriesList.find(item => item.value === series);
+        seriesName = seriesItem ? seriesItem.label : series;
+    }
+    
+    // Получить название модели
+    let modelName = selectedOption.textContent;
+    
+    await showResults('Поиск по модели', {
+        brand: brand === 'benz' ? '奔驰' : '宝马',
+        series: seriesName,
+        type: modelName,
+        year: year || '2024',
+        chassis: chassis
+    });
+}
+
+// Функция парсинга VIN
+function parseVIN(vin) {
+    const result = {
+        brand: '',
+        chassis: '',
+        model: '',
+        year: ''
+    };
+    
+    if (!vin || vin.length !== 17) {
+        return result;
+    }
+    
+    // Определить бренд по первым 3 символам VIN
+    const wmi = vin.substring(0, 3);
+    const brandCodeMap = {
+        'WDD': '奔驰', 'WDC': '奔驰', 'WDB': '奔驰',
+        'WBA': '宝马', 'WBX': '宝马', 'WBV': '宝马', 'WBS': '宝马', 'LBV': '宝马'
+    };
+    
+    if (brandCodeMap[wmi]) {
+        result.brand = brandCodeMap[wmi];
+    }
+    
+    // Карта номеров шасси к брендам
+    const chassisToBrand = {
+        'W205': '奔驰', 'W213': '奔驰', 'W222': '奔驰', 'W204': '奔驰', 'W212': '奔驰',
+        'W221': '奔驰', 'W203': '奔驰', 'W166': '奔驰', 'W251': '奔驰', 'W164': '奔驰',
+        'W246': '奔驰', 'W253': '奔驰', 'W176': '奔驰', 'W117': '奔驰', 'W211': '奔驰',
+        'W220': '奔驰', 'W218': '奔驰', 'W207': '奔驰', 'W447': '奔驰', 'W167': '奔驰',
+        'W206': '奔驰', 'W254': '奔驰', 'W214': '奔驰', 'W223': '奔驰', 'W463': '奔驰',
+        'F30': '宝马', 'F10': '宝马', 'F18': '宝马', 'G05': '宝马', 'G38': '宝马',
+        'F35': '宝马', 'F25': '宝马', 'E90': '宝马', 'E60': '宝马', 'F02': '宝马',
+        'E70': '宝马', 'F15': '宝马', 'F20': '宝马', 'G12': '宝马', 'G28': '宝马',
+        'F49': '宝马', 'E84': '宝马', 'E83': '宝马', 'F07': '宝马', 'F16': '宝马',
+        'G08': '宝马', 'G01': '宝马', 'G20': '宝马', 'G30': '宝马', 'F52': '宝马'
+    };
+    
+    // Карта номеров шасси к моделям
+    const chassisToModel = {
+        'W205': 'C-Класс', 'W213': 'E-Класс', 'W222': 'S-Класс', 'W204': 'C-Класс', 'W212': 'E-Класс',
+        'W221': 'S-Класс', 'W203': 'C-Класс', 'W166': 'ML/GLE', 'W251': 'R-Класс', 'W164': 'ML',
+        'W246': 'B-Класс', 'W253': 'GLC', 'W176': 'A-Класс', 'W117': 'CLA', 'W211': 'E-Класс',
+        'W220': 'S-Класс', 'W218': 'CLS', 'W207': 'E-Класс Coupe', 'W447': 'V-Класс', 'W167': 'GLE',
+        'W206': 'C-Класс', 'W254': 'C-Класс', 'W214': 'E-Класс', 'W223': 'S-Класс', 'W463': 'G-Класс',
+        'F30': '3 серия', 'F10': '5 серия', 'F18': '5 серия', 'G05': 'X5', 'G38': '5 серия',
+        'F35': '3 серия', 'F25': 'X3', 'E90': '3 серия', 'E60': '5 серия', 'F02': '7 серия',
+        'E70': 'X5', 'F15': 'X5', 'F20': '1 серия', 'G12': '7 серия', 'G28': '3 серия',
+        'F49': 'X1', 'E84': 'X1', 'E83': 'X3', 'F07': '5 серия GT', 'F16': 'X6',
+        'G08': 'X3', 'G01': 'X3', 'G20': '3 серия', 'G30': '5 серия', 'F52': '1 серия'
+    };
+    
+    // Определить бренд и модель по номеру шасси
+    const vds = vin.substring(3, 9);
+    const benzChassisMap = {
+        '205': 'W205', '213': 'W213', '222': 'W222', '204': 'W204', '212': 'W212'
+    };
+    const bmwChassisMap = {
+        '3A5': 'F30', '5A5': 'F18', '5D2': 'G38', 'M1C': 'G05', '2G8': 'G28'
+    };
+    
+    if (result.brand === '奔驰') {
+        const candidates = [vds.substring(0, 3), vds.substring(1, 4)];
+        for (const candidate of candidates) {
+            if (benzChassisMap[candidate]) {
+                result.chassis = benzChassisMap[candidate];
+                break;
+            }
+        }
+    } else if (result.brand === '宝马') {
+        const candidates = [vds.substring(0, 3), vds.substring(1, 4), vds.substring(2, 5)];
+        for (const candidate of candidates) {
+            if (bmwChassisMap[candidate]) {
+                result.chassis = bmwChassisMap[candidate];
+                break;
+            }
+        }
+    }
+    
+    if (result.chassis && chassisToModel[result.chassis]) {
+        result.model = chassisToModel[result.chassis];
+    }
+    
+    const yearCode = vin.charAt(9);
+    const yearMap = {
+        'A': '2010', 'B': '2011', 'C': '2012', 'D': '2013', 'E': '2014',
+        'F': '2015', 'G': '2016', 'H': '2017', 'J': '2018', 'K': '2019',
+        'L': '2020', 'M': '2021', 'N': '2022', 'P': '2023', 'R': '2024',
+        'S': '2025'
+    };
+    if (yearMap[yearCode]) {
+        result.year = yearMap[yearCode];
+    }
+    
+    return result;
+}
+
+// Перевод категорий и названий запчастей
+function translateCategory(category) {
+    const translations = {
+        '发动机配件': 'Запчасти для двигателя',
+        '变速箱配件': 'Запчасти для коробки передач',
+        '转向系统': 'Система рулевого управления',
+        '制动系统': 'Тормозная система',
+        '悬挂减震系统': 'Система подвески',
+        '冷却系统': 'Система охлаждения',
+        '空调系统': 'Система кондиционирования',
+        '车身外观': 'Кузов и экстерьер',
+        '车身内饰': 'Интерьер салона',
+        '车灯照明': 'Освещение и фары',
+        '电器电控': 'Электрические системы',
+        '进气排气系统': 'Система впуска и выпуска',
+        '底盘传动系统': 'Трансмиссия и ходовая',
+        '通用密封橡胶件': 'Уплотнения и резиновые изделия',
+        '精品系列': 'Премиум-серия',
+        '刹车泵': 'Тормозной насос',
+        '刹车片': 'Тормозные колодки',
+        '刹车盘': 'Тормозные диски',
+        '刹车油管刹车油': 'Тормозные трубки и жидкость',
+        '刹车卡钳': 'Тормозной суппорт',
+        '座椅配件': 'Запчасти для сидений',
+        '内饰板': 'Панели интерьера',
+        '卡扣固定件': 'Крепеж и клипсы',
+        '大灯尾灯': 'Фары и задние фонари',
+        '灯泡灯壳': 'Лампы и корпуса',
+        '密封件油封': 'Уплотнения и сальники',
+        '橡胶减震垫': 'Резиновые амортизаторы',
+        '胶管软管': 'Резиновые шланги',
+        '冷凝器': 'Конденсатор',
+        '暖风水阀、辅助水泵系列': 'Клапан печки и вспомогательный водяной насос',
+        '风口系列': 'Решетки воздуховодов',
+        '压缩机': 'Компрессор',
+        '蒸发箱': 'Испаритель',
+        '曲轴连杆活塞': 'Коленчатый вал, шатуны, поршни',
+        '机油泵油底壳': 'Масляный насос и поддон',
+        '滤芯滤清器': 'Фильтры и фильтрующие элементы',
+        '发动机总成': 'Двигатель в сборе',
+        '发动机密封油封': 'Уплотнения и сальники двигателя',
+        '油泵喷油嘴': 'Топливный насос и форсунки',
+        '正时链条皮带': 'Цепь и ремень ГРМ',
+        '缸体缸盖': 'Блок и головка блока цилиндров',
+        '分动箱': 'Раздаточная коробка',
+        '轴承丶轴头 修包系列': 'Подшипники, ступицы и ремонтные комплекты',
+        '万向节十字轴': 'Шарнирный узел',
+        '差速器': 'Дифференциал',
+        '传动轴': 'Карданный вал',
+        '半轴球笼': 'Шарниры полуосей',
+        '变速箱滤网油底壳': 'Фильтр КПП и поддон',
+        '离合器': 'Сцепление',
+        '变速箱总成': 'Коробка передач в сборе',
+        '换挡机构': 'Механизм переключения передач',
+        '二次废气泵丶空气流量计丶涡轮增压管系列': 'Вторичный насос, расходомер воздуха, турбопроводы',
+        '排气管': 'Выхлопная труба',
+        '三元催化': 'Каталитический нейтрализатор',
+        '涡轮增压': 'Турбокомпрессор',
+        '活塞系列': 'Поршни',
+        '鼓风机丶废气阀、进气翻版系列': 'Вентилятор, клапан EGR, заслонки впуска',
+        '进气歧管': 'Впускной коллектор',
+        '球头摆臂胶套': 'Шарниры, рычаги, втулки',
+        '转向柱': 'Рулевая колонка',
+        '转向助力泵': 'Насос гидроусилителя руля',
+        '内外拉杆': 'Внутренние и внешние тяги',
+        '方向机转向机': 'Рулевой механизм',
+        '机盖叶子板': 'Капот и крылья',
+        '后视镜': 'Зеркала заднего вида',
+        '雨刮片丶雨刮电机丶雨刮连动杆系列': 'Щетки, мотор и тяга стеклоочистителя',
+        '玻璃升降器': 'Стеклоподъемник',
+        '车门车门拉手': 'Двери и ручки',
+        '电瓶电池': 'Аккумулятор',
+        '发电机': 'Генератор',
+        '点火线圈丶电瓶线系列': 'Катушки зажигания и провода аккумулятора',
+        '电子扇系列': 'Электровентиляторы',
+        '线路插头': 'Проводка и разъемы',
+        '安全带预警器系列': 'Ремни безопасности и преднатяжители',
+        '传感器': 'Датчики',
+        '启动机': 'Стартер',
+        '悬挂胶套衬套': 'Втулки и буферы подвески',
+        '摆臂控制臂': 'Рычаги подвески',
+        '减震器避震': 'Амортизаторы',
+        '平衡杆连杆': 'Стабилизатор и тяги',
+        '水箱': 'Радиатор охлаждения',
+        '水泵': 'Водяной насос',
+        '水管暖风水管': 'Трубки охлаждения и печки',
+        '节温器': 'Термостат',
+        '电子扇风扇框架': 'Электровентилятор и рамка',
+        '精品配件': 'Премиум-комплектующие',
+        '发动机系统': 'Система двигателя',
+        '变速箱系统': 'Система КПП'
+    };
+    return translations[category] || category;
+}
+
+function translateName(name) {
+    const translations = {
+        '密封圈': 'Уплотнительное кольцо',
+        '密封圈-回油管路': 'Уплотнительное кольцо - масляная линия',
+        '密封圈-缸盖': 'Уплотнительное кольцо - головка блока цилиндров',
+        '变速箱油管胶圈': 'Уплотнительное кольцо масляной трубы КПП',
+        '涡轮增压管密封圈': 'Уплотнительное кольцо турбопроводов',
+        '密封圈-油管': 'Уплотнительное кольцо - масляная труба',
+        '喷油嘴密封圈': 'Уплотнительное кольцо форсунки',
+        '进气支管垫': 'Прокладка впускного коллектора',
+        '密封圈-缸体': 'Уплотнительное кольцо - блок цилиндров',
+        '喷油嘴胶圈上': 'Верхнее уплотнительное кольцо форсунки',
+        '密封圈-机油回流管': 'Уплотнительное кольцо - трубка возврата масла',
+        '电瓶正极线（螺线）': 'Положительный провод аккумулятора (спиральный)',
+        '后传动轴': 'Задний карданный вал',
+        '后羊角胶套': 'Задний резиновый буфер шкворня',
+        '后轮毂轴承': 'Задний подшипник ступицы',
+        '空调管（压缩机-冷凝器）': 'Трубка кондиционера (компрессор - конденсатор)',
+        '方向机防尘套': 'Пыльник рулевого механизма',
+        '废气管': 'Трубка отвода отработанных газов',
+        '前刹车感应线': 'Передний провод датчика тормозов',
+        '后刹车感应线': 'Задний провод датчика тормозов',
+        'ABS传感器后L/R': 'Задний датчик ABS (L/R)',
+        '雨刮片': 'Щетка стеклоочистителя',
+        '后雨刮片': 'Задняя щетка стеклоочистителя',
+        '助力泵': 'Насос гидроусилителя руля',
+        '尾门撑杆L/R': 'Стойка задней двери (L/R)',
+        '机油泵胶圈': 'Уплотнительное кольцо масляного насоса',
+        '密封圈-冷却液出口': 'Уплотнительное кольцо - выход охлаждающей жидкости',
+        '节气门密封圈': 'Уплотнительное кольцо дросселя',
+        '排气管密封垫': 'Прокладка выхлопной трубы',
+        '密封圈-涡轮增压管': 'Уплотнительное кольцо - турбопровод',
+        '雨刷片': 'Щетка стеклоочистителя',
+        '排气软管': 'Гибкая выхлопная труба',
+        '后轮轴承': 'Задний подшипник колеса',
+        '密封圈-冷却液管': 'Уплотнительное кольцо - трубка охлаждающей жидкости',
+        '机油泵密封圈': 'Уплотнительное кольцо масляного насоса',
+        '水管密封圈': 'Уплотнительное кольцо водяной трубы',
+        '机油散热管胶圈': 'Уплотнительное кольцо трубки охлаждения масла',
+        '废气管密封圈': 'Уплотнительное кольцо трубки отработанных газов',
+        '密封圈-回油管': 'Уплотнительное кольцо - трубка возврата масла',
+        '喷油嘴胶圈下': 'Нижнее уплотнительное кольцо форсунки',
+        '高压泵密封圈': 'Уплотнительное кольцо высоконапорного насоса',
+        '节温器密封圈': 'Уплотнительное кольцо термостата',
+        '油水分离器密封圈': 'Уплотнительное кольцо сепаратора воды и масла',
+        '凸轮轴电磁阀密封圈': 'Уплотнительное кольцо электромагнитного клапана распределительного вала',
+        '涡轮增压垫': 'Прокладка турбокомпрессора',
+        '节温器胶圈': 'Уплотнительное кольцо термостата',
+        '机油尺密封圈': 'Уплотнительное кольцо щупа уровня масла',
+        '排气管接口垫': 'Прокладка соединения выхлопной трубы',
+        '密封圈-进油管路': 'Уплотнительное кольцо - входная масляная линия',
+        '密封垫-缸盖': 'Прокладка головки блока цилиндров',
+        '增压器管密封圈': 'Уплотнительное кольцо трубки компрессора',
+        '平衡轴垫': 'Прокладка балансировочного вала',
+        '节温器垫': 'Прокладка термостата',
+        '机油盖密封圈': 'Уплотнительное кольцо крышки маслозаливного отверстия',
+        '机油散热器垫': 'Прокладка масляного радиатора',
+        '水泵垫': 'Прокладка водяного насоса',
+        '密封盖-缸体': 'Уплотнительная крышка - блок цилиндров'
+    };
+    return translations[name] || name;
+}
+
+// Показать результаты поиска
+async function showResults(searchType, carInfo) {
+    document.getElementById('resultSection').classList.remove('hidden');
+    
+    // Сначала оставить исходную логику
+    const chassisToBrand = {
+      'W168': '奔驰', 'W169': '奔驰', 'W176': '奔驰', 'W177': '奔驰', 'V177': '奔驰',
+      'W245': '奔驰', 'W246': '奔驰', 'W247': '奔驰',
+      'W202': '奔驰', 'W203': '奔驰', 'W204': '奔驰', 'W205': '奔驰', 'W206': '奔驰',
+      'W124': '奔驰', 'W210': '奔驰', 'W211': '奔驰', 'W212': '奔驰', 'W213': '奔驰', 'W214': '奔驰',
+      'W140': '奔驰', 'W220': '奔驰', 'W221': '奔驰', 'W222': '奔驰', 'W223': '奔驰',
+      'C117': '奔驰', 'C118': '奔驰',
+      'C219': '奔驰', 'C218': '奔驰', 'C257': '奔驰',
+      'X156': '奔驰', 'H247': '奔驰',
+      'X247': '奔驰',
+      'X204': '奔驰', 'X253': '奔驰', 'X254': '奔驰',
+      'W163': '奔驰', 'W164': '奔驰', 'W166': '奔驰', 'W167': '奔驰', 'C292': '奔驰',
+      'X166': '奔驰', 'X167': '奔驰',
+      'W460': '奔驰', 'W461': '奔驰', 'W463': '奔驰', 'W464': '奔驰', 'W465': '奔驰',
+      'F30': '宝马', 'F10': '宝马', 'F18': '宝马', 'G05': '宝马', 'G38': '宝马',
+      'F35': '宝马', 'F25': '宝马', 'E90': '宝马', 'E60': '宝马', 'F02': '宝马',
+      'E70': '宝马', 'F15': '宝马', 'F20': '宝马', 'G12': '宝马', 'G28': '宝马',
+      'F49': '宝马', 'E84': '宝马', 'E83': '宝马', 'F07': '宝马', 'F16': '宝马',
+      'G08': '宝马', 'G01': '宝马', 'G20': '宝马', 'G30': '宝马', 'F52': '宝马'
+    };
+
+    const chassisToModel = {
+      'W168': 'A-Class', 'W169': 'A-Class', 'W176': 'A-Class', 'W177': 'A-Class', 'V177': 'A-Class',
+      'W245': 'B-Class', 'W246': 'B-Class', 'W247': 'B-Class',
+      'W202': 'C-Class', 'W203': 'C-Class', 'W204': 'C-Class', 'W205': 'C-Class', 'W206': 'C-Class',
+      'W124': 'E-Class', 'W210': 'E-Class', 'W211': 'E-Class', 'W212': 'E-Class', 'W213': 'E-Class', 'W214': 'E-Class',
+      'W140': 'S-Class', 'W220': 'S-Class', 'W221': 'S-Class', 'W222': 'S-Class', 'W223': 'S-Class',
+      'C117': 'CLA', 'C118': 'CLA',
+      'C219': 'CLS', 'C218': 'CLS', 'C257': 'CLS',
+      'X156': 'GLA', 'H247': 'GLA',
+      'X247': 'GLB',
+      'X204': 'GLK', 'X253': 'GLC', 'X254': 'GLC',
+      'W163': 'ML', 'W164': 'ML', 'W166': 'ML/GLE', 'W167': 'GLE', 'C292': 'GLE Coupe',
+      'X166': 'GL/GLS', 'X167': 'GLS',
+      'W460': 'G-Class', 'W461': 'G-Class', 'W463': 'G-Class', 'W464': 'G-Class', 'W465': 'G-Class',
+      'F30': '3 Series', 'F10': '5 Series', 'F18': '5 Series', 'G05': 'X5', 'G38': '5 Series',
+      'F35': '3 Series', 'F25': 'X3', 'E90': '3 Series', 'E60': '5 Series', 'F02': '7 Series',
+      'E70': 'X5', 'F15': 'X5', 'F20': '1 Series', 'G12': '7 Series', 'G28': '3 Series',
+      'F49': 'X1', 'E84': 'X1', 'E83': 'X3', 'F07': '5 SeriesGT', 'F16': 'X6',
+      'G08': 'X3', 'G01': 'X3', 'G20': '3 Series', 'G30': '5 Series', 'F52': '1 Series'
+    };
+    
+    if (carInfo.chassis) {
+        const chassis = carInfo.chassis.toUpperCase();
+        if (chassisToBrand[chassis]) {
+            carInfo.brand = chassisToBrand[chassis];
+        }
+        if (chassisToModel[chassis]) {
+            carInfo.model = chassisToModel[chassis];
+        }
+    }
+    
+    // Попытка найти соответствующую информацию в полных данных моделей, добавить дополнительные поля
+    let displayCarInfo = {...carInfo};
+    // Перевести бренд для отображения
+    if (displayCarInfo.brand === '奔驰') {
+        displayCarInfo.brand = 'Mercedes-Benz';
+    } else if (displayCarInfo.brand === '宝马') {
+        displayCarInfo.brand = 'BMW';
+    }
+    try {
+        const modelResponse = await fetch('../data/car_models.json');
+        const modelData = await modelResponse.json();
+        if (modelData.success && modelData.data) {
+            // Попытка сопоставить по номеру шасси
+            if (carInfo.chassis) {
+                const chassis = carInfo.chassis.toUpperCase();
+                const matchedModel = modelData.data.find(m => m.chassis && m.chassis.toUpperCase() === chassis);
+                if (matchedModel) {
+                    displayCarInfo = {
+                        ...carInfo,
+                        ...matchedModel,
+                        year: matchedModel.years || carInfo.year
+                    };
+                    // Перевести бренд для отображения
+                    if (displayCarInfo.brand === '奔驰') {
+                        displayCarInfo.brand = 'Mercedes-Benz';
+                    } else if (displayCarInfo.brand === '宝马') {
+                        displayCarInfo.brand = 'BMW';
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки данных моделей:', error);
+    }
+    
+    const fieldOrder = ['brand', 'model', 'chassis', 'year', 'engine', 'transmission'];
+    const labels = {
+        brand: 'Марка',
+        model: 'Модель',
+        chassis: 'Шасси',
+        year: 'Год',
+        engine: 'Двигатель',
+        transmission: 'КПП'
+    };
+    
+    // 按顺序收集有值的字段
+    const fields = [];
+    fieldOrder.forEach(key => {
+        if (displayCarInfo[key]) {
+            fields.push({ key, value: displayCarInfo[key], label: labels[key] });
+        }
+    });
+    
+    // 生成两行三列的HTML
+    let carInfoHTML = '';
+    for (let i = 0; i < fields.length; i += 3) {
+        const rowFields = fields.slice(i, i + 3);
+        carInfoHTML += '<div class="car-info-row">';
+        rowFields.forEach(field => {
+            carInfoHTML += `<div class="car-info-item"><strong>${field.label}：</strong>${field.value}</div>`;
+        });
+        carInfoHTML += '</div>';
+    }
+    document.getElementById('carInfo').innerHTML = carInfoHTML;
+    
+    // Перевести бренд для сопоставления с данными товаров
+    let brandForFilter = carInfo.brand;
+    if (brandForFilter === '奔驰') {
+        brandForFilter = 'Mercedes-Benz';
+    } else if (brandForFilter === '宝马') {
+        brandForFilter = 'BMW';
+    }
+    
+    const chassis = carInfo.chassis ? carInfo.chassis.toUpperCase() : '';
+    
+    let products = [];
+    let categoryMap = {};
+    try {
+        const productResponse = await fetch('./product-data.json');
+        const productData = await productResponse.json();
+        products = productData.products || [];
+        
+        const categoryResponse = await fetch('./category-structure.json');
+        const categoryData = await categoryResponse.json();
+        categoryMap = categoryData.product_map || categoryData.productMap || {};
+    } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+        document.getElementById('partsTable').innerHTML = '<tr><td colspan="7" style="text-align: center; color: #e53935;">Ошибка загрузки данных, пожалуйста, обновите страницу</td></tr>';
+        return;
+    }
+    
+    let filteredProducts = products.filter(product => product.series === brandForFilter);
+    
+    if (chassis) {
+        // Разделить на несколько целевых номеров шасси
+        const targetChassisList = chassis.split(',').map(c => c.trim().toUpperCase()).filter(c => c);
+        
+        filteredProducts = filteredProducts.filter(product => {
+            const productModels = (product.model || '').toUpperCase();
+            
+            // Проверить, соответствует ли любой из целевых номеров шасси
+            for (const targetChassis of targetChassisList) {
+                if (productModels === targetChassis) {
+                    return true;
+                }
+                
+                const slashParts = productModels.split('/');
+                if (slashParts.some(part => part.trim() === targetChassis)) {
+                    return true;
+                }
+                
+                const commaParts = productModels.split(',');
+                for (const part of commaParts) {
+                    const trimmedPart = part.trim();
+                    if (trimmedPart === targetChassis) {
+                        return true;
+                    }
+                    const subParts = trimmedPart.split('/');
+                    if (subParts.some(sub => sub.trim() === targetChassis)) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        });
+    }
+    
+    currentResults = filteredProducts.map(product => {
+        let categoryDisplay = product.category;
+        const productCode = product.code;
+        if (categoryMap[productCode]) {
+            const catInfo = categoryMap[productCode];
+            categoryDisplay = (catInfo.system || product.category);
+        }
+        
+        return {
+            category: translateCategory(categoryDisplay),
+            name: translateName(product.name),
+            oe: product.code,
+            sakoln: 'SK-' + product.code,
+            status: 'Полностью совместимо'
+        };
+    });
+    
+    currentPage = 1;
+    renderCurrentPage();
+    
+    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Рендеринг текущей страницы
+function renderCurrentPage() {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageResults = currentResults.slice(startIndex, endIndex);
+    
+    let partsHTML = '';
+    if (pageResults.length > 0) {
+        pageResults.forEach((part, index) => {
+            const globalIndex = startIndex + index + 1;
+            partsHTML += `
+                <tr class="hover:bg-gray-50">
+                    <td style="text-align: center;">${globalIndex}</td>
+                    <td>${part.category}</td>
+                    <td>${part.name}</td>
+                    <td>${part.oe}</td>
+                    <td>${part.sakoln}</td>
+                    <td>${part.status}</td>
+                    <td>
+                        <a href="product-detail.html?oe=${encodeURIComponent(part.oe)}" 
+                           style="color: #ff7a00; text-decoration: none;">
+                            Подробнее
+                        </a>
+                    </td>
+                </tr>
+            `;
+        });
+    } else {
+        partsHTML = '<tr><td colspan="7" style="text-align: center; color: #999;">Нет данных о запчастях для этой модели</td></tr>';
+    }
+    
+    document.getElementById('partsTable').innerHTML = partsHTML;
+    renderPagination();
+}
+
+// Рендеринг пагинации
+function renderPagination() {
+    const totalPages = Math.ceil(currentResults.length / itemsPerPage);
+    const paginationContainer = document.getElementById('pagination');
+    
+    if (totalPages <= 1) {
+        paginationContainer.innerHTML = '';
+        return;
+    }
+    
+    let paginationHTML = '<div class="flex items-center justify-center gap-2 mt-4">';
+    
+    paginationHTML += `<button onclick="goToPage(${currentPage - 1})" 
+                        class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        ${currentPage === 1 ? 'disabled' : ''}>
+                        Назад
+                    </button>`;
+    
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `<button onclick="goToPage(${i})" 
+                            class="px-4 py-2 rounded-lg ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-100 hover:bg-gray-200'}">
+                            ${i}
+                        </button>`;
+    }
+    
+    paginationHTML += `<button onclick="goToPage(${currentPage + 1})" 
+                        class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        ${currentPage === totalPages ? 'disabled' : ''}>
+                        Вперед
+                    </button>`;
+    
+    paginationHTML += `<span class="ml-4 text-gray-600">Всего ${currentResults.length} записей, страница ${currentPage}/${totalPages}</span>`;
+    paginationHTML += '</div>';
+    
+    paginationContainer.innerHTML = paginationHTML;
+}
+
+// Переход на страницу
+function goToPage(page) {
+    const totalPages = Math.ceil(currentResults.length / itemsPerPage);
+    if (page < 1 || page > totalPages) return;
+    
+    currentPage = page;
+    renderCurrentPage();
+    
+    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

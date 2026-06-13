@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معلومات عنا - SHAKOLN قطع غيار السيارات</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* نمط الارتباط الموحد */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* عنوان الصفحة */
+        .page-title {
+            background-color: white;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            color: #0F4F9A;
+        }
+        
+        /* نبذة عن الشركة */
+        .company-intro {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .company-intro h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .intro-content {
+            line-height: 1.6;
+        }
+        
+        .intro-content p {
+            margin-bottom: 20px;
+        }
+        
+        /* التاريخ */
+        .development-history {
+            padding: 60px 0;
+            background-color: #f5f7fa;
+            margin-bottom: 40px;
+        }
+        
+        .development-history h2 {
+            color: #0F4F9A;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 50%;
+            width: 2px;
+            background-color: #0F4F9A;
+            transform: translateX(50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 50%;
+            width: 20px;
+            height: 20px;
+            background-color: #FF6C00;
+            border-radius: 50%;
+            transform: translateX(50%);
+        }
+        
+        .timeline-content {
+            position: relative;
+            width: 45%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            right: 0;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            right: 55%;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: #0F4F9A;
+            margin-bottom: 10px;
+        }
+        
+        /* مهمة الرؤية والقيم */
+        .mission-vision {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .mission-vision h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .mv-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .mv-item {
+            text-align: center;
+            padding: 30px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+        }
+        
+        .mv-item h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+
+        
+        /* الشهادات */
+        .honors-certifications {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .honors-certifications h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .honors-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .honor-item {
+            text-align: center;
+        }
+        
+        .honor-image {
+            width: 100%;
+            height: 180px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            object-fit: contain;
+            background-color: #f5f7fa;
+        }
+        
+
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">الرئيسية</a>
+            <span>></span>
+            <span>معلومات عنا</span>
+        </div>
+    </div>
+    
+    <!-- نبذة عن الشركة -->
+    <div class="container company-intro">
+        <h2>نبذة عن الشركة</h2>
+        <div class="intro-content">
+            <p>　　نلتزم بالسلامة والموثوقية وقطع الغيار عالية الجودة. في عملية التطوير، تواصل شركتنا الابتكار، وإنشاء علاقات تعاون طويلة الأمد ومستقرة مع العديد من الشركات المشهورة المحلية والخارجية، وتوسيع نطاق الأعمال والتأثير في السوق باستمرار. نعلم أن العملاء هم حجر الأساس لتنمية المؤسسات، ونأخذ احتياجات العملاء كدليلًا دائماً، ونحسن باستمرار جودة المنتج ومستوى الخدمة.</p>
+            <p>　　في المستقبل، ستواصل شركة بكينغ يونغفو للسيارات التجارية الالتزام بمفهوم "التشغيل الصادق، الجودة أولاً"، وتسعى لتحسين قيمة العلامة، وتوسيع نطاق السوق، وتزويد العملاء بمزيد من قطع غيار السيارات عالية الجودة والخدمات الاحترافية، وتسعى لتصبح علامة رائدة في قطاع قطع غيار السيارات.</p>
+            <p>　　تأسست شركة بكينغ يونغفو للسيارات التجارية في 6 سبتمبر 2013، وتقع في عاصمة الصين - مدينة بكينغ. منذ التأسيس، تواصل الشركة الالتزام بتزويد قطع غيار السيارات عالية الجودة، ويغطي نطاق الأعمال الأسواق الكبرى لقطع غيار السيارات في الصين. تملك الشركة حالياً 50 موظفًا محترفًا ومتمرسًا، ملتزمين بتزويد العملاء بالمنتجات عالية الجودة والخدمات الممتازة.</p>
+            <p>　　لدينا علامة خاصة بها - SHAKOLN، تركز على البحث والتطوير وبيع قطع غيار السيارات عالية الأداء. منتجاتنا غنية بالتنوع، وتغطي قطع غيار المحرك ونظام الفرامل وأنظمة التعليق وأكثر من ذلك من الفئات، لتلبية الاحتياجات المتنوعة للعملاء المختلفين. نلتزم دائماً بمبدأ الجودة أولاً، ونحكم صارمًا في عملية المنتج، لضمان أن كل منتج يلبي المعايير الدولية.</p>
+        </div>
+    </div>
+    
+    <!-- التاريخ -->
+    <div class="development-history">
+        <div class="container">
+            <h2>التاريخ</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2015</div>
+                        <h3>تأسيس الشركة</h3>
+                        <p>تأسست بكينغ يونغفو في 6 أغسطس 2015</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2017</div>
+                        <h3>المتجر الخاص الأول</h3>
+                        <p>المتجر الخاص الأول للعلامة SHAKOLN (متجر SHAKOLN بكينغ) <br> 6 سبتمبر 2017</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2018</div>
+                        <h3>المتجر الخاص الثاني</h3>
+                        <p>المتجر الخاص الثاني للعلامة SHAKOLN (متجر SHAKOLN هانغتشو) <br> 21 فبراير 2018</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2019</div>
+                        <h3>المتجر الخاص الثالث</h3>
+                        <p>المتجر الخاص الثالث للعلامة SHAKOLN (متجر SHAKOLN تشنغدو) <br> 6 مايو 2019</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2020</div>
+                        <h3>المتجر الخاص الرابع</h3>
+                        <p>المتجر الخاص الرابع للعلامة SHAKOLN (متجر SHAKOLN شيانغه) <br> 6 يونيو 2020</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2021</div>
+                        <h3>المتجر الخاص الخامس</h3>
+                        <p>المتجر الخاص الخامس للعلامة SHAKOLN (متجر SHAKOLN جينان) <br> 7 أغسطس 2021</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2022</div>
+                        <h3>المتجر الخاص السادس</h3>
+                        <p>المتجر الخاص السادس للعلامة SHAKOLN (متجر SHAKOLN غوانغتشو) <br> 24 مايو 2022</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2023</div>
+                        <h3>المتجر الخاص السابع</h3>
+                        <p>المتجر الخاص السابع للعلامة SHAKOLN (متجر SHAKOLN تشانغشان) <br> 21 مارس 2023</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024</div>
+                        <h3>المتجر الخاص الثامن</h3>
+                        <p>المتجر الخاص الثامن للعلامة SHAKOLN (متجر SHAKOLN تشونغتشينغ) <br> 16 أبريل 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- مهمة الرؤية والقيم -->
+    <div class="container mission-vision">
+        <h2>مهمة الشركة / الرؤية / القيم</h2>
+        <div class="mv-grid">
+            <div class="mv-item">
+                <h3>مهمة الشركة</h3>
+                <p>تزويد العملاء بقطع غيار السيارات عالية الجودة والخدمات الاحترافية، وتعزيز التطوير الصحي لسوق ما بعد البيع للسيارات</p>
+            </div>
+            <div class="mv-item">
+                <h3>رؤية الشركة</h3>
+                <p>تصبح موردًا رائدًا لقطع غيار Mercedes-Benz / بي أم دبليو في الصين، وبناء علامة تجارية معروفة في الصناعة</p>
+            </div>
+            <div class="mv-item">
+                <h3>القيم الأساسية</h3>
+                <p>الجودة أولاً، العميل أولاً، التشغيل الصادق، الابتكار والتطوير</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- الشهادات -->
+    <div class="container honors-certifications">
+        <h2>الشهادات</h2>
+        <div class="honors-grid">
+            <div class="honor-item">
+                <img src="../img/qiyezizhi/tu1.png" alt="شهادة الائتمان الرئيسية" class="honor-image">
+                <p>شهادة الائتمان الرئيسية</p>
+            </div>
+            <div class="honor-item">
+                <img src="../img/qiyezizhi/tu2.png" alt="عضو في جمعية صناعة صيانة السيارات الصينية" class="honor-image">
+                <p>عضو في جمعية صناعة صيانة السيارات الصينية</p>
+            </div>
+            <div class="honor-item">
+                <img src="../img/qiyezizhi/tu3.png" alt="شهادة الائتمان الرئيسية" class="honor-image">
+                <p>شهادة الائتمان الرئيسية</p>
+            </div>
+            <div class="honor-item">
+                <img src="../img/qiyezizhi/tu4.png" alt="عضو في جمعية صناعة صيانة السيارات الصينية" class="honor-image">
+                <p>عضو في جمعية صناعة صيانة السيارات الصينية</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- تحميل نص البرنامج النماذج -->
+    <script src="../../templates/load-templates.js"></script>
+</body>
+</html>

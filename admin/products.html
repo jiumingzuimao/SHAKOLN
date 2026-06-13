@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品管理 - 后台管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background-color: #0F4F9A;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+                .sidebar-header {
+            padding: 30px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header .logo {
+            text-align: center;
+        }
+        
+        .sidebar-header .logo img {
+            height: 50px;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-header h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: #87CEEB;
+        }
+        
+        .menu-item.active {
+            background-color: rgba(135, 206, 235, 0.3);
+            border-left-color: #87CEEB;
+            padding-top: 15px;
+            padding-bottom: 30px;
+            box-shadow: inset 0 0 20px rgba(135, 206, 235, 0.2);
+        }
+        
+        .menu-item a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            font-size: 16px;
+            line-height: 20px;
+        }
+        
+        .menu-item a span:first-child {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-item .menu-icon {
+            font-size: 18px;
+            margin-right: 15px;
+        }
+        
+        .menu-item .menu-icon-img {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            filter: brightness(0) invert(1);
+            flex-shrink: 0;
+            align-self: center;
+        }
+        
+        .menu-item .menu-arrow {
+            font-size: 12px;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+            align-self: center;
+        }
+        
+        .menu-item.active .menu-arrow {
+            transform: rotate(90deg);
+        }
+        
+        .submenu {
+            padding-left: 0;
+            padding-top: 0;
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.35);
+            display: none;
+        }
+        
+        .submenu.active {
+            display: block;
+        }
+        
+        .submenu-item {
+            padding: 12px 0 12px 60px;
+            text-align: left;
+        }
+        
+        .submenu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .submenu-item.active {
+            background-color: rgba(255,255,255,0.15);
+        }
+        
+        .submenu-item a {
+            font-size: 14px;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            display: block;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+        
+        .top-nav {
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .top-nav .welcome {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .top-nav .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .top-nav .user-info .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #0F4F9A;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+        
+        .top-nav .user-info .user-name {
+            font-weight: bold;
+        }
+        
+        .top-nav .user-info .logout {
+            color: #0F4F9A;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .content-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .content-card h2 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .toolbar .search-box {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .toolbar .search-box input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 300px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #0F4F9A;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0C448A;
+        }
+        
+        .btn-secondary {
+            background-color: #FF6C00;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e55a00;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-outline {
+            background-color: white;
+            color: #0F4F9A;
+            border: 1px solid #0F4F9A;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f0f4f8;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .data-table th {
+            background-color: #f5f7fa;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+            cursor: pointer;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-switch .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 26px;
+        }
+        
+        .toggle-switch .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        .toggle-switch input:checked + .slider {
+            background-color: #0F4F9A;
+        }
+        
+        .toggle-switch input:focus + .slider {
+            box-shadow: 0 0 1px #0F4F9A;
+        }
+        
+        .toggle-switch input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background-color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .pagination button.active {
+            background-color: #0F4F9A;
+            color: white;
+            border-color: #0F4F9A;
+        }
+        
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .pagination-controls input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            
+            .main-content {
+                margin-left: 200px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+                <div class="sidebar-header">
+            <div class="logo">
+                <img src="../assets/logo.svg" alt="萨肯 SHAKOLN">
+                <h1>后台管理系统</h1>
+                <p>专业汽配管理平台</p>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="menu-item">
+                <a href="index.html">
+                    <span>
+                        <img src="./icon/gongyezujian-yibiaopan.svg" alt="" class="menu-icon-img">
+                        仪表盘
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/chaxunzhongxin.svg" alt="" class="menu-icon-img">
+                        查询中心
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="oe-search.html">OE号查询</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="vin-search.html">车架号VIN查询</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="chassis-search.html">底盘号查询</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item active">
+                <a href="#">
+                    <span>
+                        <img src="./icon/a-chanpin3x.svg" alt="" class="menu-icon-img">
+                        产品管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu active">
+                    <div class="submenu-item active">
+                        <a href="products.html">产品列表</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-add.html">添加产品</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-categories.html">产品分类</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-import.html">Excel批量导入</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/tupian.svg" alt="" class="menu-icon-img">
+                        图片管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="image-auto.html">自动读取图片</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="image-manage.html">图片管理</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/chexingguanli.svg" alt="" class="menu-icon-img">
+                        车型管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="car-models.html">车型列表</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="car-model-add.html">添加车型</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/dingdanguanli.svg" alt="" class="menu-icon-img">
+                        订单管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="orders.html">订单列表</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="order-detail.html">订单详情</a>
+                    </div>
+                </div>
+            </div>            <div class="menu-item">
+                <a href="quotes.html">
+                    <span>
+                        <img src="./icon/dingdanguanli.svg" alt="" class="menu-icon-img">
+                        报价管理
+                    </span>
+                </a>
+            </div>
+            
+
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/shouyeguanli.svg" alt="" class="menu-icon-img">
+                        首页管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="home-banner.html">Banner图片管理</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="home-products.html">产品中心管理</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="home-hot.html">爆款推荐管理</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/xitongshezhi.svg" alt="" class="menu-icon-img">
+                        系统设置
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="settings.html">基本设置</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="users.html">用户管理</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="permissions.html">权限设置</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="top-nav">
+            <div class="welcome">
+                欢迎回来，管理员
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">管</div>
+                <div class="user-name">管理员</div>
+                <a href="../admin-login.html" class="logout">退出登录</a>
+            </div>
+        </div>
+        
+        <div class="content-card">
+            <h2>产品管理</h2>
+            
+            <div class="toolbar">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="搜索产品名称、OE号...">
+                    <select id="categoryFilter">
+                        <option value="">全部分类</option>
+                        <option value="发动机配件">发动机配件</option>
+                        <option value="变速箱配件">变速箱配件</option>
+                        <option value="转向系统">转向系统</option>
+                        <option value="制动系统">制动系统</option>
+                        <option value="车身内饰">车身内饰</option>
+                        <option value="车灯照明">车灯照明</option>
+                        <option value="通用密封橡胶件">通用密封橡胶件</option>
+                        <option value="空调系统">空调系统</option>
+                        <option value="底盘传动系统">底盘传动系统</option>
+                        <option value="进气排气系统">进气排气系统</option>
+                        <option value="车身外观">车身外观</option>
+                        <option value="电器电控">电器电控</option>
+                        <option value="悬挂减震系统">悬挂减震系统</option>
+                        <option value="冷却系统">冷却系统</option>
+                        <option value="精品系列">精品系列</option>
+                    </select>
+                    <select id="brandFilter">
+                        <option value="">全部品牌</option>
+                        <option value="奔驰">奔驰</option>
+                        <option value="宝马">宝马</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="searchProducts()">搜索</button>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span style="color: #666;">排序:</span>
+                    <select id="sortField">
+                        <option value="code">按OE号排序</option>
+                        <option value="name">按名称排序</option>
+                        <option value="category">按分类排序</option>
+                        <option value="series">按品牌排序</option>
+                    </select>
+                    <select id="sortOrder">
+                        <option value="asc">升序</option>
+                        <option value="desc">降序</option>
+                    </select>
+                    <span style="color: #666;">每页:</span>
+                    <select id="pageSizeSelect">
+                        <option value="10">10条</option>
+                        <option value="20" selected>20条</option>
+                        <option value="50">50条</option>
+                        <option value="100">100条</option>
+                    </select>
+                </div>
+                <button class="btn btn-secondary" onclick="location.href='product-add.html'">
+                    <span>➕</span> 添加产品
+                </button>
+            </div>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" onclick="toggleSelectAll(this)"></th>
+                        <th>产品ID</th>
+                        <th>缩略图</th>
+                        <th>产品名称</th>
+                        <th>OE号</th>
+                        <th>品牌</th>
+                        <th>分类</th>
+                        <th>库存状态</th>
+                        <th>前台序号</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="productTableBody">
+                    <tr>
+                        <td colspan="10" style="text-align: center; padding: 50px;">
+                            <div style="font-size: 24px; margin-bottom: 20px;">加载中...</div>
+                            <div style="width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid #0F4F9A; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                            <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div id="paginationInfo" style="text-align: right; margin-bottom: 10px; color: #666; font-size: 14px;">
+                显示第 1 - 20 条，共 0 条记录
+            </div>
+            <div id="pagination" class="pagination">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var currentPage = 1;
+        var pageSize = 20;
+        var sortField = 'code';
+        var sortOrder = 'asc';
+        var searchKeyword = '';
+        var categoryFilter = '';
+        var brandFilter = '';
+        var products = [];
+        var productImages = {};
+        var isLoading = false;
+        var isDataLoaded = false;
+        
+        function sortProducts(products, field, order) {
+            return [...products].sort(function(a, b) {
+                var valueA = a[field] ? a[field].toLowerCase() : '';
+                var valueB = b[field] ? b[field].toLowerCase() : '';
+                if (valueA < valueB) return order === 'asc' ? -1 : 1;
+                if (valueA > valueB) return order === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+        
+        async function loadProducts() {
+            if (isLoading) return;
+            if (isDataLoaded) {
+                renderProducts();
+                return;
+            }
+            
+            isLoading = true;
+            
+            try {
+                var [productResponse, imageResponse] = await Promise.all([
+                    fetch('../product-data.json', { cache: 'force-cache' }),
+                    fetch('../product-images.json', { cache: 'force-cache' })
+                ]);
+                
+                var productData = await productResponse.json();
+                var imageData = await imageResponse.json();
+                
+                products = productData.products || productData || [];
+                productImages = imageData || {};
+                
+                try {
+                    var orderResponse = await fetch('/api/product-orders');
+                    var orderData = await orderResponse.json();
+                    if (orderData.success && orderData.data) {
+                        orderData.data.forEach(function(savedProduct) {
+                            var product = products.find(function(p) { return p.code === savedProduct.code; });
+                            if (product && savedProduct.frontOrder !== undefined) {
+                                product.frontOrder = savedProduct.frontOrder;
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.log('加载保存的设置失败:', e);
+                }
+                
+                isDataLoaded = true;
+                renderProducts();
+            } catch (error) {
+                console.log('加载数据失败:', error);
+                document.getElementById('productTableBody').innerHTML = '<tr><td colspan="10" style="text-align:center;">加载失败</td></tr>';
+            } finally {
+                isLoading = false;
+            }
+        }
+        
+        function searchProducts() {
+            searchKeyword = document.getElementById('searchInput').value;
+            categoryFilter = document.getElementById('categoryFilter').value;
+            brandFilter = document.getElementById('brandFilter').value;
+            currentPage = 1;
+            renderProducts();
+        }
+        
+        document.getElementById('sortField').addEventListener('change', function() {
+            sortField = this.value;
+            currentPage = 1;
+            renderProducts();
+        });
+        
+        document.getElementById('sortOrder').addEventListener('change', function() {
+            sortOrder = this.value;
+            currentPage = 1;
+            renderProducts();
+        });
+        
+        document.getElementById('pageSizeSelect').addEventListener('change', function() {
+            pageSize = parseInt(this.value);
+            currentPage = 1;
+            renderProducts();
+        });
+        
+        function renderProducts() {
+            var filteredProducts = products.filter(function(product) {
+                var matchKeyword = !searchKeyword || 
+                    (product.name && product.name.toLowerCase().includes(searchKeyword.toLowerCase())) ||
+                    (product.code && product.code.toLowerCase().includes(searchKeyword.toLowerCase()));
+                var matchCategory = !categoryFilter || product.category === categoryFilter;
+                var matchBrand = !brandFilter || product.series === brandFilter;
+                return matchKeyword && matchCategory && matchBrand;
+            });
+            
+            filteredProducts = sortProducts(filteredProducts, sortField, sortOrder);
+            
+            var totalItems = filteredProducts.length;
+            var totalPages = Math.ceil(totalItems / pageSize);
+            var startIndex = (currentPage - 1) * pageSize;
+            var endIndex = startIndex + pageSize;
+            var displayProducts = filteredProducts.slice(startIndex, endIndex);
+            
+            var tableBody = document.getElementById('productTableBody');
+            if (displayProducts.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="10" style="text-align:center;">没有找到产品</td></tr>';
+            } else {
+                var html = '';
+                displayProducts.forEach(function(product) {
+                    var isActive = product.status === 'active';
+                    var statusText = isActive ? '上架' : '下架';
+                    
+                    var imageHtml = '<div style="width:60px;height:60px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#999;">无图</div>';
+                    if (product.code && productImages[product.code] && productImages[product.code].length > 0) {
+                        var firstImage = productImages[product.code][0];
+                        imageHtml = '<img src="../' + firstImage + '" alt="' + product.name + '" style="width:60px;height:60px;object-fit:cover;">';
+                    }
+                    
+                    var frontOrder = product.frontOrder || '';
+                    var orderInput = '<input type="number" min="0" max="999" value="' + frontOrder + '" style="width:60px;padding:5px;border:1px solid #ddd;border-radius:4px;" onchange="saveFrontOrder(' + product.id + ', this.value)">';
+                    
+                    var statusToggle = '<label class="toggle-switch" style="margin:0 auto;display:block;width:48px;">' +
+                        '<input type="checkbox" ' + (isActive ? 'checked' : '') + ' onchange="toggleProductStatus(' + product.id + ', this.checked)">' +
+                        '<span class="slider"></span>' +
+                        '</label><span style="display:block;text-align:center;margin-top:5px;color:' + (isActive ? '#28a745' : '#dc3545') + ';">' + statusText + '</span>';
+                    
+                    html += '<tr>' +
+                        '<td><input type="checkbox" class="product-checkbox" data-id="' + product.id + '"></td>' +
+                        '<td>' + (product.id || '-') + '</td>' +
+                        '<td>' + imageHtml + '</td>' +
+                        '<td>' + (product.name || '-') + '</td>' +
+                        '<td>' + (product.code || '-') + '</td>' +
+                        '<td>' + (product.series || '-') + '</td>' +
+                        '<td>' + (product.category || '-') + '</td>' +
+                        '<td>' + statusToggle + '</td>' +
+                        '<td>' + orderInput + '</td>' +
+                        '<td>' +
+                            '<button class="btn btn-sm btn-primary" onclick="editProduct(' + product.id + ')">编辑</button>' +
+                            '<button class="btn btn-sm btn-danger" onclick="deleteProduct(' + product.id + ')">删除</button>' +
+                        '</td>' +
+                        '</tr>';
+                });
+                tableBody.innerHTML = html;
+            }
+            
+            document.getElementById('paginationInfo').innerHTML = 
+                '显示第 ' + (startIndex + 1) + ' - ' + Math.min(endIndex, totalItems) + ' 条，共 ' + totalItems + ' 条记录';
+            
+            renderPagination(totalPages);
+        }
+        
+        function renderPagination(totalPages) {
+            var pagination = document.getElementById('pagination');
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+            
+            var html = '<button class="page-btn" onclick="goToPage(1)" ' + (currentPage === 1 ? 'disabled' : '') + '>首页</button>';
+            html += '<button class="page-btn" onclick="goToPage(' + (currentPage - 1) + ')" ' + (currentPage === 1 ? 'disabled' : '') + '>上一页</button>';
+            
+            for (var i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    html += '<button class="page-btn active">' + i + '</button>';
+                } else if (i >= currentPage - 2 && i <= currentPage + 2) {
+                    html += '<button class="page-btn" onclick="goToPage(' + i + ')">' + i + '</button>';
+                } else if (i === 1 || i === totalPages) {
+                    html += '<button class="page-btn" onclick="goToPage(' + i + ')">' + i + '</button>';
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    html += '<span class="page-dots">...</span>';
+                }
+            }
+            
+            html += '<button class="page-btn" onclick="goToPage(' + (currentPage + 1) + ')" ' + (currentPage === totalPages ? 'disabled' : '') + '>下一页</button>';
+            html += '<span style="margin: 0 5px;">跳至:</span>';
+            html += '<input type="number" id="pageInput" min="1" max="' + totalPages + '" style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">';
+            html += '<button class="page-btn" style="margin-left: 5px;" onclick="goToPage(parseInt(document.getElementById(\'pageInput\').value))">跳转</button>';
+            html += '<button class="page-btn" onclick="goToPage(' + totalPages + ')" ' + (currentPage === totalPages ? 'disabled' : '') + '>末页</button>';
+            
+            pagination.innerHTML = html;
+        }
+        
+        function goToPage(page) {
+            var totalPages = Math.ceil(products.filter(function(product) {
+                var matchKeyword = !searchKeyword || 
+                    (product.name && product.name.toLowerCase().includes(searchKeyword.toLowerCase())) ||
+                    (product.code && product.code.toLowerCase().includes(searchKeyword.toLowerCase()));
+                var matchCategory = !categoryFilter || product.category === categoryFilter;
+                var matchBrand = !brandFilter || product.series === brandFilter;
+                return matchKeyword && matchCategory && matchBrand;
+            }).length / pageSize);
+            
+            if (page < 1 || page > totalPages) {
+                alert('请输入有效的页码');
+                return;
+            }
+            currentPage = page;
+            renderProducts();
+        }
+        
+        function toggleSelectAll(checkbox) {
+            document.querySelectorAll('.product-checkbox').forEach(function(cb) {
+                cb.checked = checkbox.checked;
+            });
+        }
+        
+        function editProduct(id) {
+            window.location.href = 'product-edit.html?id=' + id;
+        }
+        
+        function deleteProduct(id) {
+            if (confirm('确定要删除这个产品吗？')) {
+                products = products.filter(function(p) { return p.id !== id; });
+                renderProducts();
+            }
+        }
+        
+        function toggleProductStatus(productId, isActive) {
+            var product = products.find(function(p) { return p.id === productId; });
+            if (product) {
+                product.status = isActive ? 'active' : 'inactive';
+                
+                fetch('/api/product-status', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: productId, status: product.status })
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('HTTP error ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    console.log('服务器响应:', data);
+                    if (data && data.success) {
+                        renderProducts();
+                    } else {
+                        alert('保存失败: ' + (data ? data.message || '未知错误' : '无响应'));
+                        product.status = isActive ? 'inactive' : 'active';
+                        renderProducts();
+                    }
+                })
+                .catch(function(error) {
+                    console.log('保存失败:', error);
+                    alert('保存失败，请检查服务器: ' + error.message);
+                    product.status = isActive ? 'inactive' : 'active';
+                    renderProducts();
+                });
+            }
+        }
+        
+        function saveFrontOrder(productId, orderValue) {
+            var product = products.find(function(p) { return p.id === productId; });
+            if (product) {
+                var order = parseInt(orderValue);
+                if (isNaN(order) || order < 0) {
+                    product.frontOrder = '';
+                } else {
+                    product.frontOrder = order;
+                }
+                
+                // 保存到服务器
+                var saveData = products.filter(p => p.frontOrder && p.frontOrder !== '').map(p => ({
+                    code: p.code || p.oe,
+                    frontOrder: p.frontOrder
+                }));
+                
+                fetch('/api/product-orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(saveData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('序号设置已保存到服务器，刷新前台首页即可看到效果');
+                    } else {
+                        alert('保存失败');
+                    }
+                })
+                .catch(error => {
+                    console.log('保存失败:', error);
+                    alert('保存失败，请检查服务器');
+                });
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            
+            document.getElementById('searchInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    searchProducts();
+                }
+            });
+            
+            var menuItems = document.querySelectorAll('.menu-item');
+            
+            menuItems.forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    var submenu = this.querySelector('.submenu');
+                    if (submenu) {
+                        if (e.target.closest('.submenu') || e.target.closest('.submenu-item')) {
+                            return;
+                        }
+                        
+                        e.preventDefault();
+                        
+                        menuItems.forEach(function(menu) {
+                            if (menu !== item) {
+                                menu.classList.remove('active');
+                                var otherSubmenu = menu.querySelector('.submenu');
+                                if (otherSubmenu) otherSubmenu.classList.remove('active');
+                            }
+                        });
+                        
+                        this.classList.add('active');
+                        submenu.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

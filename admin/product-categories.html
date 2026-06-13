@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品分类 - 后台管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+                        /* 侧边栏 */
+        .sidebar {
+            width: 280px;
+            background-color: #0F4F9A;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+                .sidebar-header {
+            padding: 30px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header .logo {
+            text-align: center;
+        }
+        
+        .sidebar-header .logo img {
+            height: 50px;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-header h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: #87CEEB;
+        }
+        
+        .menu-item.active {
+            background-color: rgba(135, 206, 235, 0.3);
+            border-left-color: #87CEEB;
+            padding-top: 15px;
+            padding-bottom: 30px;
+            box-shadow: inset 0 0 20px rgba(135, 206, 235, 0.2);
+        }
+        
+        .menu-item a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            font-size: 16px;
+            line-height: 20px;
+        }
+        
+        .menu-item a span:first-child {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-item .menu-icon {
+            font-size: 18px;
+            margin-right: 15px;
+        }
+        .menu-item .menu-icon-img {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            filter: brightness(0) invert(1);
+            flex-shrink: 0;
+            align-self: center;
+        }
+
+        
+        .menu-item .menu-arrow {
+            font-size: 12px;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+            align-self: center;
+        }
+        
+        .menu-item.active .menu-arrow {
+            transform: rotate(90deg);
+        }
+        
+        .submenu {
+            padding-left: 0;
+            padding-top: 0;
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.35);
+            display: none;
+        }
+        
+        .submenu.active {
+            display: block;
+        }
+        
+        .submenu-item {
+            padding: 12px 0 12px 60px;
+            text-align: left;
+        }
+        
+        .submenu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .submenu-item.active {
+            background-color: rgba(255,255,255,0.15);
+        }
+        
+        .submenu-item a {
+            font-size: 14px;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            display: block;
+        }
+.main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+        
+        .top-nav {
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .top-nav .welcome {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .top-nav .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .top-nav .user-info .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #0F4F9A;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+        
+        .top-nav .user-info .user-name {
+            font-weight: bold;
+        }
+        
+        .top-nav .user-info .logout {
+            color: #0F4F9A;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .content-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .content-card h2 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #0F4F9A;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0C448A;
+        }
+        
+        .btn-secondary {
+            background-color: #FF6C00;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e55a00;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-outline {
+            background-color: white;
+            color: #0F4F9A;
+            border: 1px solid #0F4F9A;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f0f4f8;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .data-table th {
+            background-color: #f5f7fa;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            
+            .main-content {
+                margin-left: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+                <div class="sidebar-header">
+            <div class="logo">
+                <img src="../assets/logo.svg" alt="萨肯 SHAKOLN">
+                <h1>后台管理系统</h1>
+                <p>专业汽配管理平台</p>
+            </div>
+        </div>
+        
+                        <div class="sidebar-menu">
+            <div class="menu-item">
+                <a href="index.html">
+                    <span>
+                        <img src="./icon/gongyezujian-yibiaopan.svg" alt="" class="menu-icon-img">
+                        仪表盘
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/chaxunzhongxin.svg" alt="" class="menu-icon-img">
+                        查询中心
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="oe-search.html">OE号查询</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="vin-search.html">车架号VIN查询</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="chassis-search.html">底盘号查询</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item active">
+                <a href="#">
+                    <span>
+                        <img src="./icon/a-chanpin3x.svg" alt="" class="menu-icon-img">
+                        产品管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu active">
+                    <div class="submenu-item">
+                        <a href="products.html">产品列表</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-add.html">添加产品</a>
+                    </div>
+                    <div class="submenu-item active">
+                        <a href="product-categories.html">产品分类</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-import.html">Excel批量导入</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/tupian.svg" alt="" class="menu-icon-img">
+                        图片管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="image-auto.html">自动读取图片</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="image-manage.html">图片管理</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/chexingguanli.svg" alt="" class="menu-icon-img">
+                        车型管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="car-models.html">车型列表</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="car-model-add.html">添加车型</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/dingdanguanli.svg" alt="" class="menu-icon-img">
+                        订单管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="orders.html">订单列表</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="order-detail.html">订单详情</a>
+                    </div>
+                </div>
+            </div>            <div class="menu-item">
+                <a href="quotes.html">
+                    <span>
+                        <img src="./icon/dingdanguanli.svg" alt="" class="menu-icon-img">
+                        报价管理
+                    </span>
+                </a>
+            </div>
+            
+
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/shouyeguanli.svg" alt="" class="menu-icon-img">
+                        首页管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="home-banner.html">Banner图片管理</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="home-products.html">产品中心管理</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="home-hot.html">爆款推荐管理</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/xitongshezhi.svg" alt="" class="menu-icon-img">
+                        系统设置
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="settings.html">基本设置</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="users.html">用户管理</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="permissions.html">权限设置</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 顶部导航 -->
+        <div class="top-nav">
+            <div class="welcome">
+                欢迎回来，管理员
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">管</div>
+                <div class="user-name">管理员</div>
+                <a href="../admin-login.html" class="logout">退出登录</a>
+            </div>
+        </div>
+        
+        <!-- 产品分类管理 -->
+        <div class="content-card">
+            <h2>产品分类管理</h2>
+            
+            <!-- 工具栏 -->
+            <div class="toolbar">
+                <button class="btn btn-secondary" onclick="showAddCategoryForm()">
+                    <span>➕</span> 添加分类
+                </button>
+            </div>
+            
+            <!-- 添加分类表单 -->
+            <div id="addCategoryForm" style="display: none; margin-bottom: 20px; padding: 20px; border: 1px solid #eee; border-radius: 8px; background-color: #f9f9f9;">
+                <h3>添加分类</h3>
+                <div class="form-group">
+                    <label for="categoryName">分类名称</label>
+                    <input type="text" id="categoryName" placeholder="请输入分类名称">
+                </div>
+                <div class="form-group">
+                    <label for="categoryCode">分类编码</label>
+                    <input type="text" id="categoryCode" placeholder="请输入分类编码">
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-outline" onclick="hideAddCategoryForm()">取消</button>
+                    <button class="btn btn-primary" onclick="addCategory()">保存</button>
+                </div>
+            </div>
+            
+            <!-- 分类表格 -->
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" onclick="toggleSelectAll(this)"></th>
+                        <th>分类ID</th>
+                        <th>分类名称</th>
+                        <th>分类编码</th>
+                        <th>排序</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="categoriesTable">
+                    <tr>
+                        <td><input type="checkbox" data-id="1"></td>
+                        <td>1</td>
+                        <td>发动机配件</td>
+                        <td>engine</td>
+                        <td>1</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(1)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(1)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="2"></td>
+                        <td>2</td>
+                        <td>变速箱配件</td>
+                        <td>transmission</td>
+                        <td>2</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(2)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(2)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="3"></td>
+                        <td>3</td>
+                        <td>转向系统</td>
+                        <td>steering</td>
+                        <td>3</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(3)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(3)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="4"></td>
+                        <td>4</td>
+                        <td>制动系统</td>
+                        <td>brake</td>
+                        <td>4</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(4)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(4)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="5"></td>
+                        <td>5</td>
+                        <td>车身内饰</td>
+                        <td>interior</td>
+                        <td>5</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(5)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(5)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="6"></td>
+                        <td>6</td>
+                        <td>车灯照明</td>
+                        <td>lighting</td>
+                        <td>6</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(6)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(6)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="7"></td>
+                        <td>7</td>
+                        <td>通用密封橡胶件</td>
+                        <td>seal</td>
+                        <td>7</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(7)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(7)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="8"></td>
+                        <td>8</td>
+                        <td>空调系统</td>
+                        <td>aircon</td>
+                        <td>8</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(8)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(8)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="9"></td>
+                        <td>9</td>
+                        <td>底盘传动系统</td>
+                        <td>chassis</td>
+                        <td>9</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(9)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(9)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="10"></td>
+                        <td>10</td>
+                        <td>进气排气系统</td>
+                        <td>intake</td>
+                        <td>10</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(10)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(10)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="11"></td>
+                        <td>11</td>
+                        <td>车身外观</td>
+                        <td>exterior</td>
+                        <td>11</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(11)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(11)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="12"></td>
+                        <td>12</td>
+                        <td>电器电控</td>
+                        <td>electrical</td>
+                        <td>12</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(12)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(12)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="13"></td>
+                        <td>13</td>
+                        <td>悬挂减震系统</td>
+                        <td>suspension</td>
+                        <td>13</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(13)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(13)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="14"></td>
+                        <td>14</td>
+                        <td>冷却系统</td>
+                        <td>cooling</td>
+                        <td>14</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(14)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(14)">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" data-id="15"></td>
+                        <td>15</td>
+                        <td>精品系列</td>
+                        <td>premium</td>
+                        <td>15</td>
+                        <td><span style="color: #4CAF50;">启用</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="editCategory(15)">编辑</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(15)">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+<script>
+        </script>
+
+<script>
+        </script>
+
+<script>
+        </script>
+
+<script>
+        , function() {
+            
+            (function(item) {
+                item.addEventListener('click', function(e) {
+                    
+                });
+            });
+            
+            
+            (function(item) {
+                item.addEventListener('click', function(e) {
+                    var target = e.target;
+                    
+                    if (target.closest('.submenu') || target.closest('.submenu-item')) {
+                        return;
+                    }
+                    
+                    var submenu = this.querySelector('.submenu');
+                    if (submenu) {
+                        
+                        
+                        (function(menu) {
+                            if (menu !== item) {
+                                menu.classList.remove('active');
+                                var otherSubmenu = menu.querySelector('.submenu');
+                                if (otherSubmenu) otherSubmenu.classList.remove('active');
+                            }
+                        });
+                        
+                        this.classList.add('active');
+                        submenu.classList.add('active');
+                    }
+                });
+            });
+        });
+</script>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 侧边栏菜单功能
+            var menuItems = document.querySelectorAll('.menu-item');
+            
+            menuItems.forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    var submenu = this.querySelector('.submenu');
+                    if (submenu) {
+                        if (e.target.closest('.submenu') || e.target.closest('.submenu-item')) {
+                            return;
+                        }
+                        
+                        e.preventDefault();
+                        
+                        menuItems.forEach(function(menu) {
+                            if (menu !== item) {
+                                menu.classList.remove('active');
+                                var otherSubmenu = menu.querySelector('.submenu');
+                                if (otherSubmenu) otherSubmenu.classList.remove('active');
+                            }
+                        });
+                        
+                        this.classList.add('active');
+                        submenu.classList.add('active');
+                    }
+                });
+            });
+        });
+        
+        // 显示添加分类表单
+        function showAddCategoryForm() {
+            document.getElementById('addCategoryForm').style.display = 'block';
+            document.getElementById('categoryName').value = '';
+            document.getElementById('categoryCode').value = '';
+        }
+        
+        // 隐藏添加分类表单
+        function hideAddCategoryForm() {
+            document.getElementById('addCategoryForm').style.display = 'none';
+        }
+        
+        // 添加分类
+        function addCategory() {
+            var name = document.getElementById('categoryName').value.trim();
+            var code = document.getElementById('categoryCode').value.trim();
+            
+            if (!name) {
+                alert('请输入分类名称');
+                return;
+            }
+            if (!code) {
+                alert('请输入分类编码');
+                return;
+            }
+            
+            var table = document.getElementById('categoriesTable');
+            var rows = table.getElementsByTagName('tr');
+            var newId = rows.length + 1;
+            
+            var newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="checkbox" data-id="${newId}"></td>
+                <td>${newId}</td>
+                <td>${name}</td>
+                <td>${code}</td>
+                <td>${newId}</td>
+                <td><span style="color: #4CAF50;">启用</span></td>
+                <td>
+                    <button class="btn btn-primary" onclick="editCategory(${newId})">编辑</button>
+                    <button class="btn btn-danger" onclick="deleteCategory(${newId})">删除</button>
+                </td>
+            `;
+            
+            table.appendChild(newRow);
+            hideAddCategoryForm();
+            alert('分类添加成功');
+        }
+        
+        // 编辑分类
+        function editCategory(id) {
+            var rows = document.getElementById('categoriesTable').getElementsByTagName('tr');
+            for (var i = 0; i < rows.length; i++) {
+                var checkbox = rows[i].getElementsByTagName('input')[0];
+                if (checkbox && checkbox.getAttribute('data-id') == id) {
+                    var name = rows[i].getElementsByTagName('td')[2].textContent;
+                    var code = rows[i].getElementsByTagName('td')[3].textContent;
+                    
+                    var newName = prompt('请输入新的分类名称:', name);
+                    var newCode = prompt('请输入新的分类编码:', code);
+                    
+                    if (newName !== null && newName.trim()) {
+                        rows[i].getElementsByTagName('td')[2].textContent = newName.trim();
+                    }
+                    if (newCode !== null && newCode.trim()) {
+                        rows[i].getElementsByTagName('td')[3].textContent = newCode.trim();
+                    }
+                    break;
+                }
+            }
+        }
+        
+        // 删除分类
+        function deleteCategory(id) {
+            if (confirm('确定要删除这个分类吗？')) {
+                var rows = document.getElementById('categoriesTable').getElementsByTagName('tr');
+                for (var i = 0; i < rows.length; i++) {
+                    var checkbox = rows[i].getElementsByTagName('input')[0];
+                    if (checkbox && checkbox.getAttribute('data-id') == id) {
+                        rows[i].remove();
+                        alert('分类删除成功');
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // 全选功能
+        function toggleSelectAll(checkbox) {
+            var checkboxes = document.querySelectorAll('#categoriesTable input[type="checkbox"]');
+            checkboxes.forEach(function(cb) {
+                cb.checked = checkbox.checked;
+            });
+        }
+</script>
+</body></html>

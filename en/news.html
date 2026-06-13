@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News - Saken Auto Parts</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* Unified Link Style */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* Pagepage title */
+        .page-title {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* News Content */
+        .news-content {
+            padding: 40px 0;
+            display: flex;
+            gap: 40px;
+        }
+        
+        .news-sidebar {
+            width: 300px;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-section {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-section h3 {
+            font-size: 18px;
+            color: #0F4F9A;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #0F4F9A;
+            padding-bottom: 10px;
+        }
+        
+        .news-categories {
+            list-style: none;
+        }
+        
+        .news-categories li {
+            margin-bottom: 10px;
+        }
+        
+        .news-categories a {
+            color: #666;
+            text-decoration: none;
+            display: block;
+            padding: 8px 0;
+            transition: color 0.3s ease;
+        }
+        
+        .news-categories a:hover {
+            color: #0F4F9A;
+            padding-left: 10px;
+        }
+        
+        .news-categories a.active {
+            color: #0F4F9A;
+            font-weight: bold;
+        }
+        
+        .search-box {
+            position: relative;
+            margin-top: 20px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .search-box button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+        }
+        
+        .latest-news {
+            list-style: none;
+        }
+        
+        .latest-news li {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .latest-news li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .latest-news a {
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            line-height: 1.4;
+            display: block;
+        }
+        
+        .latest-news a:hover {
+            color: #0F4F9A;
+        }
+        
+        .latest-news .news-date {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .news-main {
+            flex: 1;
+        }
+        
+        .news-list {
+            list-style: none;
+        }
+        
+        .news-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        
+        .news-image {
+            width: 200px;
+            height: 140px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .news-item:hover .news-image img {
+            transform: scale(1.05);
+        }
+        
+        .news-info {
+            flex: 1;
+        }
+        
+        .news-info h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .news-info h3 a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .news-info h3 a:hover {
+            color: #0F4F9A;
+        }
+        
+        .news-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .news-excerpt {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .news-read-more {
+            display: inline-block;
+            color: #0F4F9A;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .news-read-more:hover {
+            color: #0C448A;
+        }
+        
+        /* pointsPage */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            padding: 16px 24px;
+            background: transparent;
+        }
+        
+        .pagination-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background: #ffffff;
+        }
+        
+        .pagination-btn:hover:not(.disabled) {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .pagination-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .pagination-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .pagination-ellipsis {
+            color: #9ca3af;
+            font-size: 14px;
+            padding: 0 4px;
+        }
+        
+        .pagination-jump {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #6b7280;
+            padding: 6px 12px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            height: 36px;
+        }
+        
+        .pagination-input {
+            width: 40px;
+            height: 24px;
+            padding: 0 6px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            box-sizing: border-box;
+            background: #ffffff;
+        }
+        
+        .pagination-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+        }
+        
+        .pagination-jump-btn {
+            padding: 4px 14px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #3b82f6;
+        }
+        
+        .pagination-jump-btn:hover {
+            background: #2563eb;
+        }
+        
+
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .news-content {
+                flex-direction: column;
+            }
+            
+            .news-sidebar {
+                width: 100%;
+            }
+            
+            .news-categories {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .news-categories li {
+                margin-bottom: 0;
+            }
+            
+            .news-categories a {
+                padding: 5px 15px;
+                background-color: #f0f0f0;
+                border-radius: 15px;
+            }
+            
+            .news-categories a:hover {
+                padding-left: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .news-item {
+                flex-direction: column;
+            }
+            
+            .news-image {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">Home</a>
+            <span>></span>
+            <span>News</span>
+        </div>
+    </div>
+    
+    <!-- Pagepage title -->
+    <div class="page-title">
+        <div class="container">
+            <h1>News</h1>
+            <p>Learn about the latest developments and industry news of Saken Auto Parts</p>
+        </div>
+    </div>
+    
+    <!-- News Content -->
+    <div class="container news-content">
+        <!-- Sidebar -->
+        <div class="news-sidebar">
+            <div class="sidebar-section">
+                <h3>News Categories</h3>
+                <ul class="news-categories">
+                    <li><a href="#" class="active">All News</a></li>
+                    <li><a href="#">Company News</a></li>
+                    <li><a href="#">Industry News</a></li>
+                    <li><a href="#">Product Info</a></li>
+                    <li><a href="#">Tech Share</a></li>
+                    <li><a href="#">Exhibition Info</a></li>
+                </ul>
+                
+                <div class="search-box">
+                    <input type="text" placeholder="Search News...">
+                    <button>🔍</button>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Latest News</h3>
+                <ul class="latest-news">
+                    <li>
+                        <a href="#">Saken Auto Parts Participates in 2024 Guangzhou International Auto Parts Exhibition</a>
+                        <div class="news-date">2024-04-01</div>
+                    </li>
+                    <li>
+                        <a href="#">Saken Auto Parts Launches New Mercedes-Benz Series Parts</a>
+                        <div class="news-date">2024-03-15</div>
+                    </li>
+                    <li>
+                        <a href="#">Saken Auto Parts Obtains ISO9001 Quality Management System Certification</a>
+                        <div class="news-date">2024-02-28</div>
+                    </li>
+                    <li>
+                        <a href="#">Saken Auto Parts Reaches Cooperation with Multiple 4S Stores</a>
+                        <div class="news-date">2024-02-10</div>
+                    </li>
+                    <li>
+                        <a href="#">Saken Auto Parts Factory Expansion Project Launched</a>
+                        <div class="news-date">2024-01-20</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- News List -->
+        <div class="news-main">
+            <ul class="news-list">
+                <li class="news-item">
+                    <div class="news-image">
+                        <img src="../img/news-exhibition.jpg" alt="Exhibition Image">
+                    </div>
+                    <div class="news-info">
+                        <h3><a href="news-detail.html">Saken Auto Parts Participates in 2024 Guangzhou International Auto Parts Exhibition</a></h3>
+                        <div class="news-meta">
+                            <span>2024-04-01</span>
+                            <span>Exhibition Info</span>
+                            <span>Views: 1234</span>
+                        </div>
+                        <p class="news-excerpt">Saken Auto Parts will participate in the Guangzhou International Auto Parts Exhibition from April 10 to 12, 2024, showcasing the latest Mercedes-Benz and BMW parts products. We will set up a professional booth at the exhibition site to display the company's core products and technical advantages. Welcome customers to visit and discuss.</p>
+                        <a href="#" class="news-read-more">Read More →</a>
+                    </div>
+                </li>
+                <li class="news-item">
+                    <div class="news-image">
+                        <img src="../img/news-production.jpg" alt="Product Image">
+                    </div>
+                    <div class="news-info">
+                        <h3><a href="news-detail.html">Saken Auto Parts Launches New Mercedes-Benz Series Parts</a></h3>
+                        <div class="news-meta">
+                            <span>2024-03-15</span>
+                            <span>Product Info</span>
+                            <span>Views: 987</span>
+                        </div>
+                        <p class="news-excerpt">Saken Auto Parts recently launched a new Mercedes-Benz series of parts, including engine, chassis, electrical and body products. These products are made of high-quality materials and advanced processes, strictly manufactured according to original factory standards to ensure perfect matching with the original vehicle. The new series of products have started to accept orders, welcome customers to inquire and purchase.</p>
+                        <a href="#" class="news-read-more">Read More →</a>
+                    </div>
+                </li>
+                <li class="news-item">
+                    <div class="news-image">
+                        <img src="../img/news-certification.jpg" alt="Certification Image">
+                    </div>
+                    <div class="news-info">
+                        <h3><a href="news-detail.html">Saken Auto Parts Obtains ISO9001 Quality Management System Certification</a></h3>
+                        <div class="news-meta">
+                            <span>2024-02-28</span>
+                            <span>Company News</span>
+                            <span>Views: 856</span>
+                        </div>
+                        <p class="news-excerpt">Saken Auto Parts recently successfully obtained ISO9001 quality management system certification, which marks that the company's quality management level has reached international standards. Through certification, the company will further strengthen quality management, improve product quality and service levels, and provide customers with more reliable products and services.</p>
+                        <a href="#" class="news-read-more">Read More →</a>
+                    </div>
+                </li>
+                <li class="news-item">
+                    <div class="news-image">
+                        <img src="../img/news-cooperation.jpg" alt="Cooperation Image">
+                    </div>
+                    <div class="news-info">
+                        <h3><a href="news-detail.html">Saken Auto Parts Reaches Cooperation with Multiple 4S Stores</a></h3>
+                        <div class="news-meta">
+                            <span>2024-02-10</span>
+                            <span>Company News</span>
+                            <span>Views: 745</span>
+                        </div>
+                        <p class="news-excerpt">Saken Auto Parts recently reached cooperation agreements with multiple Mercedes-Benz and BMW 4S stores, becoming their designated parts supplier. This cooperation will further expand the company's market share and increase brand awareness. At the same time, the company will provide more professional technical support and after-sales service to 4S stores, working together to provide customers with a quality service experience.</p>
+                        <a href="#" class="news-read-more">Read More →</a>
+                    </div>
+                </li>
+                <li class="news-item">
+                    <div class="news-image">
+                        <img src="../img/news-expansion.jpg" alt="Factory pictures">
+                    </div>
+                    <div class="news-info">
+                        <h3><a href="news-detail.html">Saken Auto Parts Factory Expansion Project Launched</a></h3>
+                        <div class="news-meta">
+                            <span>2024-01-20</span>
+                            <span>Company News</span>
+                            <span>Views: 634</span>
+                        </div>
+                        <p class="news-excerpt">Saken Auto Parts FactoryExpansion project officially launched，Total project investment1000million yuan，expected to beJune 2024completed。After expansion，Factory production capacity will increase50%，able to better meet market demand。At the same time，The company will introduce advancedEquipmentand technology，further improveProductsqualityandproduction efficiency。</p>
+                        <a href="#" class="news-read-more">Read More →</a>
+                    </div>
+                </li>
+            </ul>
+            
+            <!-- pointsPage -->
+            <div class="pagination" id="pagination">
+                <!-- pointsPagewill be throughJavaScriptdynamically generated -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Load template script -->
+    <script src="../../templates/load-templates.js"></script>
+    <script src="../templates/pagination.js"></script>
+    <script>
+        initPagination('.news-item', 'pagination');
+    </script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الأسئلة الشائعة - SHAKOLN قطع غيار السيارات</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* نمط الارتباط الموحد */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* عنوان الصفحة */
+        .page-title {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .page-title h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* محتوى الأسئلة الشائعة */
+        .faq-content {
+            padding: 40px 0;
+        }
+        
+        .faq-section {
+            margin-bottom: 40px;
+        }
+        
+        .faq-section h2 {
+            font-size: 24px;
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .faq-list {
+            list-style: none;
+        }
+        
+        .faq-item {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: #333;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .faq-answer {
+            padding: 0 20px 20px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+        }
+        
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        
+        .faq-item.active .faq-question {
+            border-bottom: 1px solid #e0e0e0;
+            background-color: #f0f0f0;
+        }
+        
+        .faq-item.active .faq-question::after {
+            content: '▼';
+            transform: rotate(180deg);
+        }
+        
+        .faq-question::after {
+            content: '▼';
+            font-size: 12px;
+            color: #999;
+            transition: transform 0.3s ease;
+        }
+        
+        /* اتصل بنا */
+        .contact-section {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        
+        .contact-section h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .contact-section p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .contact-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #0F4F9A;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        .contact-button:hover {
+            background-color: #0C448A;
+        }
+        
+
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 992px) {
+        }
+        
+        @media (max-width: 768px) {
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">الرئيسية</a>
+            <span>></span>
+            <span>الأسئلة الشائعة</span>
+        </div>
+    </div>
+    
+    <!-- عنوان الصفحة -->
+    <div class="page-title">
+        <div class="container">
+            <h1>الأسئلة الشائعة</h1>
+            <p>أجب على الأسئلة التي قد تكون لديك، ساعدك على فهم SHAKOLN قطع غيار السيارات بشكل أفضل</p>
+        </div>
+    </div>
+    
+    <!-- محتوى الأسئلة الشائعة -->
+    <div class="container faq-content">
+        <!-- أسئلة متعلقة بالمنتج -->
+        <div class="faq-section">
+            <h2>أسئلة متعلقة بالمنتج</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">كيف أقوم باختيار قطعة الغيار المناسبة لطراز سيارتي؟</div>
+                    <div class="faq-answer">
+                        <p>يمكنك من خلال نظام موديلات السيارات لدينا، إدخال معلومات طراز سيارتك، وسيتطابق النظام تلقائيًا مع قطعة الغيار المناسبة. يمكنك أيضًا الاتصال بفريق خدمة العملاء، تقديم معلومات طراز سيارتك، وسنقدم لك نصائح اختيارية احترافية.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">كيف هي جودة منتجات SHAKOLN قطع غيار السيارات؟</div>
+                    <div class="faq-answer">
+                        <p>منتجات SHAKOLN قطع غيار السيارات مصنوعة من مواد عالية الجودة وعمليات متقدمة، مصنوعة بدقة وفق معايير المصنع الأصلي، لضمان التطابق المثالي مع السيارة الأصلية. لدينا نظام إدارة جودة شامل، حصلنا على شهادة نظام إدارة الجودة ISO9001، لضمان أن جودة المنتج مستقرة وموثوقة.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">كم مدة ضمان المنتج؟</div>
+                    <div class="faq-answer">
+                        <p>مدة ضمان منتجاتنا هي 12 شهرًا، محسوبة من تاريخ تسليم المنتج. خلال فترة الضمان، إذا ظهرت مشكلات جودة في المنتج، سنقوم بالاستبدال أو الإصلاح لك مجانًا.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">كيف أقوم بالتعرف على صحة SHAKOLN قطع غيار السيارات؟</div>
+                    <div class="faq-answer">
+                        <p>كل منتجات SHAKOLN قطع غيار السيارات لها ملصقات مضادة للتزوير فريدة، يمكنك استخدام موقعنا الرسمي أو خط خدمة العملاء للبحث عن صحة المنتج. في نفس الوقت، نوصي بالشراء من خلال القنوات المعتمدة لمنتجات SHAKOLN قطع غيار السيارات، لضمان صحة المنتج.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- أسئلة متعلقة بالطلب -->
+        <div class="faq-section">
+            <h2>أسئلة متعلقة بالطلب</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">كيف أقوم بإجراء طلب لشراء المنتج؟</div>
+                    <div class="faq-answer">
+                        <p>يمكنك من خلال موقعنا الرسمي أو الهاتف أو البريد الإلكتروني إجراء طلب لشراء المنتج. فريق خدمة العملاء لدينا سيقدم لك استشارة وخدمات طلب احترافية للمنتج.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">هل يمكن تعديل الطلب بعد التأكيد؟</div>
+                    <div class="faq-answer">
+                        <p>بعد تأكيد الطلب، إذا كنت بحاجة إلى تعديل معلومات الطلب، يرجى الاتصال بفريق خدمة العملاء قبل شحن الطلب، وسنقوم بالتعامل معك بناءً على الوضع الفعلي.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">كيف أقوم بالبحث عن حالة الطلب؟</div>
+                    <div class="faq-answer">
+                        <p>يمكنك استخدام موقعنا الرسمي أو خط خدمة العملاء للبحث عن حالة الطلب. سنقوم بتحديث معالجة الطلب في الوقت المناسب، لضمان أنك يمكن تتبع تقدم الطلب في أي وقت.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">ما طرق الدفع المدعومة؟</div>
+                    <div class="faq-answer">
+                        <p>ندعم طرق دفع متعددة مثل التحويل المصرفي، أليباي، ويتشات باي. يمكن مناقشة طرق الدفع المحددة مع فريق خدمة العملاء لدينا للاتفاق.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- أسئلة متعلقة باللوجستيات -->
+        <div class="faq-section">
+            <h2>أسئلة متعلقة باللوجستيات</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">كم من الوقت يستغرق التوصيل؟</div>
+                    <div class="faq-answer">
+                        <p>بناءً على موقعك، وقت التوصيل عادةً من 1-7 أيام عمل. سنقوم بناءً على احتياجاتك، اختيار طريقة اللوجستيات الأكثر ملاءمة، لضمان تسليم المنتج في الوقت المناسب.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">كيف أقوم بالبحث عن معلومات اللوجستيات؟</div>
+                    <div class="faq-answer">
+                        <p>بعد شحن الطلب، سنقوم عبر البريد الإلكتروني أو الرسائل القصيرة لإرسال رقم اللوجستيات لك، يمكنك من خلال رقم تتبع اللوجستيات على موقع شركة اللوجستيات المقابلة للبحث عن معلومات اللوجستيات.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">كيف يتم حساب تكلفة اللوجستيات؟</div>
+                    <div class="faq-answer">
+                        <p>تكلفة اللوجستيات بناءً على وزن المنتج والحجم وعنوان التسليم. سنقدم لك عرضًا سعريًا معقولًا لتكلفة اللوجستيات، لضمان شفافية تكلفة اللوجستيات.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">كيف هي التعبئة والتغليف للمنتج؟</div>
+                    <div class="faq-answer">
+                        <p>منتجاتنا تستخدم مواد تغليف احترافية، لضمان عدم تلف المنتج أثناء النقل. بالنسبة للعناصر الهشة، سنقوم باتخاذ تدابير حماية إضافية.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- أسئلة خدمة ما بعد البيع -->
+        <div class="faq-section">
+            <h2>أسئلة خدمة ما بعد البيع</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">كيف أقوم بطلب خدمة ما بعد البيع؟</div>
+                    <div class="faq-answer">
+                        <p>يمكنك من خلال الهاتف أو البريد الإلكتروني أو خدمة العملاء عبر الإنترنت لطلب خدمة ما بعد البيع. عند التقديم، يرجى تقديم رقم طلبك ومعلومات المنتج ووصف المشكلة، فريق خدمة العملاء لدينا سيقوم بالتعامل معك على الفور.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">كيف هي عملية خدمة ما بعد البيع؟</div>
+                    <div class="faq-answer">
+                        <p>عملية خدمة ما بعد البيع تشمل: تقديم المشكلة، تقييم المشكلة، صياغة الحل، تنفيذ الخدمة والمتابعة بعد البيع. سنقوم بتتبع العملية الخدمية بأكملها، لضمان حل المشكلات على الفور.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">كيف يتم التعامل مع مشكلات جودة المنتج؟</div>
+                    <div class="faq-answer">
+                        <p>إذا ظهرت مشكلات جودة في المنتج، يرجى الاتصال بفريق خدمة العملاء على الفور. سنقدم لك خدمات الإصلاح أو الاستبدال أو الاسترداد بناءً على الوضع الفعلي، لضمان حماية حقوقك ومصالحك.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">ما ساعات خدمة ما بعد البيع؟</div>
+                    <div class="faq-answer">
+                        <p>ساعات خدمة ما بعد البيع لدينا هي من الساعة 9:00 إلى 18:00 في أيام العمل. بالنسبة للمشكلات العاجلة، سنقوم بالرد والتعامل خلال 24 ساعة.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- أسئلة أخرى -->
+        <div class="faq-section">
+            <h2>أسئلة أخرى</h2>
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question">كيف أصبح وكيلًا ل SHAKOLN قطع غيار السيارات؟</div>
+                    <div class="faq-answer">
+                        <p>إذا كنت مهتمًا بأن تصبح وكيلًا ل SHAKOLN قطع غيار السيارات، يرجى الاتصال بفريق المبيعات، تقديم معلومات شركتك واحتياجات العمل، سنقدم لك خطة تعاون مفصلة.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">ما هي ثقافة SHAKOLN قطع غيار السيارات؟</div>
+                    <div class="faq-answer">
+                        <p>ثقافة SHAKOLN قطع غيار السيارات هي: الصدق والابتكار والاحترافية والخدمة. نلتزم بتزويد العملاء بمنتجات عالية الجودة وخدمة جيدة، لتصبح موردًا لقطع غيار السيارات رائدًا في الصناعة.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">كيف أقوم بالاتصال بـ SHAKOLN قطع غيار السيارات؟</div>
+                    <div class="faq-answer">
+                        <p>يمكنك من خلال الطرق التالية الاتصال بنا: الهاتف: 400 626 0128، البريد الإلكتروني: shakoln@163.com، العنوان: بكين، منطقة تشاويانغ، شياو هونغ مين، رقم 69.</p>
+                    </div>
+                </li>
+                <li class="faq-item">
+                    <div class="faq-question">كيف هو تاريخ SHAKOLN قطع غيار السيارات؟</div>
+                    <div class="faq-answer">
+                        <p>SHAKOLN قطع غيار السيارات تأسست في عام 2010، بعد سنوات من التطور، أصبحت موردًا احترافيًا لقطع غيار مرسيدس وبامو. الشركة لديها مصنع عصري وفريق احترافي، المنتجات تُباع إلى الأسواق الداخلية والخارجية معًا.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- اتصل بنا -->
+    <div class="contact-section">
+        <div class="container">
+            <h2>هل لديك أي أسئلة أخرى؟</h2>
+            <p>إذا كنت لديك أي أسئلة أخرى، مرحبًا بك في أي وقت الاتصال بفريق خدمة العملاء</p>
+            <a href="contact.html" class="contact-button">اتصل بنا</a>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <script>
+        // FAQ Collapsible Function
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+    </script>
+    
+    <!-- تحميل نص البرنامج النماذج -->
+    <script src="../../templates/load-templates.js"></script>
+</body>
+</html>

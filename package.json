@@ -1,0 +1,17 @@
+{
+  "name": "shakoln-website",
+  "version": "1.0.0",
+  "description": "萨肯汽配官网 - 带后端API的动态网站",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["website", "api", "dynamic"],
+  "author": "Shakoln",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  }
+}

@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>现货库存 - 萨肯汽配</title>
+    <!-- Tailwind CSS -->
+    <script src="assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* 统一链接样式 */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* 内容区域 */
+        .content {
+            padding: 40px 0;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .stock-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stock-info {
+            margin-bottom: 40px;
+        }
+        
+        .stock-info h3 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .stock-info p {
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .stock-search {
+            margin-bottom: 40px;
+        }
+        
+        .stock-search h3 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .search-btn {
+            padding: 12px 30px;
+            background-color: #0F4F9A;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 24px;
+            white-space: nowrap;
+        }
+        
+        .search-btn:hover {
+            background-color: #0C3D7A;
+        }
+        
+        .stock-list {
+            margin-top: 40px;
+        }
+        
+        .stock-list h3 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .stock-table th,
+        .stock-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stock-table th {
+            background-color: #f5f7fa;
+            font-weight: 600;
+            color: #0F4F9A;
+        }
+        
+        .stock-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .stock-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .stock-status.in-stock {
+            background-color: #E8F5E8;
+            color: #2E7D32;
+        }
+        
+        .stock-status.limited {
+            background-color: #FFF3E0;
+            color: #E65100;
+        }
+        
+        /* 分页样式 */
+        .pagination-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .pagination-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background-color: white;
+            color: #333;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .pagination-btn:hover:not(.disabled):not(.active) {
+            background-color: #f0f0f0;
+            border-color: #0F4F9A;
+        }
+        
+        .pagination-btn.active {
+            background-color: #0F4F9A;
+            color: white;
+            border-color: #0F4F9A;
+        }
+        
+        .pagination-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .pagination-ellipsis {
+            padding: 0 8px;
+            color: #999;
+        }
+        
+        .pagination-jump {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .pagination-input {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .pagination-jump-btn {
+            padding: 8px 16px;
+            background-color: #0F4F9A;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .pagination-jump-btn:hover {
+            background-color: #0C3D7A;
+        }
+        
+        .pagination-info {
+            margin-top: 10px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">首页</a>
+            <span>></span>
+            <span>现货库存</span>
+        </div>
+    </div>
+    
+    <!-- 内容区域 -->
+    <div class="content">
+        <div class="container">
+            <h1 class="section-title">现货库存</h1>
+            
+            <div class="stock-container">
+                <div class="stock-info">
+                    <h3>库存信息</h3>
+                    <p>我们拥有大量现货库存，确保您能够及时获得所需的汽车配件。以下是我们的部分库存信息，您可以通过搜索功能查找特定产品的库存状态。</p>
+                </div>
+                
+                <div class="stock-search">
+                    <h3>库存查询</h3>
+                    <form class="search-form">
+                        <div class="form-group">
+                            <label for="oe-number">OE号</label>
+                            <input type="text" id="oe-number" class="form-input" placeholder="请输入OE号">
+                        </div>
+                        <div class="form-group">
+                            <label for="part-name">配件名称</label>
+                            <input type="text" id="part-name" class="form-input" placeholder="请输入配件名称">
+                        </div>
+                        <div class="form-group">
+                            <label for="brand">品牌</label>
+                            <select id="brand" class="form-select">
+                                <option value="">全部品牌</option>
+                                <option value="奔驰">奔驰</option>
+                                <option value="宝马">宝马</option>
+                            </select>
+                        </div>
+                        <button type="button" class="search-btn">查询库存</button>
+                    </form>
+                </div>
+                
+                <div class="stock-list">
+                    <h3>库存列表</h3>
+                    <table class="stock-table">
+                        <thead>
+                            <tr>
+                                <th>OE号</th>
+                                <th>配件名称</th>
+                                <th>品牌</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stock-table-body">
+                            <!-- 动态加载内容 -->
+                        </tbody>
+                    </table>
+                    <div class="pagination-container" id="pagination"></div>
+                    <div class="pagination-info" id="pagination-info"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+    
+    <script>
+        // 全局变量
+        let allProducts = [];
+        let filteredProducts = [];
+        let currentPage = 1;
+        const itemsPerPage = 20;
+        
+        // 生成随机库存数量
+        function getRandomStock() {
+            return Math.floor(Math.random() * 200) + 10;
+        }
+        
+        // 获取库存状态
+        function getStockStatus(stock) {
+            if (stock > 50) {
+                return { text: '现货', class: 'in-stock' };
+            } else {
+                return { text: '库存紧张', class: 'limited' };
+            }
+        }
+        
+        // 加载产品数据
+        async function loadProducts() {
+            try {
+                console.log('开始加载产品数据...');
+                const response = await fetch('product-data.json');
+                const data = await response.json();
+                
+                console.log('原始产品数据数量:', data.products.length);
+                
+                // 加载所有产品，不做过滤，确保所有产品都能被搜索到
+                allProducts = data.products.map(product => ({
+                    ...product,
+                    stock: getRandomStock()
+                }));
+                
+                console.log('最终加载的产品数量:', allProducts.length);
+                
+                // 打印前5个产品看看数据是否正确
+                for (let i = 0; i < Math.min(5, allProducts.length); i++) {
+                    console.log('产品', i + 1, ':', allProducts[i].code, allProducts[i].name, allProducts[i].series);
+                }
+                
+                filteredProducts = [...allProducts];
+                renderProducts();
+            } catch (error) {
+                console.error('加载产品数据失败:', error);
+            }
+        }
+        
+        // 模糊搜索
+        function searchProducts() {
+            console.log('========== 搜索开始 ==========');
+            
+            const oeNumberInput = document.getElementById('oe-number');
+            const partNameInput = document.getElementById('part-name');
+            const brandSelect = document.getElementById('brand');
+            
+            if (!oeNumberInput || !partNameInput || !brandSelect) {
+                console.error('找不到输入元素');
+                return;
+            }
+            
+            const oeNumber = oeNumberInput.value.trim();
+            const partName = partNameInput.value.trim();
+            const brand = brandSelect.value;
+            
+            console.log('搜索条件:');
+            console.log('- OE号:', oeNumber);
+            console.log('- 配件名称:', partName);
+            console.log('- 品牌:', brand);
+            console.log('全部产品数量:', allProducts.length);
+            
+            filteredProducts = [];
+            
+            for (let i = 0; i < allProducts.length; i++) {
+                var product = allProducts[i];
+                var match = true;
+                
+                // 搜索OE号 - 模糊匹配
+                if (oeNumber.length > 0) {
+                    var code = product.code || '';
+                    if (code.toLowerCase().indexOf(oeNumber.toLowerCase()) === -1) {
+                        match = false;
+                    }
+                }
+                
+                // 搜索配件名称 - 模糊匹配保持不变
+                if (match && partName.length > 0) {
+                    var name = product.name || '';
+                    if (name.toLowerCase().indexOf(partName.toLowerCase()) === -1) {
+                        match = false;
+                    }
+                }
+                
+                // 搜索品牌
+                if (match && brand.length > 0) {
+                    var series = product.series || '';
+                    if (series !== brand) {
+                        match = false;
+                    }
+                }
+                
+                if (match) {
+                    filteredProducts.push(product);
+                    console.log('找到匹配产品:', product.code, product.name, product.series);
+                }
+            }
+            
+            console.log('搜索结果总数:', filteredProducts.length);
+            console.log('========== 搜索结束 ==========');
+            
+            currentPage = 1;
+            renderProducts();
+        }
+        
+        // 渲染产品表格
+        function renderProducts() {
+            const tbody = document.getElementById('stock-table-body');
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageProducts = filteredProducts.slice(startIndex, endIndex);
+            
+            if (pageProducts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999; padding: 30px;">暂无匹配的产品</td></tr>';
+            } else {
+                tbody.innerHTML = pageProducts.map(product => {
+                    const status = getStockStatus(product.stock);
+                    return `
+                        <tr>
+                            <td>${product.code}</td>
+                            <td>${product.name}</td>
+                            <td>${product.series}</td>
+                            <td><span class="stock-status ${status.class}">${status.text}</span></td>
+                            <td><a href="product-detail.html?oe=${encodeURIComponent(product.code)}">查看详情</a></td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            renderPagination();
+        }
+        
+        // 渲染分页
+        function renderPagination() {
+            const totalItems = filteredProducts.length;
+            const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+            const pagination = document.getElementById('pagination');
+            const paginationInfo = document.getElementById('pagination-info');
+            
+            const startItem = (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+            paginationInfo.textContent = `共 ${totalItems} 条记录，显示第 ${startItem} - ${endItem} 条`;
+            
+            pagination.innerHTML = '';
+            
+            // 上一页
+            const prevPage = document.createElement('button');
+            prevPage.className = 'pagination-btn' + (currentPage <= 1 ? ' disabled' : '');
+            prevPage.textContent = '上一页';
+            prevPage.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderProducts();
+                }
+            });
+            pagination.appendChild(prevPage);
+            
+            // 页码按钮
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+            
+            if (currentPage <= 3) {
+                endPage = Math.min(8, totalPages);
+            } else if (currentPage >= totalPages - 2) {
+                startPage = Math.max(1, totalPages - 7);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = 'pagination-btn' + (i === currentPage ? ' active' : '');
+                pageBtn.textContent = i;
+                pageBtn.addEventListener('click', () => {
+                    if (i !== currentPage) {
+                        currentPage = i;
+                        renderProducts();
+                    }
+                });
+                pagination.appendChild(pageBtn);
+            }
+            
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.className = 'pagination-ellipsis';
+                    ellipsis.textContent = '...';
+                    pagination.appendChild(ellipsis);
+                }
+                
+                const lastPageNum = document.createElement('button');
+                lastPageNum.className = 'pagination-btn' + (currentPage === totalPages ? ' active' : '');
+                lastPageNum.textContent = totalPages;
+                lastPageNum.addEventListener('click', () => {
+                    if (currentPage !== totalPages) {
+                        currentPage = totalPages;
+                        renderProducts();
+                    }
+                });
+                pagination.appendChild(lastPageNum);
+            }
+            
+            // 下一页
+            const nextPage = document.createElement('button');
+            nextPage.className = 'pagination-btn' + (currentPage >= totalPages ? ' disabled' : '');
+            nextPage.textContent = '下一页';
+            nextPage.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderProducts();
+                }
+            });
+            pagination.appendChild(nextPage);
+            
+            // 跳转到指定页
+            const jumpContainer = document.createElement('div');
+            jumpContainer.className = 'pagination-jump';
+            
+            const jumpText = document.createElement('span');
+            jumpText.textContent = '到第';
+            jumpContainer.appendChild(jumpText);
+            
+            const pageInput = document.createElement('input');
+            pageInput.type = 'text';
+            pageInput.className = 'pagination-input';
+            pageInput.value = currentPage;
+            
+            const pageText = document.createElement('span');
+            pageText.textContent = '页';
+            jumpContainer.appendChild(pageText);
+            
+            const jumpBtn = document.createElement('button');
+            jumpBtn.className = 'pagination-jump-btn';
+            jumpBtn.textContent = '确定';
+            
+            const jumpToPage = () => {
+                const pageNum = parseInt(pageInput.value);
+                if (pageNum >= 1 && pageNum <= totalPages) {
+                    currentPage = pageNum;
+                    renderProducts();
+                }
+            };
+            
+            jumpBtn.addEventListener('click', jumpToPage);
+            pageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    jumpToPage();
+                }
+            });
+            
+            jumpContainer.appendChild(pageInput);
+            jumpContainer.appendChild(pageText);
+            jumpContainer.appendChild(jumpBtn);
+            pagination.appendChild(jumpContainer);
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成！');
+            
+            loadProducts();
+            
+            // 等待一点时间确保所有元素都加载完成
+            setTimeout(function() {
+                // 查询按钮点击事件
+                const searchBtn = document.querySelector('.search-btn');
+                if (searchBtn) {
+                    console.log('找到搜索按钮，绑定事件');
+                    searchBtn.addEventListener('click', function() {
+                        console.log('按钮被点击了！');
+                        searchProducts();
+                    });
+                } else {
+                    console.error('找不到搜索按钮');
+                }
+                
+                // 回车键触发搜索
+                const oeInput = document.getElementById('oe-number');
+                const partInput = document.getElementById('part-name');
+                
+                if (oeInput) {
+                    oeInput.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            searchProducts();
+                        }
+                    });
+                }
+                
+                if (partInput) {
+                    partInput.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            searchProducts();
+                        }
+                    });
+                }
+                
+                // 检查URL中是否有OE号参数，如果有则自动搜索
+                const urlParams = new URLSearchParams(window.location.search);
+                const oeParam = urlParams.get('oe');
+                if (oeParam && oeInput) {
+                    oeInput.value = oeParam;
+                    // 等待产品数据加载完成后再搜索
+                    setTimeout(function() {
+                        searchProducts();
+                    }, 1000);
+                }
+            }, 500);
+        });
+    </script>
+    
+    <!-- 加载模板脚本 -->
+    <script src="templates/load-templates.js"></script>
+</body>
+</html>

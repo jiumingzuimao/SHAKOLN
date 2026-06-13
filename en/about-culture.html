@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Culture - Saken Auto Parts</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Header Style */
+        header {
+            background-color: #0F4F9A;
+            color: white;
+            padding: 15px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        nav ul li:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        nav ul li:hover a {
+            color: white;
+        }
+        
+        nav ul li a:active {
+            color: white;
+        }
+        
+        .hotline {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .wechat-btn {
+            background-color: #FF6C00;
+            border: none;
+            padding: 8px 16px;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* Quick Function Bar */
+        .quick-functions {
+            background-color: white;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .functions-list {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .function-item {
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .function-item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .function-item a {
+            display: inline-block;
+            padding: 15px 25px;
+            text-decoration: none;
+            color: #333;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 0;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+        
+        .function-item a:hover {
+            background-color: #0F4F9A;
+            color: white;
+            border-color: #0F4F9A;
+        }
+        
+        /* PagePage Title */
+        .page-title {
+            background-color: white;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            color: #0F4F9A;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* Culture */
+        .company-culture {
+            background-color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .culture-section {
+            margin-bottom: 60px;
+        }
+        
+        .culture-section h2 {
+            color: #0F4F9A;
+            margin-bottom: 40px;
+            text-align: center;
+            font-size: 24px;
+        }
+        
+        .mv-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .mv-item {
+            text-align: center;
+            padding: 40px 30px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .mv-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .mv-item h3 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .mv-item p {
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        /* Core Values */
+        .core-values {
+            background-color: #f5f7fa;
+            padding: 60px 0;
+            margin-bottom: 60px;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        
+        .value-item {
+            text-align: center;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .value-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .value-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #0F4F9A;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 24px;
+        }
+        
+        .value-item h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+        .value-item p {
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        /* Enterprise Spirit */
+        .enterprise-spirit {
+            padding: 60px 0;
+        }
+        
+        .spirit-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .spirit-content h3 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            font-size: 20px;
+        }
+        
+        .spirit-content p {
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        /* Bottom */
+        footer {
+            background-color: #0F4F9A;
+            color: white;
+            padding: 40px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+        }
+        
+        .footer-section p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">Home</a>
+            <span>></span>
+            <a href="about.html">About Us</a>
+            <span>></span>
+            <span>Culture</span>
+        </div>
+    </div>
+    
+    <!-- PagePage Title -->
+    <div class="container page-title">
+        <h1>Culture</h1>
+    </div>
+    
+    <!-- Culture -->
+    <div class="company-culture">
+        <div class="container">
+            <!-- Enterprise Mission, Vision and Values -->
+            <div class="culture-section">
+                <h2>Enterprise Mission / Vision / Values</h2>
+                <div class="mv-grid">
+                    <div class="mv-item">
+                        <h3>Enterprise Mission</h3>
+                        <p>Provide customers with high-quality autoPartsand professional services，Promote the healthy development of the automotive aftermarket，Contribute to the progress of the automotive industry。</p>
+                    </div>
+                    <div class="mv-item">
+                        <h3>Enterprise Vision</h3>
+                        <p>Become a leading in ChinaMercedes-Benz/BMWAutoPartsSupplier，Build a well-known brand in the industryBrand，Create greater value for customers。</p>
+                    </div>
+                    <div class="mv-item">
+                        <h3>Core Values</h3>
+                        <p>Quality First, Customer First, Honest Operation, Innovation and Development, win customer trust with professional spirit and excellent service。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Core Values -->
+            <div class="culture-section core-values">
+                <h2>Core Values</h2>
+                <div class="values-grid">
+                    <div class="value-item">
+                        <div class="value-icon">Quality</div>
+                        <h3>Quality First</h3>
+                        <p>Adhere to quality as the core，Strictly ControlProductsQuality，Ensure everyproductsAll meet high standard requirements。</p>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-icon">Customer</div>
+                        <h3>Customer First</h3>
+                        <p>Take customer needs as the guide，ProvidePiecePersonalized service，Establish long-term stable cooperative relationships。</p>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-icon">Integrity</div>
+                        <h3>Honest Operation</h3>
+                        <p>Adhere to integrity, abide by business ethics, and win the trust of customers and partners.</p>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-icon">Innovation</div>
+                        <h3>Innovation and Development</h3>
+                        <p>Continuously innovate, introduce advanced technology and management concepts, and promote continuous development of the enterprise.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Enterprise Spirit -->
+            <div class="culture-section enterprise-spirit">
+                <h2>Enterprise Spirit</h2>
+                <div class="spirit-content">
+                    <h3>Professional、Innovation、Collaboration、Win-win</h3>
+                    <p>Professional：Focus onMercedes-Benz/BMWAutoPartsField，ContinuouslyImproveProfessional knowledge and skills，Provide customers with professional solutions。</p>
+                    <p>Innovation：Actively explore new technologies and management methods，ContinuouslyInnovationProductsand services，Maintain the competitiveness of the enterprise。</p>
+                    <p>Collaboration: Focus on team cooperation, strengthen internal communication and collaboration, and form a strong team synergy.</p>
+                    <p>Win-win: Pursue win-win with customers, partners and employees, and achieve common development.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Load template script -->
+    <script src="../../templates/load-templates.js"></script>
+</body>
+</html>

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理 - 后台管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+                        /* 侧边栏 */
+        .sidebar {
+            width: 280px;
+            background-color: #0F4F9A;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+                .sidebar-header {
+            padding: 30px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header .logo {
+            text-align: center;
+        }
+        
+        .sidebar-header .logo img {
+            height: 50px;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-header h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: #87CEEB;
+        }
+        
+        .menu-item.active {
+            background-color: rgba(135, 206, 235, 0.3);
+            border-left-color: #87CEEB;
+            padding-top: 15px;
+            padding-bottom: 30px;
+            box-shadow: inset 0 0 20px rgba(135, 206, 235, 0.2);
+        }
+        
+        .menu-item a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            font-size: 16px;
+            line-height: 20px;
+        }
+        
+        .menu-item a span:first-child {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-item .menu-icon {
+            font-size: 18px;
+            margin-right: 15px;
+        }
+        .menu-item .menu-icon-img {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            filter: brightness(0) invert(1);
+            flex-shrink: 0;
+            align-self: center;
+        }
+
+        
+        .menu-item .menu-arrow {
+            font-size: 12px;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+            align-self: center;
+        }
+        
+        .menu-item.active .menu-arrow {
+            transform: rotate(90deg);
+        }
+        
+        .submenu {
+            padding-left: 0;
+            padding-top: 0;
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.35);
+            display: none;
+        }
+        
+        .submenu.active {
+            display: block;
+        }
+        
+        .submenu-item {
+            padding: 12px 0 12px 60px;
+            text-align: left;
+        }
+        
+        .submenu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .submenu-item.active {
+            background-color: rgba(255,255,255,0.15);
+        }
+        
+        .submenu-item a {
+            font-size: 14px;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            display: block;
+        }
+/* 主内容区 */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+        
+        /* 顶部导航 */
+        .top-nav {
+            background-color: white;
+            padding: 20px 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .top-nav .welcome {
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .top-nav .welcome span {
+            color: #0F4F9A;
+            font-weight: bold;
+        }
+        
+        .top-nav .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .top-nav .user-info .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50;
+            background-color: #0F4F9A;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .top-nav .user-info .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-nav .user-info .user-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .top-nav .user-info .user-role {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .top-nav .user-info .logout {
+            color: #0F4F9A;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid #0F4F9A;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .top-nav .user-info .logout:hover {
+            background-color: #0F4F9A;
+            color: white;
+        }
+        
+        /* 内容卡片 */
+        .content-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .content-card h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        
+        /* 工具栏 */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .toolbar .search-box {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .toolbar .search-box input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 300px;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #0F4F9A;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0C448A;
+        }
+        
+        .btn-secondary {
+            background-color: #FF6C00;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e55a00;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-outline {
+            background-color: white;
+            color: #0F4F9A;
+            border: 1px solid #0F4F9A;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f0f4f8;
+        }
+        
+        /* 表格样式 */
+        .data-table {
+            width: 100;
+            border-collapse: collapse;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .data-table th {
+            background-color: #f5f7fa;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background-color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .pagination button.active {
+            background-color: #0F4F9A;
+            color: white;
+            border-color: #0F4F9A;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .main-content {
+                margin-left: 240px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+                <div class="sidebar-header">
+            <div class="logo">
+                <img src="../assets/logo.svg" alt="萨肯 SHAKOLN">
+                <h1>后台管理系统</h1>
+                <p>专业汽配管理平台</p>
+            </div>
+        </div>
+        
+                        <div class="sidebar-menu">
+            <div class="menu-item">
+                <a href="index.html">
+                    <span>
+                        <img src="./icon/gongyezujian-yibiaopan.svg" alt="" class="menu-icon-img">
+                        仪表盘
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/chaxunzhongxin.svg" alt="" class="menu-icon-img">
+                        查询中心
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="oe-search.html">OE号查询</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="vin-search.html">车架号VIN查询</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="chassis-search.html">底盘号查询</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/a-chanpin3x.svg" alt="" class="menu-icon-img">
+                        产品管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="products.html">产品列表</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-add.html">添加产品</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-categories.html">产品分类</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-import.html">Excel批量导入</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/tupian.svg" alt="" class="menu-icon-img">
+                        图片管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="image-auto.html">自动读取图片</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="image-manage.html">图片管理</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/chexingguanli.svg" alt="" class="menu-icon-img">
+                        车型管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="car-models.html">车型列表</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="car-model-add.html">添加车型</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/dingdanguanli.svg" alt="" class="menu-icon-img">
+                        订单管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="orders.html">订单列表</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="order-detail.html">订单详情</a>
+                    </div>
+                </div>
+            </div>            <div class="menu-item">
+                <a href="quotes.html">
+                    <span>
+                        <img src="./icon/dingdanguanli.svg" alt="" class="menu-icon-img">
+                        报价管理
+                    </span>
+                </a>
+            </div>
+            
+
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/shouyeguanli.svg" alt="" class="menu-icon-img">
+                        首页管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="home-banner.html">Banner图片管理</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="home-products.html">产品中心管理</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="home-hot.html">爆款推荐管理</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item active">
+                <a href="#">
+                    <span>
+                        <img src="./icon/xitongshezhi.svg" alt="" class="menu-icon-img">
+                        系统设置
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu active">
+                    <div class="submenu-item">
+                        <a href="settings.html">基本设置</a>
+                    </div>
+                    <div class="submenu-item active">
+                        <a href="users.html">用户管理</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="permissions.html">权限设置</a>
+                    </div>
+                </div>
+            </div>
+        </div></div>
+    </div>
+    
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 顶部导航 -->
+        <div class="top-nav">
+            <div class="welcome">
+                欢迎回来，<span>管理员</span>！今天是 2025年4月18日
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">管</div>
+                <div class="user-details">
+                    <div class="user-name">管理员</div>
+                    <div class="user-role">超级管理员</div>
+                </div>
+                <a href="../admin-login.html" class="logout">退出登录</a>
+            </div>
+        </div>
+        
+        <!-- 用户管理 -->
+        <div class="content-card">
+            <h2>用户管理</h2>
+            
+            <!-- 工具栏 -->
+            <div class="toolbar">
+                <div class="search-box">
+                    <input type="text" placeholder="搜索用户名、邮箱...">
+                    <button class="btn btn-primary">搜索</button>
+                </div>
+                <button class="btn btn-secondary">
+                    <span>➕</span> 添加用户
+                </button>
+            </div>
+            
+            <!-- 用户表格 -->
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox"></th>
+                        <th>用户ID</th>
+                        <th>用户名</th>
+                        <th>邮箱</th>
+                        <th>角色</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>1</td>
+                        <td>admin</td>
+                        <td>admin@shakoln.com</td>
+                        <td>超级管理员</td>
+                        <td><span style="color: #4CAF50;">活跃</span></td>
+                        <td>2025-01-01</td>
+                        <td>
+                            <button class="btn btn-primary">编辑</button>
+                            <button class="btn btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>2</td>
+                        <td>editor</td>
+                        <td>editor@shakoln.com</td>
+                        <td>编辑</td>
+                        <td><span style="color: #4CAF50;">活跃</span></td>
+                        <td>2025-02-15</td>
+                        <td>
+                            <button class="btn btn-primary">编辑</button>
+                            <button class="btn btn-danger">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>3</td>
+                        <td>viewer</td>
+                        <td>viewer@shakoln.com</td>
+                        <td>查看</td>
+                        <td><span style="color: #999;">禁用</span></td>
+                        <td>2025-03-10</td>
+                        <td>
+                            <button class="btn btn-primary">编辑</button>
+                            <button class="btn btn-danger">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- 分页 -->
+            <div id="pageInfo" style="text-align: right; margin-bottom: 10px; color: #666; font-size: 14px;">
+                显示第 1 - 20 条，共 0 条记录
+            </div>
+            <div id="pagination" class="pagination">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 分页变量
+        let currentPage = 1;
+        const pageSize = 20;
+        let totalPages = 1;
+        
+        // 用户数据
+        const users = [
+            { id: 1, username: 'admin', email: 'admin@shakoln.com', role: '超级管理员', status: '活跃', createdAt: '2025-01-01' },
+            { id: 2, username: 'editor', email: 'editor@shakoln.com', role: '编辑', status: '活跃', createdAt: '2025-02-15' },
+            { id: 3, username: 'viewer', email: 'viewer@shakoln.com', role: '查看', status: '禁用', createdAt: '2025-03-10' },
+            { id: 4, username: 'manager', email: 'manager@shakoln.com', role: '管理员', status: '活跃', createdAt: '2025-03-20' },
+            { id: 5, username: 'sales', email: 'sales@shakoln.com', role: '销售', status: '活跃', createdAt: '2025-04-01' },
+            { id: 6, username: 'support', email: 'support@shakoln.com', role: '客服', status: '活跃', createdAt: '2025-04-10' },
+            { id: 7, username: 'warehouse', email: 'warehouse@shakoln.com', role: '仓库管理员', status: '活跃', createdAt: '2025-04-15' },
+            { id: 8, username: 'finance', email: 'finance@shakoln.com', role: '财务', status: '禁用', createdAt: '2025-04-18' }
+        ];
+<script>
+        </script>
+
+<script>
+        </script>
+
+<script>
+        </script>
+
+<script>
+        , function() {
+            
+            (function(item) {
+                item.addEventListener('click', function(e) {
+                    
+                });
+            });
+            
+            
+            (function(item) {
+                item.addEventListener('click', function(e) {
+                    var target = e.target;
+                    
+                    if (target.closest('.submenu') || target.closest('.submenu-item')) {
+                        return;
+                    }
+                    
+                    var submenu = this.querySelector('.submenu');
+                    if (submenu) {
+                        
+                        
+                        (function(menu) {
+                            if (menu !== item) {
+                                menu.classList.remove('active');
+                                var otherSubmenu = menu.querySelector('.submenu');
+                                if (otherSubmenu) otherSubmenu.classList.remove('active');
+                            }
+                        });
+                        
+                        this.classList.add('active');
+                        submenu.classList.add('active');
+                    }
+                });
+            });
+        });
+</script>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 侧边栏菜单功能
+            var menuItems = document.querySelectorAll('.menu-item');
+            
+            menuItems.forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    var submenu = this.querySelector('.submenu');
+                    if (submenu) {
+                        // 检查是否点击了二级菜单区域
+                        if (e.target.closest('.submenu') || e.target.closest('.submenu-item')) {
+                            return;
+                        }
+                        
+                        e.preventDefault();
+                        
+                        // 关闭其他菜单
+                        menuItems.forEach(function(menu) {
+                            if (menu !== item) {
+                                menu.classList.remove('active');
+                                var otherSubmenu = menu.querySelector('.submenu');
+                                if (otherSubmenu) otherSubmenu.classList.remove('active');
+                            }
+                        });
+                        
+                        // 确保当前菜单展开
+                        this.classList.add('active');
+                        submenu.classList.add('active');
+                    }
+                });
+            });
+        });
+</script>
+</body></html>

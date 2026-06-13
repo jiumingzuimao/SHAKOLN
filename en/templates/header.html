@@ -1,0 +1,174 @@
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Microsoft YaHei", sans-serif;
+    }
+
+    .top-bar {
+        background-color: #0b4b99;
+        color: #fff;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 30px;
+    }
+    .top-bar a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+    }
+    .top-bar .lang-select {
+        background: #1a67b8;
+        color: white;
+        border: 1px solid #fff;
+        padding: 5px 15px;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    .top-bar .phone {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .main-nav {
+        background-color: #0f53a6;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+    }
+    .logo {
+        padding: 15px 0;
+    }
+    .logo img {
+        height: 60px;
+    }
+    .nav-menu {
+        display: flex;
+        list-style: none;
+    }
+    .nav-menu li {
+        position: relative;
+    }
+    .nav-menu li a {
+        display: block;
+        color: #fff;
+        text-decoration: none;
+        padding: 30px 35px;
+        font-size: 20px;
+        transition: background-color 0.3s;
+    }
+    .nav-menu li a:hover {
+        background-color: #0b4b99;
+    }
+    .nav-menu li.active a {
+        background-color: #0b4b99;
+    }
+    .wechat-btn {
+        background-color: #ff7a00;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: 20px;
+        transition: background-color 0.3s;
+    }
+    .wechat-btn:hover {
+        background-color: #ff6500;
+    }
+
+    @media (max-width: 1200px) {
+        .nav-menu li a {
+            padding: 30px 20px;
+            font-size: 18px;
+        }
+    }
+</style>
+
+<script>
+    (function() {
+        var currentPath = window.location.pathname;
+        var pageName = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+        if (!pageName) pageName = 'index.html';
+        
+        var navLinks = document.querySelectorAll('.nav-menu li a');
+        navLinks.forEach(function(link) {
+            var linkHref = link.getAttribute('href');
+            if (linkHref === pageName || 
+                (pageName.startsWith('product') && linkHref === 'product.html') ||
+                (pageName.startsWith('car-models') && linkHref === 'car-models.html')) {
+                link.parentElement.classList.add('active');
+            }
+        });
+    })();
+</script>
+
+<div class="top-bar">
+    <a href="about.html">About Saken</a>
+    <a href="contact.html">Contact Us</a>
+    <select class="lang-select" id="langSelect">
+        <option value="">中文</option>
+        <option value="en">English</option>
+        <option value="ru">Русский</option>
+        <option value="ar">العربية</option>
+    </select>
+    <span class="phone">400 626 0128</span>
+</div>
+
+<nav class="main-nav">
+    <div class="logo">
+        <img src="../assets/logo.svg" alt="SHAKOLN">
+    </div>
+    <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="product.html">Products</a></li>
+        <li><a href="car-models.html">Car Models</a></li>
+        <li><a href="factory.html">Factory</a></li>
+        <li><a href="service.html">Services</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+    </ul>
+    <button class="wechat-btn">WeChat Service</button>
+</nav>
+
+<div class="quick-functions" style="background-color: white !important; padding: 20px 0 !important; border-bottom: 1px solid #eee !important; margin: 0 !important; width: 100% !important;">
+    <div class="container" style="width: 1200px !important; margin: 0 auto !important; padding: 0 !important;">
+        <div class="functions-list" style="display: flex !important; justify-content: space-around !important; gap: 0 !important;">
+            <div class="function-item" style="text-align: center !important; transition: all 0.3s !important; flex: none !important;">
+                <a href="index.html#oe-search" style="display: inline-block !important; padding: 15px 25px !important; text-decoration: none !important; color: #333 !important; background-color: white !important; border: 1px solid #e0e0e0 !important; border-radius: 0 !important; transition: all 0.3s !important; min-width: 150px !important;">
+                    <div style="font-size: 16px !important; margin-bottom: 5px !important;">1</div>
+                    <div style="font-size: 14px !important;">OE Number Search</div>
+                </a>
+            </div>
+            <div class="function-item" style="text-align: center !important; transition: all 0.3s !important; flex: none !important;">
+                <a href="car-models.html" style="display: inline-block !important; padding: 15px 25px !important; text-decoration: none !important; color: #333 !important; background-color: white !important; border: 1px solid #e0e0e0 !important; border-radius: 0 !important; transition: all 0.3s !important; min-width: 150px !important;">
+                    <div style="font-size: 16px !important; margin-bottom: 5px !important;">2</div>
+                    <div style="font-size: 14px !important;">Car Search</div>
+                </a>
+            </div>
+            <div class="function-item" style="text-align: center !important; transition: all 0.3s !important; flex: none !important;">
+                <a href="quote.html" style="display: inline-block !important; padding: 15px 25px !important; text-decoration: none !important; color: #333 !important; background-color: white !important; border: 1px solid #e0e0e0 !important; border-radius: 0 !important; transition: all 0.3s !important; min-width: 150px !important;">
+                    <div style="font-size: 16px !important; margin-bottom: 5px !important;">3</div>
+                    <div style="font-size: 14px !important;">Online Quote</div>
+                </a>
+            </div>
+            <div class="function-item" style="text-align: center !important; transition: all 0.3s !important; flex: none !important;">
+                <a href="stock.html" style="display: inline-block !important; padding: 15px 25px !important; text-decoration: none !important; color: #333 !important; background-color: white !important; border: 1px solid #e0e0e0 !important; border-radius: 0 !important; transition: all 0.3s !important; min-width: 150px !important;">
+                    <div style="font-size: 16px !important; margin-bottom: 5px !important;">4</div>
+                    <div style="font-size: 14px !important;">In Stock</div>
+                </a>
+            </div>
+            <div class="function-item" style="text-align: center !important; transition: all 0.3s !important; flex: none !important;">
+                <a href="service.html" style="display: inline-block !important; padding: 15px 25px !important; text-decoration: none !important; color: #333 !important; background-color: white !important; border: 1px solid #e0e0e0 !important; border-radius: 0 !important; transition: all 0.3s !important; min-width: 150px !important;">
+                    <div style="font-size: 16px !important; margin-bottom: 5px !important;">5</div>
+                    <div style="font-size: 14px !important;">After-sales</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

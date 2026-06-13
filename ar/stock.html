@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المخزون - SHAKOLN قطع غيار السيارات</title>
+    <!-- Tailwind CSS -->
+    <script src="./assets/tailwind.min.js"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* نمط الارتباط الموحد */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* Content Area */
+        .content {
+            padding: 40px 0;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .stock-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stock-info {
+            margin-bottom: 40px;
+        }
+        
+        .stock-info h3 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .stock-info p {
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .stock-search {
+            margin-bottom: 40px;
+        }
+        
+        .stock-search h3 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .search-btn {
+            padding: 12px 30px;
+            background-color: #0F4F9A;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 24px;
+            white-space: nowrap;
+        }
+        
+        .search-btn:hover {
+            background-color: #0C3D7A;
+        }
+        
+        .stock-list {
+            margin-top: 40px;
+        }
+        
+        .stock-list h3 {
+            color: #0F4F9A;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .stock-table th,
+        .stock-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stock-table th {
+            background-color: #f5f7fa;
+            font-weight: 600;
+            color: #0F4F9A;
+        }
+        
+        .stock-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .stock-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .stock-status.in-stock {
+            background-color: #E8F5E8;
+            color: #2E7D32;
+        }
+        
+        .stock-status.limited {
+            background-color: #FFF3E0;
+            color: #E65100;
+        }
+        
+        /* نمط ترقيم الصفحات */
+        .pagination-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .pagination-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background-color: white;
+            color: #333;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .pagination-btn:hover:not(.disabled):not(.active) {
+            background-color: #f0f0f0;
+            border-color: #0F4F9A;
+        }
+        
+        .pagination-btn.active {
+            background-color: #0F4F9A;
+            color: white;
+            border-color: #0F4F9A;
+        }
+        
+        .pagination-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .pagination-ellipsis {
+            padding: 0 8px;
+            color: #999;
+        }
+        
+        .pagination-jump {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .pagination-input {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .pagination-jump-btn {
+            padding: 8px 16px;
+            background-color: #0F4F9A;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .pagination-jump-btn:hover {
+            background-color: #0C3D7A;
+        }
+        
+        .pagination-info {
+            margin-top: 10px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">الرئيسية</a>
+            <span>></span>
+            <span>المخزون</span>
+        </div>
+    </div>
+    
+    <!-- Content Area -->
+    <div class="content">
+        <div class="container">
+            <h1 class="section-title">المخزون</h1>
+            
+            <div class="stock-container">
+                <div class="stock-info">
+                    <h3>معلومات المخزون</h3>
+                    <p>لدينا مخزون كبير من المنتجات المتوفرة، مما يضمن حصولك على قطع الغيار التي تحتاجها في الوقت المناسب. في ما يلي بعض معلومات مخزوننا، يمكنك استخدام وظيفة البحث للعثور على حالة مخزون منتج محدد.</p>
+                </div>
+                
+                <div class="stock-search">
+                    <h3>استعلام المخزون</h3>
+                    <form class="search-form">
+                        <div class="form-group">
+                            <label for="oe-number">رقم OE</label>
+                            <input type="text" id="oe-number" class="form-input" placeholder="يرجى إدخال رقم OE">
+                        </div>
+                        <div class="form-group">
+                            <label for="part-name">اسم القطعة</label>
+                            <input type="text" id="part-name" class="form-input" placeholder="يرجى إدخال اسم القطعة">
+                        </div>
+                        <div class="form-group">
+                            <label for="brand">العلامة</label>
+                            <select id="brand" class="form-select">
+                                <option value="">جميع العلامات</option>
+                                <option value="Mercedes-Benz">Mercedes-Benz</option>
+                                <option value="BMW">BMW</option>
+                            </select>
+                        </div>
+                        <button type="button" class="search-btn">التحقق من المخزون</button>
+                    </form>
+                </div>
+                
+                <div class="stock-list">
+                    <h3>قائمة المخزون</h3>
+                    <table class="stock-table">
+                        <thead>
+                            <tr>
+                                <th>رقم OE</th>
+                                <th>اسم القطعة</th>
+                                <th>العلامة</th>
+                                <th>الحالة</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stock-table-body">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                    <div class="pagination-container" id="pagination"></div>
+                    <div class="pagination-info" id="pagination-info"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <script>
+        // متغيرات عالمية
+        let allProducts = [];
+        let filteredProducts = [];
+        let currentPage = 1;
+        const itemsPerPage = 20;
+        
+        // توليد كمية مخزون عشوائية
+        function getRandomStock() {
+            return Math.floor(Math.random() * 200) + 10;
+        }
+        
+        // الحصول على حالة المخزون
+        function getStockStatus(stock) {
+            if (stock > 50) {
+                return { text: 'متوفر', class: 'in-stock' };
+            } else {
+                return { text: 'مخزون منخفض', class: 'limited' };
+            }
+        }
+        
+        // تحميل بيانات المنتج
+        async function loadProducts() {
+            try {
+                const response = await fetch('product-data.json');
+                const data = await response.json();
+                
+                // تحميل جميع المنتجات، بدون تصفية، مما يضمن إمكانية البحث في جميع المنتجات
+                allProducts = data.products.map(product => ({
+                    ...product,
+                    stock: getRandomStock()
+                }));
+                
+                filteredProducts = [...allProducts];
+                renderProducts();
+            } catch (error) {
+                console.error('فشل تحميل بيانات المنتج:', error);
+            }
+        }
+        
+        // بحث ضبابي
+        function searchProducts() {
+            console.log('========== بدأ البحث ==========');
+            
+            const oeNumberInput = document.getElementById('oe-number');
+            const partNameInput = document.getElementById('part-name');
+            const brandSelect = document.getElementById('brand');
+            
+            if (!oeNumberInput || !partNameInput || !brandSelect) {
+                console.error('لا يمكن العثور على عنصر الإدخال');
+                return;
+            }
+            
+            const oeNumber = oeNumberInput.value.trim();
+            const partName = partNameInput.value.trim();
+            const brand = brandSelect.value;
+            
+            console.log('معايير البحث:');
+            console.log('- رقم OE:', oeNumber);
+            console.log('- اسم قطعة الغيار:', partName);
+            console.log('- العلامة:', brand);
+            console.log('كمية جميع المنتجات:', allProducts.length);
+            
+            filteredProducts = [];
+            
+            for (let i = 0; i < allProducts.length; i++) {
+                var product = allProducts[i];
+                var match = true;
+                
+                // بحث رقم OE - مطابقة ضبابية
+                if (oeNumber.length > 0) {
+                    var code = product.code || '';
+                    if (code.toLowerCase().indexOf(oeNumber.toLowerCase()) === -1) {
+                        match = false;
+                    }
+                }
+                
+                // البحث عن اسم قطع الغيار - مطابقة ضبابية
+                if (match && partName.length > 0) {
+                    var name = product.name || '';
+                    if (name.toLowerCase().indexOf(partName.toLowerCase()) === -1) {
+                        match = false;
+                    }
+                }
+                
+                // Search العلامة
+                if (match && brand.length > 0) {
+                    var series = product.series || '';
+                    if (series !== brand) {
+                        match = false;
+                    }
+                }
+                
+                if (match) {
+                    filteredProducts.push(product);
+                    console.log('تم العثور على منتج مطابق:', product.code, product.name, product.series);
+                }
+            }
+            
+            console.log('إجمالي نتائج البحث:', filteredProducts.length);
+            console.log('========== انتهى البحث ==========');
+            
+            currentPage = 1;
+            renderProducts();
+        }
+        
+        // عرض جدول المنتجات
+        function renderProducts() {
+            const tbody = document.getElementById('stock-table-body');
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageProducts = filteredProducts.slice(startIndex, endIndex);
+            
+            if (pageProducts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999; padding: 30px;">لا توجد منتجات مطابقة</td></tr>';
+            } else {
+                tbody.innerHTML = pageProducts.map(product => {
+                    const status = getStockStatus(product.stock);
+                    return `
+                        <tr>
+                            <td>${product.code}</td>
+                            <td>${product.name}</td>
+                            <td>${product.series}</td>
+                            <td><span class="stock-status ${status.class}">${status.text}</span></td>
+                            <td><a href="product-detail.html?oe=${encodeURIComponent(product.code)}">عرض التفاصيل</a></td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            renderPagination();
+        }
+        
+        // عرض ترقيم الصفحات
+        function renderPagination() {
+            const totalItems = filteredProducts.length;
+            const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+            const pagination = document.getElementById('pagination');
+            const paginationInfo = document.getElementById('pagination-info');
+            
+            const startItem = (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+            paginationInfo.textContent = `إجمالي ${totalItems} سجلات، عرض ${startItem} - ${endItem} سجلات`;
+            
+            pagination.innerHTML = '';
+            
+            // السابق
+            const prevPage = document.createElement('button');
+            prevPage.className = 'pagination-btn' + (currentPage <= 1 ? ' disabled' : '');
+            prevPage.textContent = 'السابق';
+            prevPage.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderProducts();
+                }
+            });
+            pagination.appendChild(prevPage);
+            
+            // زر رمز الصفحة
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+            
+            if (currentPage <= 3) {
+                endPage = Math.min(8, totalPages);
+            } else if (currentPage >= totalPages - 2) {
+                startPage = Math.max(1, totalPages - 7);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = 'pagination-btn' + (i === currentPage ? ' active' : '');
+                pageBtn.textContent = i;
+                pageBtn.addEventListener('click', () => {
+                    if (i !== currentPage) {
+                        currentPage = i;
+                        renderProducts();
+                    }
+                });
+                pagination.appendChild(pageBtn);
+            }
+            
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.className = 'pagination-ellipsis';
+                    ellipsis.textContent = '...';
+                    pagination.appendChild(ellipsis);
+                }
+                
+                const lastPageNum = document.createElement('button');
+                lastPageNum.className = 'pagination-btn' + (currentPage === totalPages ? ' active' : '');
+                lastPageNum.textContent = totalPages;
+                lastPageNum.addEventListener('click', () => {
+                    if (currentPage !== totalPages) {
+                        currentPage = totalPages;
+                        renderProducts();
+                    }
+                });
+                pagination.appendChild(lastPageNum);
+            }
+            
+            // التالي
+            const nextPage = document.createElement('button');
+            nextPage.className = 'pagination-btn' + (currentPage >= totalPages ? ' disabled' : '');
+            nextPage.textContent = 'التالي';
+            nextPage.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderProducts();
+                }
+            });
+            pagination.appendChild(nextPage);
+            
+            // الذهاب إلى الصفحة المحددة
+            const jumpContainer = document.createElement('div');
+            jumpContainer.className = 'pagination-jump';
+            
+            const jumpText = document.createElement('span');
+            jumpText.textContent = 'الذهاب إلى';
+            jumpContainer.appendChild(jumpText);
+            
+            const pageInput = document.createElement('input');
+            pageInput.type = 'text';
+            pageInput.className = 'pagination-input';
+            pageInput.value = currentPage;
+            
+            const pageText = document.createElement('span');
+            pageText.textContent = 'الصفحة';
+            jumpContainer.appendChild(pageText);
+            
+            const jumpBtn = document.createElement('button');
+            jumpBtn.className = 'pagination-jump-btn';
+            jumpBtn.textContent = 'موافق';
+            
+            const jumpToPage = () => {
+                const pageNum = parseInt(pageInput.value);
+                if (pageNum >= 1 && pageNum <= totalPages) {
+                    currentPage = pageNum;
+                    renderProducts();
+                }
+            };
+            
+            jumpBtn.addEventListener('click', jumpToPage);
+            pageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    jumpToPage();
+                }
+            });
+            
+            jumpContainer.appendChild(pageInput);
+            jumpContainer.appendChild(pageText);
+            jumpContainer.appendChild(jumpBtn);
+            pagination.appendChild(jumpContainer);
+        }
+        
+        // تهيئة الصفحة بعد تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('تم تحميل الصفحة！');
+            
+            loadProducts();
+            
+            // Wait a bit to ensure all elements are loaded
+            setTimeout(function() {
+                // حدث النقر على زر الاستعلام
+                const searchBtn = document.querySelector('.search-btn');
+                if (searchBtn) {
+                    console.log('تم العثور على زر البحث، ربط الحدث');
+                    searchBtn.addEventListener('click', function() {
+                        console.log('تم النقر على الزر!');
+                        searchProducts();
+                    });
+                } else {
+                    console.error('لا يمكن العثور على زر البحث');
+                }
+                
+                // مفتاح الإدخال يثير البحث
+                const oeInput = document.getElementById('oe-number');
+                const partInput = document.getElementById('part-name');
+                
+                if (oeInput) {
+                    oeInput.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            searchProducts();
+                        }
+                    });
+                }
+                
+                if (partInput) {
+                    partInput.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            searchProducts();
+                        }
+                    });
+                }
+                
+                // التحقق مما إذا كان هناك معلمة رقم OE في عنوان URL، البحث تلقائيًا إذا كان موجودًا
+                const urlParams = new URLSearchParams(window.location.search);
+                const oeParam = urlParams.get('oe');
+                if (oeParam && oeInput) {
+                    oeInput.value = oeParam;
+                    // الانتظار بعد تحميل بيانات المنتج للبحث
+                    setTimeout(function() {
+                        searchProducts();
+                    }, 1000);
+                }
+            }, 500);
+        });
+    </script>
+    
+    <!-- تحميل نص البرنامج النماذج -->
+    <script src="./templates/load-templates.js"></script>
+</body>
+</html>

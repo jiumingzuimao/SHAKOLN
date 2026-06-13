@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Завод - SHAKOLN Auto Parts</title>
+    <!-- Tailwind CSS -->
+    <script src="../assets/tailwind.min.js"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['Microsoft YaHei', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* Unified Link Style */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* Factory BannerBanner */
+        .factory-banner {
+            background-color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .banner-content {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .banner-image {
+            width: 50%;
+            height: 400px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+            background-image: url('__PROTECTED_5__');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .banner-text {
+            width: 50%;
+        }
+        
+        .banner-text h1 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+        
+        .banner-text p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        /* Core Advantages */
+        .core-advantages {
+            padding: 60px 0;
+            background-color: #f5f7fa;
+            margin-bottom: 40px;
+        }
+        
+        .core-advantages h2 {
+            color: #0F4F9A;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .advantage-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .advantage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .advantage-card h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+        /* Оборудование */
+        .production-equipment {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .production-equipment h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .equipment-item {
+            text-align: center;
+        }
+        
+        .equipment-image {
+            width: 100%;
+            height: 200px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .equipment-item h3 {
+            color: #0F4F9A;
+            margin-bottom: 10px;
+        }
+        
+        /* StandardizationПроцесс */
+        .production-process {
+            padding: 60px 0;
+            background-color: #f5f7fa;
+            margin-bottom: 40px;
+        }
+        
+        .production-process h2 {
+            color: #0F4F9A;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #0F4F9A;
+            transform: translateY(-50%);
+        }
+        
+        .process-step {
+            position: relative;
+            z-index: 1;
+            width: 18%;
+            text-align: center;
+        }
+        
+        .step-circle {
+            width: 60px;
+            height: 60px;
+            background-color: #0F4F9A;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: bold;
+        }
+        
+        .process-step h3 {
+            color: #0F4F9A;
+            margin-bottom: 10px;
+        }
+        
+        /* Visit Reservation */
+        .visit-appointment {
+            background-color: #0F2B46;
+            color: white;
+            padding: 60px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .visit-appointment h2 {
+            margin-bottom: 30px;
+        }
+        
+        .visit-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+        }
+        
+        .submit-btn {
+            background-color: #FF6C00;
+            border: none;
+            padding: 12px 30px;
+            color: white;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">Главная</a>
+            <span>></span>
+            <span>Завод</span>
+        </div>
+    </div>
+    
+    <!-- Factory BannerBanner -->
+    <div class="factory-banner">
+        <div class="container">
+            <div class="banner-content">
+                <div class="banner-image">
+                    <img src="../img/slgc-2.jpg" alt="Завод" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="banner-text">
+                    <h1>Завод</h1>
+                    <p>Beijing Yunfu Automobile Trade Co., Ltd.Established in 2010，is a professionalMercedes-Benz/BMWauto partsштsupplier。</p>
+                    <p>The factory is equipped with advancedОборудованиеand testing equipment，Havean experienced technical team，committed to providing customers withProvidehigh-quality auto partsшт。OurТоварcover engine、Коробка передач、suspension,braking and otherШтукsystems，to meet the needs of different customers。</p>
+                    <p>The company adheres to the business philosophy of "Quality First, Customer First"，has passedISO9001Qualitymanagement system certification，Товарare sold all over the country，deeply trusted by customers。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Core Advantages -->
+    <div class="core-advantages">
+        <div class="container">
+            <h2>Core Advantages</h2>
+            <div class="advantages-grid">
+                <div class="advantage-card">
+                    <h3>Advanced Equipment</h3>
+                    <p>Introduce internationally advancedОборудованиеand testing equipment，EnsureТоварQuality</p>
+                </div>
+                <div class="advantage-card">
+                    <h3>Professional Team</h3>
+                    <p>Have10years of experience in technical team，Provide professionalТехподдержка</p>
+                </div>
+                <div class="advantage-card">
+                    <h3>Strict Quality Control</h3>
+                    <p>Established a comprehensive quality management system，EveryШтукpartsштhas passed strict testing</p>
+                </div>
+                <div class="advantage-card">
+                    <h3>Quick Response</h3>
+                    <p>Efficient production and logistics system，Ensure timely delivery</p>
+                </div>
+                <div class="advantage-card">
+                    <h3>Customized Services</h3>
+                    <p>According to customer needs，ProvideШтукpersonalizedТоварSolutions</p>
+                </div>
+                <div class="advantage-card">
+                    <h3>After-sales Service</h3>
+                    <p>Comprehensive after-sales service system，Solve customer worries</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- StandardizationПроцесс -->
+    <div class="production-process">
+        <div class="container">
+            <h2>StandardizationПроцесс</h2>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-circle">1</div>
+                    <h3>Raw Material Procurement</h3>
+                    <p>Strictly select high-quality raw materials</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-circle">2</div>
+                    <h3>Production and Processing</h3>
+                    <p>Advanced equipment precision processing</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-circle">3</div>
+                    <h3>Quality Inspection</h3>
+                    <p>Multiple inspection processes</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-circle">4</div>
+                    <h3>Packaging and Warehousing</h3>
+                    <p>Standardized packaging process</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-circle">5</div>
+                    <h3>Доставка</h3>
+                    <p>Fast and efficient delivery</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Загрузить скрипт шаблонов -->
+    <script src="../../templates/load-templates.js"></script>
+</body>
+</html>

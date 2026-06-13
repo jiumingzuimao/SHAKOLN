@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联系我们 - 萨肯汽配</title>
+    <!-- Tailwind CSS -->
+    <script src="assets/tailwind.min.js"></script>
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4F9A',
+                        secondary: '#FF6C00',
+                        light: '#f5f7fa',
+                        border: '#e0e0e0'
+                    },
+                    fontFamily: {
+                        sans: ['微软雅黑', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .filter-shadow {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .product-card-hover {
+                transition: all 0.3s ease;
+            }
+            .product-card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        
+
+        
+        /* 统一链接样式 */
+        a {
+            color: #0F4F9A;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #0C448A;
+            text-decoration: underline;
+        }
+        
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 20px 0;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb-content a {
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-content a:hover {
+            color: #0F4F9A;
+        }
+        
+        .breadcrumb-content span {
+            color: #999;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            background-color: white;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            color: #0F4F9A;
+        }
+        
+        /* 快速联系卡片 */
+        .quick-contact {
+            background-color: white;
+            padding: 40px;
+            margin-top: 60px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .quick-contact h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .contact-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            justify-items: center;
+        }
+        
+        .contact-card {
+            text-align: center;
+            padding: 30px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .contact-card h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+        /* 详细地址 */
+        .detailed-address {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .detailed-address h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .address-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .address-item {
+            padding: 30px;
+            border-radius: 8px;
+            background-color: #f5f7fa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .address-item h3 {
+            color: #0F4F9A;
+            margin-bottom: 15px;
+        }
+        
+        /* 部门联系方式 */
+        .department-contact {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .department-contact h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .department-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .department-table th,
+        .department-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .department-table th {
+            background-color: #f5f7fa;
+            color: #0F4F9A;
+        }
+        
+        /* 在线留言表单 */
+        .message-form {
+            background-color: #0F2B46;
+            color: white;
+            padding: 60px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+        
+        .message-form h2 {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-group textarea {
+            height: 150px;
+        }
+        
+        .submit-btn {
+            background-color: #FF6C00;
+            border: none;
+            padding: 12px 30px;
+            color: white;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        /* 服务承诺 */
+        .service-commitment {
+            background-color: white;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .service-commitment h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .commitment-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .commitment-item {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .commitment-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #0F4F9A;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .commitment-content h3 {
+            color: #0F4F9A;
+            margin-bottom: 10px;
+        }
+        
+
+    </style>
+</head>
+<body class="bg-light font-sans text-gray-800">
+    <!-- 头部占位符 -->
+    <div id="header-placeholder"></div>
+    
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb">
+        <div class="container breadcrumb-content">
+            <a href="index.html">首页</a>
+            <span>></span>
+            <span>联系我们</span>
+        </div>
+    </div>
+    
+    <!-- 快速联系卡片 -->
+    <div class="container quick-contact">
+        <h2>快速联系</h2>
+        <div class="contact-cards">
+            <div class="contact-card">
+                <img src="img/lianxiwomen/20xiaoshifuwu.svg" alt="服务热线" class="contact-icon">
+                <h3>服务热线</h3>
+                <p>400-626-0128</p>
+                <p>24小时服务</p>
+            </div>
+            <div class="contact-card">
+                <img src="img/lianxiwomen/weixinkefu.svg" alt="微信客服" class="contact-icon">
+                <h3>微信客服</h3>
+                <p>sakenqp123</p>
+                <p>在线咨询</p>
+            </div>
+            <div class="contact-card">
+                <img src="img/lianxiwomen/youxiang.svg" alt="邮箱" class="contact-icon">
+                <h3>邮箱</h3>
+                <p>shakoln@163.com</p>
+                <p>业务咨询</p>
+            </div>
+            <div class="contact-card">
+                <img src="img/lianxiwomen/dizhi.svg" alt="地址" class="contact-icon">
+                <h3>地址</h3>
+                <p>北京市朝阳区小红门 69 号</p>
+                <p>总部地址</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 详细地址 -->
+    <div class="container detailed-address">
+        <h2>详细地址</h2>
+        <div class="address-list">
+            <div class="address-item">
+                <h3>总部地址</h3>
+                <p>北京市朝阳区小红门 69 号</p>
+                <p>联系电话：010-12345678</p>
+                <p>营业时间：周一至周五 9:00-18:00</p>
+            </div>
+            <div class="address-item">
+                <h3>全国分仓</h3>
+                <p>上海分仓：上海市嘉定区安亭镇汽车城</p>
+                <p>广州分仓：广州市白云区太和镇</p>
+                <p>成都分仓：成都市龙泉驿区汽车城</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 服务承诺 -->
+    <div class="container service-commitment">
+        <h2>服务承诺</h2>
+        <div class="commitment-list">
+            <div class="commitment-item">
+                <div class="commitment-icon">1</div>
+                <div class="commitment-content">
+                    <h3>正品保证</h3>
+                    <p>所有配件均为原厂或优质副厂件，品质有保障</p>
+                </div>
+            </div>
+            <div class="commitment-item">
+                <div class="commitment-icon">2</div>
+                <div class="commitment-content">
+                    <h3>现货供应</h3>
+                    <p>海量库存，大部分配件当天发货</p>
+                </div>
+            </div>
+            <div class="commitment-item">
+                <div class="commitment-icon">3</div>
+                <div class="commitment-content">
+                    <h3>快速配送</h3>
+                    <p>与多家物流公司合作，覆盖全国大部分地区</p>
+                </div>
+            </div>
+            <div class="commitment-item">
+                <div class="commitment-icon">4</div>
+                <div class="commitment-content">
+                    <h3>售后保障</h3>
+                    <p>7天无理由退换，1年质保服务</p>
+                </div>
+            </div>
+            <div class="commitment-item">
+                <div class="commitment-icon">5</div>
+                <div class="commitment-content">
+                    <h3>技术支持</h3>
+                    <p>专业技术团队，提供安装指导和技术咨询</p>
+                </div>
+            </div>
+            <div class="commitment-item">
+                <div class="commitment-icon">6</div>
+                <div class="commitment-content">
+                    <h3>退换货政策</h3>
+                    <p>完善的退换货流程，保障客户权益</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部占位符 -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- 加载模板脚本 -->
+    <script src="templates/load-templates.js"></script>
+</body>
+</html>

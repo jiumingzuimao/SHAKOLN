@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel导入与OE号匹配 - 后台管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: '微软雅黑', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            width: 280px;
+            background-color: #0F4F9A;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+                .sidebar-header {
+            padding: 30px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header .logo {
+            text-align: center;
+        }
+        
+        .sidebar-header .logo img {
+            height: 50px;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-header h1 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: #87CEEB;
+        }
+        
+        .menu-item.active {
+            background-color: rgba(135, 206, 235, 0.3);
+            border-left-color: #87CEEB;
+            padding-top: 15px;
+            padding-bottom: 30px;
+            box-shadow: inset 0 0 20px rgba(135, 206, 235, 0.2);
+        }
+        
+        .menu-item a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            font-size: 16px;
+            line-height: 20px;
+        }
+        
+        .menu-item a span:first-child {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-item .menu-icon {
+            font-size: 18px;
+            margin-right: 15px;
+        }
+        .menu-item .menu-icon-img {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            filter: brightness(0) invert(1);
+            flex-shrink: 0;
+            align-self: center;
+        }
+
+        
+        .menu-item .menu-arrow {
+            font-size: 12px;
+            transition: transform 0.3s;
+            flex-shrink: 0;
+            align-self: center;
+        }
+        
+        .menu-item.active .menu-arrow {
+            transform: rotate(90deg);
+        }
+        
+        .submenu {
+            padding-left: 0;
+            padding-top: 0;
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.35);
+            display: none;
+        }
+        
+        .submenu.active {
+            display: block;
+        }
+        
+        .submenu-item {
+            padding: 12px 0 12px 60px;
+            text-align: left;
+        }
+        
+        .submenu-item:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .submenu-item.active {
+            background-color: rgba(255,255,255,0.15);
+        }
+        
+        .submenu-item a {
+            font-size: 14px;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+        
+        /* 顶部导航 */
+        .top-nav {
+            background-color: white;
+            padding: 20px 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .top-nav .welcome {
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .top-nav .welcome span {
+            color: #0F4F9A;
+            font-weight: bold;
+        }
+        
+        .top-nav .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .top-nav .user-info .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #0F4F9A;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .top-nav .user-info .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-nav .user-info .user-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .top-nav .user-info .user-role {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .top-nav .user-info .logout {
+            color: #0F4F9A;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: 1px solid #0F4F9A;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .top-nav .user-info .logout:hover {
+            background-color: #0F4F9A;
+            color: white;
+        }
+        
+        /* 内容卡片 */
+        .content-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .content-card h2 {
+            color: #0F4F9A;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        
+        /* 导入控制 */
+        .import-controls {
+            margin-bottom: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input[type="file"]:focus {
+            outline: none;
+            border-color: #0F4F9A;
+            box-shadow: 0 0 0 3px rgba(15, 79, 154, 0.1);
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #0F4F9A;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0C448A;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: #FF6C00;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e55a00;
+            transform: translateY(-2px);
+        }
+        
+        /* 匹配结果 */
+        .match-result {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .result-header h3 {
+            color: #0F4F9A;
+            font-size: 20px;
+        }
+        
+        .result-stats {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* 产品网格 */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .product-card {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .product-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .product-info {
+            flex: 1;
+        }
+        
+        .product-oe {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0F4F9A;
+            margin-bottom: 5px;
+        }
+        
+        .product-details {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .product-images {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .image-container {
+            aspect-ratio: 1;
+            border-radius: 6px;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 240px;
+            }
+            
+            .main-content {
+                margin-left: 240px;
+                padding: 20px;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+                <div class="sidebar-header">
+            <div class="logo">
+                <img src="../assets/logo.svg" alt="萨肯 SHAKOLN">
+                <h1>后台管理系统</h1>
+                <p>专业汽配管理平台</p>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="menu-item">
+                <a href="index.html">
+                    <span>
+                        <img src="./icon/gongyezujian-yibiaopan.svg" alt="" class="menu-icon-img">
+                        仪表盘
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+            </div>
+            
+            <div class="menu-item active">
+                <a href="#">
+                    <span>
+                        <img src="./icon/chaxunzhongxin.svg" alt="" class="menu-icon-img">
+                        查询中心
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu active">
+                    <div class="submenu-item active">
+                        <a href="excel-import.html">Excel导入与匹配</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="oe-search.html">OE号查询</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="vin-search.html">车架号VIN查询</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="chassis-search.html">底盘号查询</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <a href="#">
+                    <span>
+                        <img src="./icon/a-chanpin3x.svg" alt="" class="menu-icon-img">
+                        产品管理
+                    </span>
+                    <span class="menu-arrow">▶</span>
+                </a>
+                <div class="submenu">
+                    <div class="submenu-item">
+                        <a href="products.html">产品列表</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-add.html">添加产品</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-categories.html">产品分类</a>
+                    </div>
+                    <div class="submenu-item">
+                        <a href="product-import.html">Excel批量导入</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 顶部导航 -->
+        <div class="top-nav">
+            <div class="welcome">
+                欢迎回来，<span>管理员</span>！今天是 2025年4月18日
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">管</div>
+                <div class="user-details">
+                    <div class="user-name">管理员</div>
+                    <div class="user-role">超级管理员</div>
+                </div>
+                <a href="../admin-login.html" class="logout">退出登录</a>
+            </div>
+        </div>
+        
+        <!-- Excel导入与OE号匹配 -->
+        <div class="content-card">
+            <h2>Excel导入与OE号匹配</h2>
+            
+            <div class="import-controls">
+                <div class="form-group">
+                    <label for="excelFile">选择Excel文件</label>
+                    <input type="file" id="excelFile" accept=".xlsx,.xls">
+                </div>
+                <div class="form-group">
+                    <label for="amazonFolder">亚马逊图片文件夹路径</label>
+                    <input type="text" id="amazonFolder" value="/Users/liuhongwei/Desktop/网站设计/网页/亚马逊jpg" readonly>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="clearResults()">清空</button>
+                    <button type="button" class="btn btn-primary" id="importBtn">导入并匹配</button>
+                </div>
+            </div>
+            
+            <!-- 匹配结果 -->
+            <div class="match-result" id="matchResult" style="display: none;">
+                <div class="result-header">
+                    <h3>匹配结果</h3>
+                    <div class="result-stats">找到 <span id="matchCount">0</span> 个匹配的产品</div>
+                </div>
+                
+                <div class="product-grid" id="productGrid">
+                    <!-- 产品将在这里动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 侧边栏菜单展开/收起
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                // 检查点击的是否是子菜单项
+                const isSubmenuItem = e.target.closest('.submenu-item');
+                if (isSubmenuItem) {
+                    // 子菜单项，允许默认行为（导航）
+                    return;
+                }
+                
+                // 主菜单项，阻止默认行为
+                e.preventDefault();
+                
+                // 移除所有活动状态
+                document.querySelectorAll('.menu-item').forEach(menu => {
+                    menu.classList.remove('active');
+                    const submenu = menu.querySelector('.submenu');
+                    if (submenu) {
+                        submenu.classList.remove('active');
+                    }
+                });
+                
+                // 添加当前活动状态
+                this.classList.add('active');
+                
+                // 切换子菜单
+                const submenu = this.querySelector('.submenu');
+                if (submenu) {
+                    submenu.classList.toggle('active');
+                }
+            });
+        });
+        
+        // 清空结果
+        function clearResults() {
+            document.getElementById('excelFile').value = '';
+            document.getElementById('matchResult').style.display = 'none';
+        }
+        
+        // 导入并匹配
+        document.getElementById('importBtn').addEventListener('click', function() {
+            const excelFile = document.getElementById('excelFile').files[0];
+            const amazonFolder = document.getElementById('amazonFolder').value;
+            
+            if (!excelFile) {
+                alert('请选择Excel文件');
+                return;
+            }
+            
+            if (!amazonFolder) {
+                alert('请输入亚马逊图片文件夹路径');
+                return;
+            }
+            
+            // 模拟导入和匹配过程
+            alert('正在导入Excel文件并匹配OE号...');
+            
+            // 显示匹配结果
+            setTimeout(() => {
+                displayMatchResults();
+            }, 1000);
+        });
+        
+        // 显示匹配结果
+        function displayMatchResults() {
+            const productGrid = document.getElementById('productGrid');
+            const matchCount = document.getElementById('matchCount');
+            
+            // 清空网格
+            productGrid.innerHTML = '';
+            
+            // 模拟匹配数据
+            const matchedProducts = [
+                {
+                    oe: '1699810127',
+                    size: '12*9*9cm',
+                    weight: '1017g',
+                    images: [
+                        'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=car%20auto%20part%201&image_size=square',
+                        'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=car%20auto%20part%202&image_size=square',
+                        'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=car%20auto%20part%203&image_size=square'
+                    ],
+                    excelInfo: {
+                        name: '轴头',
+                        price: '¥298.00',
+                        stock: '50'
+                    }
+                },
+                {
+                    oe: '2033300051',
+                    size: '12*9*9cm',
+                    weight: '472g',
+                    images: [
+                        'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=car%20auto%20part%204&image_size=square',
+                        'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=car%20auto%20part%205&image_size=square',
+                        'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=car%20auto%20part%206&image_size=square'
+                    ],
+                    excelInfo: {
+                        name: '轴头',
+                        price: '¥198.00',
+                        stock: '35'
+                    }
+                },
+                {
+                    oe: '2463203411',
+                    size: '21.5*16cm',
+                    weight: '63.5g',
+                    images: [
+                        'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=car%20auto%20part%207&image_size=square',
+                        'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=car%20auto%20part%208&image_size=square',
+                        'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=car%20auto%20part%209&image_size=square'
+                    ],
+                    excelInfo: {
+                        name: '轴头',
+                        price: '¥128.00',
+                        stock: '42'
+                    }
+                }
+            ];
+            
+            // 生成产品卡片
+            matchedProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                
+                productCard.innerHTML = `
+                    <div class="product-header">
+                        <div class="product-info">
+                            <div class="product-oe">OE号: ${product.oe}</div>
+                            <div class="product-details">
+                                <div>尺寸: ${product.size}</div>
+                                <div>重量: ${product.weight}</div>
+                                <div>产品名称: ${product.excelInfo.name}</div>
+                                <div>价格: ${product.excelInfo.price}</div>
+                                <div>库存: ${product.excelInfo.stock}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-images">
+                        ${product.images.map(img => `<div class="image-container"><img src="${img}" alt="产品图片"></div>`).join('')}
+                    </div>
+                `;
+                
+                productGrid.appendChild(productCard);
+            });
+            
+            // 设置匹配数量
+            matchCount.textContent = matchedProducts.length;
+            
+            // 显示匹配结果
+            document.getElementById('matchResult').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
