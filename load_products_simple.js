@@ -2,8 +2,15 @@
 // 产品图片从 Gitee 仓库加载
 console.log('=== 产品加载脚本启动 (从产品数据JSON加载) ===');
 
-// 产品图片基础URL（从Gitee仓库读取图片，不传到GitHub）
-const PRODUCT_IMAGE_BASE_URL = 'https://gitee.com/shakoln_0/sakon-website/raw/master/';
+// 产品图片Gitee路由转换（baoma → baoma-img2, benchi → benchi-img2）
+function getGiteeImageUrl(imgPath) {
+    if (imgPath && imgPath.indexOf('baoma/') === 0) {
+        return 'https://gitee.com/shakoln/baoma-img2/raw/main/' + imgPath.replace('baoma/', '');
+    } else if (imgPath && imgPath.indexOf('benchi/') === 0) {
+        return 'https://gitee.com/shakoln/benchi-img2/raw/master/' + imgPath.replace('benchi/', '');
+    }
+    return imgPath;
+}
 
 // 全局缓存
 var productImagesMap = {};
@@ -54,7 +61,7 @@ function hasProductImage(productCode) {
 function getProductImagePath(productCode) {
     var images = productImagesMap[String(productCode)];
     if (images && images.length > 0) {
-        return PRODUCT_IMAGE_BASE_URL + images[0];
+        return getGiteeImageUrl(images[0]);
     }
     return null;
 }
@@ -115,8 +122,8 @@ function renderProductsCore(containerId, products, basePath, language) {
                 imgSrc = product.image;
             } else if (product.image.startsWith('/')) {
                 imgSrc = product.image;
-            } else if (product.image.startsWith('fenlei-chanp-jpg/')) {
-                imgSrc = PRODUCT_IMAGE_BASE_URL + product.image;
+            } else if (product.image.startsWith('baoma/') || product.image.startsWith('benchi/')) {
+                imgSrc = getGiteeImageUrl(product.image);
             } else {
                 imgSrc = defaultSrc;
             }
