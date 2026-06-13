@@ -961,8 +961,14 @@
             return images !== undefined && images.length > 0;
         }
         
-        // 产品图片基础URL（从Gitee仓库读取图片，不传到GitHub）
-        const PRODUCT_IMAGE_BASE_URL = 'https://gitee.com/shakoln_0/sakon-website/raw/master/';
+        function getGiteeImageUrl(imgPath) {
+            if (imgPath && imgPath.indexOf('baoma/') === 0) {
+                return 'https://gitee.com/shakoln/baoma-img2/raw/main/' + imgPath.replace('baoma/', '');
+            } else if (imgPath && imgPath.indexOf('benchi/') === 0) {
+                return 'https://gitee.com/shakoln/benchi-img2/raw/master/' + imgPath.replace('benchi/', '');
+            }
+            return imgPath;
+        }
 
         // 获取路径前缀 - 遍历查找语言部分位置（兼容 GitHub Pages 子路径部署）
         function getImagePathPrefix() {
@@ -979,7 +985,7 @@
         function getProductImagePath(productCode) {
             const images = productImagesMap[String(productCode)];
             if (images && images.length > 0) {
-                return PRODUCT_IMAGE_BASE_URL + images[0];
+                return getGiteeImageUrl(images[0]);
             }
             // 如果没有找到图片，返回默认的占位图片
             return getDefaultProductImage(productCode);

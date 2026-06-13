@@ -1,6 +1,12 @@
 
-// 产品图片基础URL（从Gitee仓库读取图片，不传到GitHub）
-const PRODUCT_IMAGE_BASE_URL = 'https://gitee.com/shakoln_0/sakon-website/raw/master/';
+function getGiteeImageUrl(imgPath) {
+    if (imgPath && imgPath.indexOf('baoma/') === 0) {
+        return 'https://gitee.com/shakoln/baoma-img2/raw/main/' + imgPath.replace('baoma/', '');
+    } else if (imgPath && imgPath.indexOf('benchi/') === 0) {
+        return 'https://gitee.com/shakoln/benchi-img2/raw/master/' + imgPath.replace('benchi/', '');
+    }
+    return imgPath;
+}
 
 function getBasePath() {
     var path = window.location.pathname;
@@ -805,7 +811,7 @@ function renderHomeProducts(products) {
 
         // 给产品图片路径加上 Gitee 仓库 URL（图片不上传到GitHub）
         if (imageSrc && !imageSrc.startsWith('http') && imageSrc.startsWith('fenlei-chanp-jpg/')) {
-            imageSrc = PRODUCT_IMAGE_BASE_URL + imageSrc;
+            imageSrc = getGiteeImageUrl(imageSrc);
         }
 
         // 正确URL编码路径
@@ -955,7 +961,7 @@ function renderHotProducts(products) {
 
         // 给产品图片路径加上 Gitee 仓库 URL（图片不上传到GitHub）
         if (imageSrc && !imageSrc.startsWith('http') && imageSrc.startsWith('fenlei-chanp-jpg/')) {
-            imageSrc = PRODUCT_IMAGE_BASE_URL + imageSrc;
+            imageSrc = getGiteeImageUrl(imageSrc);
         }
 
         // 正确URL编码路径
