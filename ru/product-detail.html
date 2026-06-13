@@ -262,7 +262,7 @@
     <!-- 图片放大模态框 -->
     <div class="lightbox" id="lightbox" onclick="closeLightbox()">
         <span class="lightbox-close">&times;</span>
-        <img id="lightboxImage" src="" alt="Увеличить изображение">
+        <img id="lightboxImage" src="" alt="Увеличить изображение" referrerpolicy="no-referrer">
     </div>
     
     <!-- 头部占位符 -->
@@ -380,10 +380,10 @@
             }
             
             container.innerHTML = '<div class="product-images">' +
-                '<img class="main-image" id="mainProductImage" src="' + productImages[0] + '" alt="' + product.name + '" onclick="openLightbox()" onerror="this.src=\'' + pathPrefix + defaultImages[0] + '\'">' +
+                '<img referrerpolicy="no-referrer" class="main-image" id="mainProductImage" src="' + productImages[0] + '" alt="' + product.name + '" onclick="openLightbox()" onerror="this.src=\'' + pathPrefix + defaultImages[0] + '\'">' +
                 '<div class="thumbnail-container">' +
                 productImages.map(function(img, idx) {
-                    return '<img class="thumbnail' + (idx === 0 ? ' active' : '') + '" src="' + img + '" onclick="changeMainImage(' + idx + ')" onerror="this.src=\'' + pathPrefix + defaultImages[0] + '\'">';
+                    return '<img referrerpolicy="no-referrer" class="thumbnail' + (idx === 0 ? ' active' : '') + '" src="' + img + '" onclick="changeMainImage(' + idx + ')" onerror="this.src=\'' + pathPrefix + defaultImages[0] + '\'">';
                 }).join('') +
                 '</div>' +
                 '</div>' +

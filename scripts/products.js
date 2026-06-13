@@ -821,7 +821,7 @@ function renderHomeProducts(products) {
 
         productCard.innerHTML = '\
             <div class="product-image">\
-                <img src="' + imageSrc + '" alt="' + product.name + '" onerror="this.src=\'' + defaultSrc + '\'">\
+                <img referrerpolicy="no-referrer" src="' + imageSrc + '" alt="' + product.name + '" onerror="this.src=\'' + defaultSrc + '\'">\
             </div>\
             <div class="product-oe">OE: ' + product.oe + '</div>\
             <div class="product-name">' + product.name + '</div>\
@@ -971,7 +971,7 @@ function renderHotProducts(products) {
 
         productCard.innerHTML = '\
             <div class="product-image">\
-                <img src="' + imageSrc + '" alt="' + product.name + '" onerror="this.src=\'' + defaultSrc + '\'">\
+                <img referrerpolicy="no-referrer" src="' + imageSrc + '" alt="' + product.name + '" onerror="this.src=\'' + defaultSrc + '\'">\
             </div>\
             <div class="product-oe">OE: ' + product.oe + '</div>\
             <div class="product-name">' + product.name + '</div>\

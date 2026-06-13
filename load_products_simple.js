@@ -139,6 +139,7 @@ function renderProductsCore(containerId, products, basePath, language) {
 
         var img = document.createElement('img');
         img.alt = product.name;
+        img.referrerPolicy = 'no-referrer';
         img.src = encodedImgSrc;
         img.dataset.productIndex = i;
         img.dataset.originalSrc = imgSrc;

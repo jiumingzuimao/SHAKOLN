@@ -79,7 +79,7 @@
                 const content = document.getElementById('content');
                 content.innerHTML = productsWithImages.slice(0, 6).map(p => `
                     <div class="product-card">
-                        <img src="${imagesMap[p.code][0]}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/100'">
+                        <img referrerpolicy="no-referrer" src="${imagesMap[p.code][0]}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/100'">
                         <h3>${p.name}</h3>
                         <p>OE: ${p.code}</p>
                         <p>品牌: ${p.series}</p>
