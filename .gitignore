@@ -34,5 +34,3 @@ backup/
 *.bak
 index_backup.html
 fix_mixed_text.js
-home_products.json
-hot_products.json

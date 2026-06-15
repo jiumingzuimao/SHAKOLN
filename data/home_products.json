@@ -1,0 +1,42 @@
+[
+  {
+    "id": -40007,
+    "name": "气门室盖",
+    "oe": "11127565284",
+    "brand": "宝马",
+    "stock": 197,
+    "image": "https://gitee.com/shakoln/baoma-img2/raw/main/fadongjixitong/gangtiganggai/qimenshigaizhuhuanchongkuaixilie/11127565284_74_37_18cm_3136g/11127565284_5.jpg"
+  },
+  {
+    "id": -10004,
+    "name": "发动机油底壳",
+    "oe": "11137635651",
+    "brand": "宝马",
+    "stock": 86,
+    "image": "https://gitee.com/shakoln/baoma-img2/raw/main/fadongjixitong/jiyoubengyoudike/fadongjiyoudikexilie/11137635651_65_32_25.5cm_6488g/11137635651_2.jpg"
+  },
+  {
+    "id": -20011,
+    "name": "水箱",
+    "oe": "17113415693",
+    "brand": "宝马",
+    "stock": 108,
+    "image": "https://gitee.com/shakoln/baoma-img2/raw/main/lengquexitong/shuixiang/shuixiang_zhonglengqixilie/17113415693_76.5_60.5_13cm_3957g/17113415693_3.jpg"
+  },
+  {
+    "id": -30007,
+    "name": "电子扇500W改款",
+    "oe": "2205000093",
+    "brand": "奔驰",
+    "stock": 29,
+    "image": "https://gitee.com/shakoln/benchi-img2/raw/master/dianqidiankong/dianzishanxilie/2205000093_79_13_62cm_7784.0g/2205000093_4.jpg"
+  },
+  {
+    "id": -29,
+    "name": "电子水泵",
+    "oe": "11517632426",
+    "brand": "宝马",
+    "stock": 83,
+    "image": "https://gitee.com/shakoln/baoma-img2/raw/main/lengquexitong/shuibeng/shuibengxilie/11517632426_24_18_18cm_2757.0g/11517632426_1.jpg"
+  }
+]
