@@ -667,7 +667,7 @@ console.log('当前使用的路径前缀:', pathPrefix);
                             <td>${part.oe}</td>
                             <td>${part.sakoln}</td>
                             <td>${part.status}</td>
-                            <td><a href="${pathPrefix}product-detail.html?oe=${encodeURIComponent(part.oe)}">查看详情</a></td>
+                            <td><a href="product-detail.html?oe=${encodeURIComponent(part.oe)}">查看详情</a></td>
                         </tr>
                     `;
                 });
@@ -778,7 +778,7 @@ console.log('当前使用的路径前缀:', pathPrefix);
             products.slice(0, 5).forEach(function(product, index) {
                 const productCard = document.createElement('a');
                 productCard.className = 'product-card';
-                productCard.href = pathPrefix + 'product-detail.html?oe=' + encodeURIComponent(product.oe);
+                productCard.href = 'product-detail.html?oe=' + encodeURIComponent(product.oe);
                 const defaultSrc = pathPrefix + defaultImages[index % defaultImages.length];
                 let imageSrc = product.image || defaultImages[index % defaultImages.length];
                 
@@ -905,7 +905,7 @@ console.log('当前使用的路径前缀:', pathPrefix);
             products.slice(0, 5).forEach(function(product, index) {
                 const productCard = document.createElement('a');
                 productCard.className = 'product-card';
-                productCard.href = pathPrefix + 'product-detail.html?oe=' + encodeURIComponent(product.oe);
+                productCard.href = 'product-detail.html?oe=' + encodeURIComponent(product.oe);
                 const defaultSrc = pathPrefix + defaultImages[index % defaultImages.length];
                 let imageSrc = product.image || defaultImages[index % defaultImages.length];
                 

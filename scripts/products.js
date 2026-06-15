@@ -793,7 +793,7 @@ function renderHomeProducts(products) {
     products.slice(0, 5).forEach(function(product, index) {
         const productCard = document.createElement('a');
         productCard.className = 'product-card';
-        productCard.href = basePath + 'product-detail.html?code=' + encodeURIComponent(product.oe);
+        productCard.href = 'product-detail.html?code=' + encodeURIComponent(product.oe);
         const defaultSrc = defaultImages[index % defaultImages.length];
         let imageSrc = product.image || defaultSrc;
 
@@ -943,7 +943,7 @@ function renderHotProducts(products) {
     products.slice(0, 5).forEach(function(product, index) {
         const productCard = document.createElement('a');
         productCard.className = 'product-card';
-        productCard.href = basePath + 'product-detail.html?code=' + encodeURIComponent(product.oe);
+        productCard.href = 'product-detail.html?code=' + encodeURIComponent(product.oe);
         const defaultSrc = defaultImages[index % defaultImages.length];
         let imageSrc = product.image || defaultSrc;
 

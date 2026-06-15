@@ -257,7 +257,7 @@ function renderProductsCore(containerId, products, basePath, language) {
 
         var card = document.createElement('a');
         card.className = 'product-card';
-        card.href = basePath + 'en/product-detail.html?oe=' + encodeURIComponent(product.code);
+        card.href = 'product-detail.html?oe=' + encodeURIComponent(product.code);
 
         var img = document.createElement('img');
         img.alt = product.name;
