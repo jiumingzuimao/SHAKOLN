@@ -193,7 +193,49 @@ function loadHomepageProducts(hotContainerId, homeContainerId, language) {
 
     // 1. 加载产品图片映射
     loadProductImagesMap(basePath, function(imgErr, imgMap) {
-        // 2. 加载产品主数据
+        // 1A. 优先尝试加载后台保存的产品中心和爆款推荐数据
+        function tryAdminData() {
+            var adminResults = { home: null, hot: null };
+            var loadedCount = 0;
+
+            fetch(basePath + 'data/home_products.json?' + Date.now())
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .then(function(homeData) {
+                    if (homeData && Array.isArray(homeData) && homeData.length > 0) {
+                        adminResults.home = homeData.map(function(p) { return { code: p.oe, name: p.name, stock: p.stock, image: p.image }; });
+                    }
+                    loadedCount++;
+                    checkComplete();
+                })
+                .catch(function() { loadedCount++; checkComplete(); });
+
+            fetch(basePath + 'data/hot_products.json?' + Date.now())
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .then(function(hotData) {
+                    if (hotData && Array.isArray(hotData) && hotData.length > 0) {
+                        adminResults.hot = hotData.map(function(p) { return { code: p.oe, name: p.name, stock: p.stock, image: p.image }; });
+                    }
+                    loadedCount++;
+                    checkComplete();
+                })
+                .catch(function() { loadedCount++; checkComplete(); });
+
+            function checkComplete() {
+                if (loadedCount >= 2) {
+                    if (adminResults.home && adminResults.hot) {
+                        console.log('使用后台保存的产品数据 - 产品中心:', adminResults.home.length, '，爆款推荐:', adminResults.hot.length);
+                        renderProductsCore(hotContainerId, adminResults.hot, basePath, language);
+                        renderProductsCore(homeContainerId, adminResults.home, basePath, language);
+                    } else {
+                        console.log('后台数据文件不存在或为空，回退到默认逻辑...');
+                        loadWithDefaultLogic();
+                    }
+                }
+            }
+        }
+
+        // 2. 默认逻辑：从产品主数据中筛选
+        function loadWithDefaultLogic() {
         fetch(basePath + 'product-data.json?' + Date.now())
             .then(function(response) {
                 if (response.ok) {
@@ -278,6 +320,10 @@ function loadHomepageProducts(hotContainerId, homeContainerId, language) {
                 console.error('产品数据加载失败:', error);
                 // 加载失败时什么都不做，保持空容器
             });
+        }
+
+        // 启动：优先尝试后台数据
+        tryAdminData();
     });
 }
 
