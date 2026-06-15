@@ -1,42 +1,42 @@
 [
   {
-    "id": 1,
-    "name": "Thermostat",
-    "oe": "2700180900",
-    "brand": "Mercedes-Benz",
-    "stock": 85,
-    "image": "fenlei-chanp-jpg/奔驰/冷却系统/节温器/进气管、水箱装配盘系列/2700180900:61.6*27.7cm:144g/DSC06306.jpg"
+    "id": -40023,
+    "name": "前上摆臂R",
+    "oe": "1673301400",
+    "brand": "奔驰",
+    "stock": 61,
+    "image": "https://gitee.com/shakoln/benchi-img2/raw/master/xuanguajianzhenxitong/baibikongzhibi/baibixilie/1673301400_36_33_12cm_2305.5g/1673301400_5.jpg"
   },
   {
-    "id": 2,
-    "name": "Power Steering Pump",
-    "oe": "0064666401",
-    "brand": "Mercedes-Benz",
-    "stock": 75,
-    "image": "fenlei-chanp-jpg/奔驰/转向系统/转向助力泵/助力泵系列/0064666401:33*24*19cm:2742.5g/DSC04187.jpg"
+    "id": -20084,
+    "name": "前减震器L/R（带电）",
+    "oe": "1643206013",
+    "brand": "未知品牌",
+    "stock": 21,
+    "image": "https://gitee.com/shakoln/benchi-img2/raw/master/xuanguajianzhenxitong/jianzhenqibizhen/jianzhenqi_daqibengzhufenpeifa_dingjiaoxilie/1643206013_97_20_20cm_11676.0g/1643206013_3.jpg"
   },
   {
-    "id": 3,
-    "name": "Radiator Hose",
-    "oe": "13717582312",
-    "brand": "BMW",
-    "stock": 95,
-    "image": "fenlei-chanp-jpg/宝马/冷却系统/节温器/进气管、水箱装配盘系列/13717582312D:38*25cm:195g/DSC06210.jpg"
+    "id": -20152,
+    "name": "减震器避震",
+    "oe": "37206875176总成",
+    "brand": "宝马",
+    "stock": 169,
+    "image": "https://gitee.com/shakoln/baoma-img2/raw/main/xuanguajianzhenxitong/jianzhenqibizhen/jianzhenqi_daqibengzhufenpeifa_dingjiaoxilie/37206875176zongcheng_49_26_24.5cm_4843g/37206875176_3.jpg"
   },
   {
-    "id": 4,
-    "name": "Intake Manifold",
-    "oe": "2721402401",
-    "brand": "Mercedes-Benz",
-    "stock": 120,
-    "image": "fenlei-chanp-jpg/奔驰/进气排气系统/进气歧管/进气支管、修包系列/2721402401:47*40.5*30.5cm:6540.5g/DSC01987.jpg"
+    "id": -40003,
+    "name": "右前半轴",
+    "oe": "2533302200",
+    "brand": "奔驰",
+    "stock": 184,
+    "image": "https://gitee.com/shakoln/benchi-img2/raw/master/dipanchuandongxitong/banzhouqiulong/banzhouqiulongxiubaoxilie/2533302200_71.6_12_11.6cm_6851g/2533302200_5.jpg"
   },
   {
-    "id": 5,
-    "name": "Throttle Body",
-    "oe": "13547506627",
-    "brand": "BMW",
-    "stock": 110,
-    "image": "fenlei-chanp-jpg/宝马/进气排气系统/进气歧管/节气门系列/13547506627:18*14.5*14.5cm:1316.0g/DSC08047.jpg"
+    "id": -40082,
+    "name": "副水壶",
+    "oe": "2225000949",
+    "brand": "奔驰",
+    "stock": 207,
+    "image": "https://gitee.com/shakoln/benchi-img2/raw/master/lengquexitong/shuibeng/penshuihu_bushuihuxilie/2225000949_26_23.6_22.3cm_852.0g/2225000949_5.jpg"
   }
 ]

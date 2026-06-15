@@ -242,18 +242,13 @@ function renderProductsCore(containerId, products, basePath, language) {
         var defaultSrc = defaultImages[i % defaultImages.length];
         var imgSrc;
 
-        if (hasProductImage(product.code)) {
+        // 优先使用产品自带的图片URL（后台推送的完整Gitee URL）
+        if (product.image && product.image.startsWith('http')) {
+            imgSrc = product.image;
+        } else if (product.image && (product.image.startsWith('baoma/') || product.image.startsWith('benchi/'))) {
+            imgSrc = getGiteeImageUrl(product.image);
+        } else if (hasProductImage(product.code)) {
             imgSrc = getProductImagePath(product.code);
-        } else if (product.image) {
-            if (product.image.startsWith('http')) {
-                imgSrc = product.image;
-            } else if (product.image.startsWith('/')) {
-                imgSrc = product.image;
-            } else if (product.image.startsWith('fenlei-chanp-jpg/')) {
-                imgSrc = getGiteeImageUrl(product.image);
-            } else {
-                imgSrc = defaultSrc;
-            }
         } else {
             imgSrc = defaultSrc;
         }

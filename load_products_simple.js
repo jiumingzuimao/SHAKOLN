@@ -113,20 +113,14 @@ function renderProductsCore(containerId, products, basePath, language) {
         var defaultSrc = defaultImages[i % defaultImages.length];
         var imgSrc;
 
-        // 从 productImagesMap 根据 code 查找图片
-        if (hasProductImage(product.code)) {
+        // 优先使用产品自带的图片URL（后台推送的完整Gitee URL）
+        if (product.image && product.image.startsWith('http')) {
+            imgSrc = product.image;
+        } else if (product.image && (product.image.startsWith('baoma/') || product.image.startsWith('benchi/'))) {
+            imgSrc = getGiteeImageUrl(product.image);
+        } else if (hasProductImage(product.code)) {
+            // 回退到 productImagesMap 映射
             imgSrc = getProductImagePath(product.code);
-        } else if (product.image) {
-            // 兼容老格式
-            if (product.image.startsWith('http')) {
-                imgSrc = product.image;
-            } else if (product.image.startsWith('/')) {
-                imgSrc = product.image;
-            } else if (product.image.startsWith('baoma/') || product.image.startsWith('benchi/')) {
-                imgSrc = getGiteeImageUrl(product.image);
-            } else {
-                imgSrc = defaultSrc;
-            }
         } else {
             imgSrc = defaultSrc;
         }
