@@ -371,8 +371,44 @@
                 populateSystemDropdown(''); // 页面加载时展开系统分类
                 bindFilterEvents();
                 bindEvents(); // 绑定搜索栏和热门配件事件
-                // 加载默认产品
-                loadProducts({}, 1);
+                
+                // 从 URL 读取筛选参数（支持底盘号/品牌/关键词/系列/车型）
+                const urlParams = new URLSearchParams(window.location.search);
+                const initialFilters = {};
+                if (urlParams.get('chassis')) {
+                    initialFilters.chassis = urlParams.get('chassis');
+                }
+                if (urlParams.get('brand')) {
+                    initialFilters.brand = urlParams.get('brand');
+                }
+                if (urlParams.get('keyword')) {
+                    initialFilters.keyword = urlParams.get('keyword');
+                }
+                if (urlParams.get('model')) {
+                    initialFilters.model = urlParams.get('model');
+                }
+                if (urlParams.get('system')) {
+                    initialFilters.system = urlParams.get('system');
+                }
+                if (urlParams.get('series')) {
+                    initialFilters.series = urlParams.get('series');
+                }
+                
+                // 如果 URL 传了品牌，高亮对应标签
+                if (initialFilters.brand) {
+                    const tab = document.querySelector('.brand-tab[data-brand="' + initialFilters.brand + '"]');
+                    if (tab) {
+                        document.querySelectorAll('.brand-tab').forEach(t => {
+                            t.classList.remove('border-primary', 'text-primary');
+                            t.classList.add('border-transparent', 'text-gray-500');
+                        });
+                        tab.classList.remove('border-transparent', 'text-gray-500');
+                        tab.classList.add('border-primary', 'text-primary');
+                        populateSystemDropdown(initialFilters.brand);
+                    }
+                }
+                
+                loadProducts(initialFilters, 1);
             } catch (error) {
                 console.error('加载分类结构失败:', error);
                 categoryStructure = {};
@@ -665,9 +701,18 @@
                 const hasBrandFilter = filters.brand && filters.brand !== '';
                 const hasSystemFilter = filters.system && filters.system !== '';
                 const hasModelFilter = filters.model && filters.model !== '';
+                const hasChassisFilter = filters.chassis && filters.chassis !== '';
                 
                 if ((hasBrandFilter || hasSystemFilter || hasModelFilter) && !productMapping) {
+                    // chassis 过滤是基于 product.model，不需要映射
                     return false; // 有筛选条件时，只显示在映射中的产品
+                }
+                
+                // 底盘号筛选（直接匹配产品的 model 字段）
+                if (hasChassisFilter) {
+                    if (!product.model || product.model !== filters.chassis) {
+                        return false;
+                    }
                 }
                 
                 // 品牌筛选
