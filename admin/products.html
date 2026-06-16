@@ -836,7 +836,8 @@
                     var imageHtml = '<div style="width:60px;height:60px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#999;">无图</div>';
                     if (product.code && productImages[product.code] && productImages[product.code].length > 0) {
                         var firstImage = productImages[product.code][0];
-                        imageHtml = '<img src="../' + firstImage + '" alt="' + product.name + '" style="width:60px;height:60px;object-fit:cover;">';
+                        var imageSrc = (firstImage.indexOf('http://') === 0 || firstImage.indexOf('https://') === 0) ? firstImage : ('../' + firstImage);
+                        imageHtml = '<img src="' + imageSrc + '" alt="' + product.name + '" style="width:60px;height:60px;object-fit:cover;">';
                     }
                     
                     var frontOrder = product.frontOrder || '';

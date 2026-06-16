@@ -342,6 +342,72 @@
         // 当前显示的图片索引
         window.currentImageIndex = 0;
 
+        // 中文 -> 英文 翻译表（仅用于本页产品详情展示）
+        var enBrandMap = {
+            '宝马': 'BMW',
+            '奔驰': 'Mercedes-Benz',
+            '萨肯': 'Saken',
+            '未知品牌': 'Unknown Brand'
+        };
+        var enCategoryMap = {
+            '发动机配件': 'Engine Parts',
+            '变速箱配件': 'Transmission Parts',
+            '转向系统': 'Steering System',
+            '密封件': 'Seals',
+            '悬挂系统': 'Suspension System',
+            '悬架减震系统': 'Suspension System',
+            '冷却系统': 'Cooling System',
+            '制动系统': 'Brake System',
+            '电气电控': 'Electrical System',
+            '底盘传动系统': 'Chassis & Drivetrain'
+        };
+        var enNameMap = {
+            '减震器避震': 'Shock Absorber / Strut',
+            '前减震器L/R（带电）': 'Front Shock Absorber L/R (with ADS)',
+            '前上摆臂R': 'Front Upper Control Arm R',
+            '右前半轴': 'Front Right Drive Shaft',
+            '副水壶': 'Expansion Tank',
+            '气门室盖': 'Valve Cover',
+            '发动机油底壳': 'Engine Oil Pan',
+            '水箱': 'Radiator',
+            '电子扇500W改款': 'Electric Fan 500W (Revised)',
+            '电子水泵': 'Electric Water Pump',
+            '密封圈': 'Seal Ring',
+            '密封圈-回油管路': 'Seal Ring - Oil Return Line',
+            '密封圈-缸盖': 'Seal Ring - Cylinder Head',
+            '密封圈-油管': 'Seal Ring - Oil Line',
+            '变速箱油管胶圈': 'Transmission Oil Line Seal',
+            '涡轮增压管密封圈': 'Turbocharger Pipe Seal',
+            '喷油嘴密封圈': 'Fuel Injector Seal',
+            '喷油嘴胶圈上': 'Fuel Injector Rubber Seal (Upper)',
+            '进气支管垫': 'Intake Manifold Gasket',
+            '密封圈-缸体': 'Seal Ring - Cylinder Block',
+            '密封圈-机油回流管': 'Seal Ring - Oil Return Pipe',
+            '密封圈-涡轮增压管': 'Seal Ring - Turbocharger Pipe',
+            '机油泵胶圈': 'Oil Pump Rubber Seal',
+            '密封圈-冷却液出口': 'Seal Ring - Coolant Outlet',
+            '节气门密封圈': 'Throttle Body Seal Ring',
+            '排气管密封垫': 'Exhaust Pipe Gasket',
+            '密封圈-冷却液管': 'Seal Ring - Coolant Pipe',
+            '机油泵密封圈': 'Oil Pump Seal Ring',
+            '水管密封圈': 'Water Pipe Seal Ring',
+            '机油散热管胶圈': 'Oil Cooler Pipe Rubber Seal'
+        };
+        function translateEnBrand(v) { return (v && enBrandMap[v]) || v; }
+        function translateEnCategory(v) { return (v && enCategoryMap[v]) || v; }
+        function translateEnName(v) {
+            if (!v) return v;
+            if (enNameMap[v]) return enNameMap[v];
+            // 尝试按已知词替换翻译
+            var translated = v;
+            for (var key in enNameMap) {
+                if (Object.prototype.hasOwnProperty.call(enNameMap, key)) {
+                    translated = translated.split(key).join(enNameMap[key]);
+                }
+            }
+            return translated;
+        }
+
         // 渲染Product
         function renderProduct(product) {
             var container = document.getElementById('productContent');
@@ -357,6 +423,15 @@
                 var catInfo = window.categoryStructureMap[productKey];
                 categoryText = (catInfo.system || product.category);
             }
+            // 翻译中文字段（品牌、分类、名称）
+            var displayName = translateEnName(product.name);
+            var displayBrand = translateEnBrand(product.brand);
+            var displayCategory = translateEnCategory(categoryText);
+            var displayModel = translateEnBrand(product.model) || translateEnBrand(product.series);
+            var displayDescription = product.description;
+            if (displayDescription && /[\u4e00-\u9fa5]/.test(displayDescription)) {
+                displayDescription = 'This is a high-quality auto part from Saken Auto Parts, made with premium materials, with excellent performance and durability, ensuring your vehicle operates normally.';
+            }
 
             // 获取所有Product图片（从Gitee仓库读取）
             var productImages = [];
@@ -369,9 +444,9 @@
             while (productImages.length < 5) {
                 productImages.push(pathPrefix + defaultImages[productImages.length % defaultImages.length]);
             }
-            
+
             container.innerHTML = '<div class="product-images">' +
-                '<img referrerpolicy="no-referrer" class="main-image" id="mainProductImage" src="' + productImages[0] + '" alt="' + product.name + '" onclick="openLightbox()" onerror="this.src=\'' + pathPrefix + defaultImages[0] + '\'">' +
+                '<img referrerpolicy="no-referrer" class="main-image" id="mainProductImage" src="' + productImages[0] + '" alt="' + displayName + '" onclick="openLightbox()" onerror="this.src=\'' + pathPrefix + defaultImages[0] + '\'">' +
                 '<div class="thumbnail-container">' +
                 productImages.map(function(img, idx) {
                     return '<img referrerpolicy="no-referrer" class="thumbnail' + (idx === 0 ? ' active' : '') + '" src="' + img + '" onclick="changeMainImage(' + idx + ')" onerror="this.src=\'' + pathPrefix + defaultImages[0] + '\'">';
@@ -379,13 +454,13 @@
                 '</div>' +
                 '</div>' +
                 '<div class="product-info">' +
-                '<h1>' + product.name + '</h1>' +
+                '<h1>' + displayName + '</h1>' +
                 '<div class="product-details">' +
                 '<div class="detail-item"><label>OE No:</label><span>' + (product.code || product.oe || '') + '</span></div>' +
-                '<div class="detail-item"><label>Part Name:</label><span>' + product.name + '</span></div>' +
-                '<div class="detail-item"><label>Brand:</label><span>' + (product.brand || 'Saken') + '</span></div>' +
-                '<div class="detail-item"><label>Model:</label><span>' + (product.model || product.series || '') + '</span></div>' +
-                '<div class="detail-item"><label>Category:</label><span>' + categoryText + '</span></div>' +
+                '<div class="detail-item"><label>Part Name:</label><span>' + displayName + '</span></div>' +
+                '<div class="detail-item"><label>Brand:</label><span>' + (displayBrand || 'Saken') + '</span></div>' +
+                '<div class="detail-item"><label>Model:</label><span>' + displayModel + '</span></div>' +
+                '<div class="detail-item"><label>Category:</label><span>' + displayCategory + '</span></div>' +
                 '<div class="detail-item"><label>Stock:</label><span>' + (product.stock || 'In Stock') + '</span></div>' +
                 '</div>' +
                 '<div class="product-actions">' +
@@ -394,9 +469,9 @@
                 '</div>' +
                 '<div class="product-description">' +
                 '<h3>Product Description</h3>' +
-                '<p>' + (product.description || 'This is a high-quality auto part from Saken Auto Parts, made with premium materials, with excellent performance and durability, ensuring your vehicle operates normally.') + '</p>' +
+                '<p>' + (displayDescription || 'This is a high-quality auto part from Saken Auto Parts, made with premium materials, with excellent performance and durability, ensuring your vehicle operates normally.') + '</p>' +
                 '</div>';
-            
+
             // 保存图片列表供切换使用
             window.currentProductImages = productImages;
         }
