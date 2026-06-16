@@ -78,8 +78,12 @@ const ruTranslator = {
         '机油泵油底壳': 'Поддон масляного насоса',
         '电子扇': 'Электрический вентилятор',
         '电子扇850W': 'Электрический вентилятор 850Вт',
+        '电子扇500W改款': 'Электрический вентилятор 500Вт (нов.)',
         '气门室盖': 'Крышка клапанов',
         '前减震器R（4驱）': 'Передний амортизатор R (4WD)',
+        '前减震器L（带电）': 'Передний амортизатор L (ADS)',
+        '前减震器R（带电）': 'Передний амортизатор R (ADS)',
+        '前减震器L/R（带电）': 'Передний амортизатор L/R (ADS)',
         '减震器避震': 'Амортизатор',
         '发动机油底壳': 'Поддон двигателя',
         '右前半轴': 'Правый передний полуось',
@@ -100,7 +104,40 @@ const ruTranslator = {
         '刹车总泵': 'Главный тормозной цилиндр',
         '刹车分泵': 'Колесный тормозной цилиндр',
         '刹车助力器': 'Усилитель тормозов',
-        '手刹模块': 'Модуль ручного тормоза'
+        '手刹模块': 'Модуль ручного тормоза',
+        '水箱': 'Радиатор'
+    },
+    oeCnTerms: {
+        '总成': ' Сборка',
+        '滤清器': ' Фильтр',
+        '滤芯': ' Фильтрующий элемент',
+        '泵': ' Насос',
+        '阀': ' Клапан',
+        '电机': ' Электродвигатель',
+        '传感器': ' Датчик',
+        '开关': ' Выключатель',
+        '模块': ' Модуль',
+        '支架': ' Кронштейн',
+        '轴承': ' Подшипник',
+        '皮带': ' Ремень',
+        '链条': ' Цепь',
+        '垫片': ' Прокладка',
+        '密封垫': ' Уплотнение',
+        '软管': ' Шланг',
+        '油管': ' Маслопровод',
+        '水管': ' Водопровод',
+        '空气管': ' Воздуховод'
+    },
+    translateOE: function(code) {
+        if (!code) return code;
+        var result = code;
+        for (var cn in this.oeCnTerms) {
+            if (Object.prototype.hasOwnProperty.call(this.oeCnTerms, cn)) {
+                result = result.split(cn).join(this.oeCnTerms[cn]);
+            }
+        }
+        result = result.replace(/\s+/g, ' ').replace(/^\s/, '').replace(/\s$/, '');
+        return result;
     },
     translateText: function(text) {
         if (!text) return text;
@@ -255,6 +292,9 @@ function renderProductsCore(containerId, products, basePath, language) {
 
         var encodedImgSrc = encodePath(imgSrc);
 
+        // 翻译 OE 号中文字（如 "37206875176总成" -> "37206875176 Сборка"）
+        var displayCode = ruTranslator.translateOE(product.code);
+
         var card = document.createElement('a');
         card.className = 'product-card';
         card.href = 'product-detail.html?oe=' + encodeURIComponent(product.code);
@@ -283,7 +323,7 @@ function renderProductsCore(containerId, products, basePath, language) {
 
         var oeDiv = document.createElement('div');
         oeDiv.className = 'product-oe';
-        oeDiv.textContent = oeLabel + product.code;
+        oeDiv.textContent = oeLabel + displayCode;
 
         var nameDiv = document.createElement('div');
         nameDiv.className = 'product-name';

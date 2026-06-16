@@ -78,8 +78,12 @@ const enTranslator = {
         '机油泵油底壳': 'Oil Pump Oil Pan',
         '电子扇': 'Electric Fan',
         '电子扇850W': 'Electric Fan 850W',
+        '电子扇500W改款': 'Electric Fan 500W (Revised)',
         '气门室盖': 'Valve Cover',
         '前减震器R（4驱）': 'Front Shock Absorber Right (4WD)',
+        '前减震器L（带电）': 'Front Shock Absorber Left (ADS)',
+        '前减震器R（带电）': 'Front Shock Absorber Right (ADS)',
+        '前减震器L/R（带电）': 'Front Shock Absorber L/R (ADS)',
         '减震器避震': 'Shock Absorber',
         '发动机油底壳': 'Engine Oil Pan',
         '右前半轴': 'Right Front Axle Shaft',
@@ -100,7 +104,40 @@ const enTranslator = {
         '刹车总泵': 'Brake Master Cylinder',
         '刹车分泵': 'Brake Wheel Cylinder',
         '刹车助力器': 'Brake Booster',
-        '手刹模块': 'Handbrake Module'
+        '手刹模块': 'Handbrake Module',
+        '水箱': 'Radiator'
+    },
+    oeCnTerms: {
+        '总成': ' Assembly',
+        '滤清器': ' Filter',
+        '滤芯': ' Filter Element',
+        '泵': ' Pump',
+        '阀': ' Valve',
+        '电机': ' Motor',
+        '传感器': ' Sensor',
+        '开关': ' Switch',
+        '模块': ' Module',
+        '支架': ' Bracket',
+        '轴承': ' Bearing',
+        '皮带': ' Belt',
+        '链条': ' Chain',
+        '垫片': ' Gasket',
+        '密封垫': ' Seal',
+        '软管': ' Hose',
+        '油管': ' Oil Line',
+        '水管': ' Water Pipe',
+        '空气管': ' Air Pipe'
+    },
+    translateOE: function(code) {
+        if (!code) return code;
+        var result = code;
+        for (var cn in this.oeCnTerms) {
+            if (Object.prototype.hasOwnProperty.call(this.oeCnTerms, cn)) {
+                result = result.split(cn).join(this.oeCnTerms[cn]);
+            }
+        }
+        result = result.replace(/\s+/g, ' ').replace(/^\s/, '').replace(/\s$/, '');
+        return result;
     },
     translateText: function(text) {
         if (!text) return text;
@@ -255,6 +292,9 @@ function renderProductsCore(containerId, products, basePath, language) {
 
         var encodedImgSrc = encodePath(imgSrc);
 
+        // 翻译 OE 号中文字（如 "37206875176总成" -> "37206875176 Assembly"）
+        var displayCode = enTranslator.translateOE(product.code);
+
         var card = document.createElement('a');
         card.className = 'product-card';
         card.href = 'product-detail.html?oe=' + encodeURIComponent(product.code);
@@ -283,7 +323,7 @@ function renderProductsCore(containerId, products, basePath, language) {
 
         var oeDiv = document.createElement('div');
         oeDiv.className = 'product-oe';
-        oeDiv.textContent = oeLabel + product.code;
+        oeDiv.textContent = oeLabel + displayCode;
 
         var nameDiv = document.createElement('div');
         nameDiv.className = 'product-name';

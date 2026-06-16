@@ -403,6 +403,93 @@
         let productImagesMap = {};
         let categoryStructure = {};
         const pageSize = 24;
+
+        // 中文 -> 俄文 翻译字典（仅用于本页产品列表显示）
+        window.ruProductNameMap = {
+            '副水壶': 'Расширительный бак',
+            '机油滤清器': 'Масляный фильтр',
+            '空气滤清器': 'Воздушный фильтр',
+            '燃油滤清器': 'Топливный фильтр',
+            '空调滤清器': 'Фильтр салона',
+            '刹车片': 'Тормозные колодки',
+            '刹车盘': 'Тормозной диск',
+            '火花塞': 'Свеча зажигания',
+            '水泵': 'Водяной насос',
+            '电子水泵': 'Электрический водяной насос',
+            '正时皮带': 'Ремень ГРМ',
+            '电池': 'Аккумулятор',
+            '轮胎': 'Шина',
+            '减震器': 'Амортизатор',
+            '滤清器': 'Фильтр',
+            '机油格': 'Масляный фильтр',
+            '空气格': 'Воздушный фильтр',
+            '汽油格': 'Топливный фильтр',
+            '空调格': 'Фильтр салона',
+            '前上摆臂L': 'Передний верхний рычаг L',
+            '前上摆臂R': 'Передний верхний рычаг R',
+            '前下摆臂L': 'Передний нижний рычаг L',
+            '前下摆臂R': 'Передний нижний рычаг R',
+            '下摆臂': 'Нижний рычаг',
+            '上摆臂': 'Верхний рычаг',
+            '摆臂': 'Рычаг',
+            '机油泵油底壳': 'Поддон масляного насоса',
+            '电子扇': 'Электрический вентилятор',
+            '电子扇850W': 'Электрический вентилятор 850Вт',
+            '电子扇500W改款': 'Электрический вентилятор 500Вт (нов.)',
+            '气门室盖': 'Крышка клапанов',
+            '前减震器R（4驱）': 'Передний амортизатор R (4WD)',
+            '前减震器L（带电）': 'Передний амортизатор L (ADS)',
+            '前减震器R（带电）': 'Передний амортизатор R (ADS)',
+            '前减震器L/R（带电）': 'Передний амортизатор L/R (ADS)',
+            '减震器避震': 'Амортизатор',
+            '发动机油底壳': 'Поддон двигателя',
+            '右前半轴': 'Правый передний полуось',
+            '密封圈': 'Уплотнительное кольцо',
+            '密封圈-回油管路': 'Уплотнение обратного маслопровода',
+            '密封圈-缸盖': 'Уплотнение ГБЦ',
+            '变速箱油管胶圈': 'Уплотнение трубопровода КПП',
+            '机油尺': 'Щуп уровня масла',
+            '机油尺导管': 'Трубка щупа масла',
+            '机油泵': 'Масляный насос',
+            '机油泵链条': 'Цепь масляного насоса',
+            '机油泵链轮': 'Звездочка масляного насоса',
+            '机油泵涨紧器': 'Натяжитель цепи масляного насоса',
+            '机油泵减压阀': 'Предохранительный клапан масляного насоса',
+            '机油泵盖': 'Крышка масляного насоса',
+            '真空泵': 'Вакуумный насос',
+            '真空泵修理包': 'Ремкомплект вакуумного насоса',
+            '刹车总泵': 'Главный тормозной цилиндр',
+            '刹车分泵': 'Колесный тормозной цилиндр',
+            '刹车助力器': 'Усилитель тормозов',
+            '手刹模块': 'Модуль ручного тормоза',
+            '水箱': 'Радиатор'
+        };
+        window.ruOeCnMap = {
+            '总成': 'Сборка',
+            '滤清器': 'Фильтр',
+            '滤芯': 'Фильтрующий элемент',
+            '泵': 'Насос',
+            '阀': 'Клапан',
+            '电机': 'Электродвигатель',
+            '传感器': 'Датчик',
+            '开关': 'Выключатель',
+            '模块': 'Модуль',
+            '支架': 'Кронштейн',
+            '轴承': 'Подшипник',
+            '皮带': 'Ремень',
+            '链条': 'Цепь',
+            '垫片': 'Прокладка',
+            '密封垫': 'Уплотнение',
+            '软管': 'Шланг',
+            '油管': 'Маслопровод',
+            '水管': 'Водопровод',
+            '空气管': 'Воздуховод'
+        };
+        window.ruBrandMap = {
+            '宝马': 'BMW',
+            '奔驰': 'Mercedes-Benz',
+            '萨肯': 'SHAKOLN'
+        };
         
         // 加载Товар图片映射
         async function loadProductImagesMap() {
@@ -662,17 +749,33 @@
                     paginatedProducts.forEach(product => {
                         const productCard = document.createElement('div');
                         productCard.className = 'bg-white rounded-lg shadow-md p-4 product-card-hover';
-                        
+
                         // 生成Товар图片
                         const imageUrl = getProductImagePath(product.code);
-                        
+
+                        // 翻译产品名/OE号中的中文
+                        const nameMap = window.ruProductNameMap || {};
+                        const oeMap = window.ruOeCnMap || {};
+                        const brandMap = window.ruBrandMap || {};
+                        let displayName = (product.name && nameMap[product.name]) ? nameMap[product.name] : (product.name || '——');
+                        let displayCode = product.code || '';
+                        if (typeof displayCode === 'string') {
+                            for (const cn in oeMap) {
+                                if (Object.prototype.hasOwnProperty.call(oeMap, cn)) {
+                                    displayCode = displayCode.split(cn).join(' ' + oeMap[cn]);
+                                }
+                            }
+                            displayCode = displayCode.replace(/\s+/g, ' ').replace(/^\s/, '').replace(/\s$/, '');
+                        }
+                        let displaySeries = (product.series && brandMap[product.series]) ? brandMap[product.series] : (product.series || '');
+
                         productCard.innerHTML = `
                             <div class="relative w-full pb-[100%] mb-4 border border-border rounded-lg bg-light overflow-hidden">
-                                <img referrerpolicy="no-referrer" src="${imageUrl}" alt="${product.name}" class="absolute top-0 left-0 w-full h-full object-cover">
+                                <img referrerpolicy="no-referrer" src="${imageUrl}" alt="${displayName}" class="absolute top-0 left-0 w-full h-full object-cover">
                             </div>
-                            <div class="text-sm text-gray-600 mb-2">OE: ${product.code}</div>
-                            <h3 class="text-lg font-medium mb-3">${product.name || '——'}</h3>
-                            <div class="text-sm text-gray-600 mb-3">Подходит для: ${product.series} ${product.model || ''}</div>
+                            <div class="text-sm text-gray-600 mb-2">OE: ${displayCode}</div>
+                            <h3 class="text-lg font-medium mb-3">${displayName}</h3>
+                            <div class="text-sm text-gray-600 mb-3">Подходит для: ${displaySeries} ${product.model || ''}</div>
                             <a href="quote.html" class="block text-lg font-bold text-secondary mb-4">Запрос цены</a>
                             <div class="text-sm text-gray-600 mb-4">В наличии</div>
                             <a href="product-detail.html?oe=${product.code}" class="block text-center bg-secondary text-white py-2 rounded-lg hover:bg-orange-600 transition-colors">
