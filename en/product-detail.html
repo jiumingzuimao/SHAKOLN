@@ -407,6 +407,40 @@
             }
             return translated;
         }
+        // OE 号里常见中文后缀/词 -> 英文
+        var enOeCnMap = {
+            '总成': 'Assembly',
+            '滤清器': 'Filter',
+            '滤芯': 'Filter Element',
+            '泵': 'Pump',
+            '阀': 'Valve',
+            '电机': 'Motor',
+            '传感器': 'Sensor',
+            '开关': 'Switch',
+            '模块': 'Module',
+            '支架': 'Bracket',
+            '轴承': 'Bearing',
+            '皮带': 'Belt',
+            '链条': 'Chain',
+            '垫片': 'Gasket',
+            '密封垫': 'Seal',
+            '软管': 'Hose',
+            '油管': 'Oil Line',
+            '水管': 'Water Pipe',
+            '空气管': 'Air Pipe'
+        };
+        function translateEnOe(v) {
+            if (!v) return v;
+            var translated = v;
+            for (var key in enOeCnMap) {
+                if (Object.prototype.hasOwnProperty.call(enOeCnMap, key)) {
+                    translated = translated.split(key).join(' ' + enOeCnMap[key]);
+                }
+            }
+            // 清理多余空格
+            translated = translated.replace(/\s+/g, ' ').replace(/\s+$/, '');
+            return translated;
+        }
 
         // 渲染Product
         function renderProduct(product) {
@@ -423,11 +457,12 @@
                 var catInfo = window.categoryStructureMap[productKey];
                 categoryText = (catInfo.system || product.category);
             }
-            // 翻译中文字段（品牌、分类、名称）
+            // 翻译中文字段（品牌、分类、名称、OE号）
             var displayName = translateEnName(product.name);
             var displayBrand = translateEnBrand(product.brand);
             var displayCategory = translateEnCategory(categoryText);
             var displayModel = translateEnBrand(product.model) || translateEnBrand(product.series);
+            var displayOe = translateEnOe(product.code) || translateEnOe(product.oe) || '';
             var displayDescription = product.description;
             if (displayDescription && /[\u4e00-\u9fa5]/.test(displayDescription)) {
                 displayDescription = 'This is a high-quality auto part from Saken Auto Parts, made with premium materials, with excellent performance and durability, ensuring your vehicle operates normally.';
@@ -456,7 +491,7 @@
                 '<div class="product-info">' +
                 '<h1>' + displayName + '</h1>' +
                 '<div class="product-details">' +
-                '<div class="detail-item"><label>OE No:</label><span>' + (product.code || product.oe || '') + '</span></div>' +
+                '<div class="detail-item"><label>OE No:</label><span>' + displayOe + '</span></div>' +
                 '<div class="detail-item"><label>Part Name:</label><span>' + displayName + '</span></div>' +
                 '<div class="detail-item"><label>Brand:</label><span>' + (displayBrand || 'Saken') + '</span></div>' +
                 '<div class="detail-item"><label>Model:</label><span>' + displayModel + '</span></div>' +

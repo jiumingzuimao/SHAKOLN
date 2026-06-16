@@ -406,6 +406,39 @@
             }
             return translated;
         }
+        // OE 号里常见中文后缀/词 -> 俄文
+        var ruOeCnMap = {
+            '总成': 'Сборка',
+            '滤清器': 'Фильтр',
+            '滤芯': 'Фильтрующий элемент',
+            '泵': 'Насос',
+            '阀': 'Клапан',
+            '电机': 'Электродвигатель',
+            '传感器': 'Датчик',
+            '开关': 'Выключатель',
+            '模块': 'Модуль',
+            '支架': 'Кронштейн',
+            '轴承': 'Подшипник',
+            '皮带': 'Ремень',
+            '链条': 'Цепь',
+            '垫片': 'Прокладка',
+            '密封垫': 'Уплотнение',
+            '软管': 'Шланг',
+            '油管': 'Маслопровод',
+            '水管': 'Водопровод',
+            '空气管': 'Воздуховод'
+        };
+        function translateRuOe(v) {
+            if (!v) return v;
+            var translated = v;
+            for (var key in ruOeCnMap) {
+                if (Object.prototype.hasOwnProperty.call(ruOeCnMap, key)) {
+                    translated = translated.split(key).join(' ' + ruOeCnMap[key]);
+                }
+            }
+            translated = translated.replace(/\s+/g, ' ').replace(/\s+$/, '');
+            return translated;
+        }
 
         // 渲染产品
         function renderProduct(product) {
@@ -422,11 +455,12 @@
                 var catInfo = window.categoryStructureMap[productKey];
                 categoryText = (catInfo.system || product.category);
             }
-            // 翻译中文字段（品牌、分类、名称）
+            // 翻译中文字段（品牌、分类、名称、OE号）
             var displayName = translateRuName(product.name);
             var displayBrand = translateRuBrand(product.brand);
             var displayCategory = translateRuCategory(categoryText);
             var displayModel = translateRuBrand(product.model) || translateRuBrand(product.series);
+            var displayOe = translateRuOe(product.code) || translateRuOe(product.oe) || '';
             var displayDescription = product.description;
             if (displayDescription && /[\u4e00-\u9fa5]/.test(displayDescription)) {
                 displayDescription = 'Этот товар - высококачественная автозапчасть от SHAKOLN, изготовленная из качественных материалов, с отличными характеристиками и длительным сроком службы, гарантирующая нормальную работу вашего автомобиля.';
@@ -462,7 +496,7 @@
                 '<div class="product-info">' +
                 '<h1>' + displayName + '</h1>' +
                 '<div class="product-details">' +
-                '<div class="detail-item"><label>Номер ОЕ:</label><span>' + (product.code || product.oe || '') + '</span></div>' +
+                '<div class="detail-item"><label>Номер ОЕ:</label><span>' + displayOe + '</span></div>' +
                 '<div class="detail-item"><label>Название запчасти:</label><span>' + displayName + '</span></div>' +
                 '<div class="detail-item"><label>Бренд:</label><span>' + (displayBrand || 'SHAKOLN') + '</span></div>' +
                 '<div class="detail-item"><label>Модель автомобиля:</label><span>' + displayModel + '</span></div>' +
